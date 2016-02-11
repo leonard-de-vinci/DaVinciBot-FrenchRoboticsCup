@@ -1,5 +1,5 @@
-
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import rospy
 from std_msgs.msg import Float64
@@ -14,6 +14,9 @@ class Robot():
       self.pub2 = rospy.Publisher('/speedRight', Int16, queue_size=10)
       self.go = 1
       self.tirette = rospy.Subscriber ("/PinGo", Int16, self.tirette_callback)
+      self.pub.publish(0)       
+      self.pub2.publish(0)
+
 
       self.rate = rospy.Rate(10)
       try:
@@ -21,7 +24,7 @@ class Robot():
       except rospy.ROSInterruptException:
          pass
       finally:
-         a = 1
+         rospy.loginfo("Action finie")
 
 
 
@@ -31,17 +34,24 @@ class Robot():
    
 
    def run(self):
-	while not (rospy.is_shutdown()):
-	   while (go == 1):
-		a = 1
-	   
-	   for i in range (0, 20):
-         	pub.publish(10)	   
-	   	pub2.publish(10)
+	while (self.go == 1):
+	   rospy.loginfo("J'att")
+        begin = rospy.get_rostime()
+	rospy.loginfo("Current Time is %i %i",begin.secs,begin.nsecs)
+	now = rospy.get_rostime()   
+	while (now.secs - begin.secs < 5):
+           self.pub.publish(40)	   
+           self.pub2.publish(40)
+           now = rospy.get_rostime() 
+	
+	self.pub.publish(0)       
+        self.pub2.publish(0)
+	
+	rospy.spin()
 	   	
 
 if __name__ == '__main__':
     try:
         whatever = Robot()
     except rospy.ROSInterruptException:
-        rospy.loginfo("Action terminée.")
+        rospy.loginfo("Action termine.")
