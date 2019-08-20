@@ -44,11 +44,18 @@ Debugging Interfaces :
 
 First you need Ubuntu 16.04 (Ubuntu Mate 16.04 on the Raspberry Pi 3) with Ros Kinetic : [ROS kinetic](http://wiki.ros.org/kinetic)
 
-    $ git clone [https://github.com/leonard-de-vinci/DaVinciBot-FrenchRoboticsCup-2020.git](https://github.com/leonard-de-vinci DaVinciBot-FrenchRoboticsCup-2020.git)
+    $ git clone https://github.com/leonard-de-vinci/DaVinciBot-FrenchRoboticsCup-2020.git
     $ cd ~/cdr_robot_ws/
     $ catkin_make
 
+To launch the ros node pid quickly: 
 
+    
+     $ cd cdr_robot_ws/    
+     $ source devel/setup.bash
+     $ roslaunch deplacement base.launch
+    
+    
 For the debugging GUI you will need PYQT5
 
     $ sudo apt-get install python3-pyqt5
