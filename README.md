@@ -16,7 +16,7 @@ TODO Season 2020 :
 - ROS implementation
 - Better controller PID
 - Arduino --> STM32
-
+- News motors : Faulhaber 2232SR
 
 Robot 2018 / 2019 : 
 
@@ -32,7 +32,7 @@ Debugging Interfaces :
 
 # Hardware : 
 
-- [Pololu VNH5019 dual motor controller shield](http://www.pololu.com/catalog/product/2502) 
+- [Pololu VNH5019](http://www.pololu.com/catalog/product/2502) 
 - [Faulhaber 2642 cxr motor](https://www.faulhaber.com/fr/produits/series/2642cxr/)
 - [Rotary encoder kubler](https://www.kuebler.com/en/products/measurement/encoders/product-finder/product-details/2400)
 - [Nucleo ESP32](https://www.st.com/en/evaluation-tools/nucleo-f401re.html)
