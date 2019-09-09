@@ -51,7 +51,7 @@ First you need Ubuntu 16.04 (Ubuntu Mate 16.04 on the Raspberry Pi 3) with Ros K
 To launch the ros node pid quickly: 
 
     
-     $ cd cdr_robot_ws/    
+     $ cd ROS_FrenchCupRobotic2019/cdr_robot_ws/    
      $ source devel/setup.bash
      $ roslaunch deplacement base.launch
     
