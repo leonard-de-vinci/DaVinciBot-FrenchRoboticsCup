@@ -2,9 +2,9 @@
 #include <Encoder.h>
 #include <PID_v1.h>
 
-int EnA = 4;
-int In1 = 5;
-int In2 = 6;
+int EnA = 2;
+int In1 = 3;
+int In2 = 4;
 
 Encoder knobLeft(6, 7);
 double kp = 2 , ki = 1.1 , kd = 0;            
