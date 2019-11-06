@@ -2,11 +2,11 @@
 #include <Encoder.h>
 #include <PID_v1.h>
 
-int EnA = 3;
-int In1 = 4;
-int In2 = 5;
+int EnA = 4;
+int In1 = 5;
+int In2 = 6;
 
-Encoder knobLeft(9, 8);
+Encoder knobLeft(6, 7);
 double kp = 2 , ki = 1.1 , kd = 0;            
 
 double input2, output2, setpoint2; 

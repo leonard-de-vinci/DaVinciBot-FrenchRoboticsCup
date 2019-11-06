@@ -2,8 +2,8 @@
 #include <Encoder.h>
 #include <PID_v1.h>
 
-int EnA = 4;
-int In1 = 6;
+int EnA = 3;
+int In1 = 4;
 int In2 = 5;
 
 Encoder knobLeft(9, 10);
