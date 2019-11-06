@@ -1,3 +1,0 @@
-<launch>
-    <rosparam command="load" file="$(find param_controller)/config/robot/robot.yaml"/>
-</launch>
