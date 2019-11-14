@@ -1,16 +1,10 @@
-/* #define ENCODER_OPTIMIZE_INTERRUPTS
+#define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
 #include <PID_v1.h>
-#include <ros.h>
-#include <ros.h>
-#include <std_msgs/Int16.h>
 
-int EnA = 3;
-int In1 = 4;
-int In2 = 5;
-
-ros::NodeHandle nh;
-
+int EnA = 4;
+int In1 = 5;
+int In2 = 6;
 
 Encoder knobLeft(9, 10);
 double kp = 2 , ki = 1.1 , kd = 0;            
@@ -19,17 +13,8 @@ double input2, output2, setpoint2;
 PID myPID2(&input2, &output2, &setpoint2, kp, ki, kd, DIRECT); 
 
 
-void messageCb( const std_msgs::Int16& toggle_msg){
-  setpoint2=toggle_msg.data;
-}
-
-ros::Subscriber<std_msgs::Int16> sub("speed", &messageCb );
-
 void setup() {
 
-  nh.initNode();
-  nh.subscribe(sub);
-  
   pinMode(EnA, OUTPUT);
   pinMode(In1, OUTPUT);
   pinMode(In2, OUTPUT);
@@ -38,7 +23,7 @@ void setup() {
   digitalWrite(In2, HIGH);
 
   input2 = 0;
-  setpoint2 = 0;
+  setpoint2 = 100;
 
   myPID2.SetMode(AUTOMATIC);
   myPID2.SetSampleTime(1); //Fréquence du PID dans le loop
@@ -50,7 +35,7 @@ void setup() {
 void asservissement(double cible, bool arret)
 {
   setpoint2 = cible;
-  input2 = knobLeft.read();
+  input2 = -knobLeft.read();
   if (myPID2.Compute()) {
     Serial.print(input2);
     Serial.print(" , ");
@@ -67,11 +52,6 @@ void asservissement(double cible, bool arret)
 
 void loop()
 {
-  nh.spinOnce();
-  asservissement(setpoint2, false);
+  setpoint2 = 100;
+  asservissement(50, false);
 }
-
-
-
-
-*/
