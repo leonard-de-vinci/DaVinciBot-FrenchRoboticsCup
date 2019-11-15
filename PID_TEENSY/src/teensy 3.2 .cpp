@@ -1,16 +1,15 @@
-/*
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
 #include <PID_v1.h>
 #include <ros.h>
 #include <std_msgs/Int16.h>
 
-int EnA = 4;
-int In1 = 5;
-int In2 = 6;
+int EnA = 3;
+int In1 = 4;
+int In2 = 5;
 
 
-Encoder knobLeft(9, 10);
+Encoder knobLeft(7, 8);
 double kp = 2 , ki = 1.1 , kd = 0;            
 
 ros::NodeHandle nh;
@@ -50,7 +49,7 @@ void setup() {
 void asservissement(double cible, bool arret)
 {
   setpoint2=cible;
-  input2 = -knobLeft.read();
+  input2 = knobLeft.read();
   if (myPID2.Compute()) {
     Serial.print(input2);
     Serial.print(" , ");
@@ -71,4 +70,3 @@ void loop()
   delay(1);
   asservissement(setpoint2, false);
 }
-*/
