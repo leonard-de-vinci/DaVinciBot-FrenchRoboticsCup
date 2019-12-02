@@ -4,12 +4,12 @@
 #include <ros.h>
 #include <std_msgs/Int16.h>
 
-int EnA = 3;
-int In1 = 4;
-int In2 = 5;
+int EnA = 4;
+int In1 = 5;
+int In2 = 6;
 
 
-Encoder knobLeft(7, 8);
+Encoder knobLeft(9, 10);
 double kp = 2 , ki = 1.1 , kd = 0;            
 
 ros::NodeHandle nh;
@@ -22,7 +22,7 @@ void messageCb( const std_msgs::Int16& toggle_msg){
   setpoint2=toggle_msg.data;
 }
 
-ros::Subscriber<std_msgs::Int16> sub("/speed", &messageCb );
+ros::Subscriber<std_msgs::Int16> sub("/speedLeft", &messageCb );
 
 void setup() {
 
@@ -49,7 +49,7 @@ void setup() {
 void asservissement(double cible, bool arret)
 {
   setpoint2=cible;
-  input2 = knobLeft.read();
+  input2 = -knobLeft.read();
   if (myPID2.Compute()) {
     Serial.print(input2);
     Serial.print(" , ");
@@ -57,8 +57,11 @@ void asservissement(double cible, bool arret)
     Serial.print(setpoint2);
     Serial.println();
 
-    if (output2 >= 0) {
+    if (output2 >= 0 && setpoint2!=0) {
       analogWrite(EnA, output2);
+    }
+    else if (setpoint2==0) {
+      analogWrite(EnA,0);
     }
     knobLeft.write(0);
   }
