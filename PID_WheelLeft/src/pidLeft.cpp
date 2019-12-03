@@ -44,7 +44,7 @@ void setup() {
   myPID2.SetSampleTime(1); //Fréquence du PID dans le loop
   myPID2.SetOutputLimits(0, 200); //Va fixer le PWM entre -400 et 400 comme sur nos moteurs
 
-  Serial.begin (115200);                              //DEBUG
+  //Serial.begin (115200);                              //DEBUG
 }
 
 void asservissement(double cible, bool arret)
@@ -52,15 +52,20 @@ void asservissement(double cible, bool arret)
   setpoint2=cible;
   input2 = -knobLeft.read();
   if (myPID2.Compute()) {
+    /*
     Serial.print(input2);
     Serial.print(" , ");
     Serial.print(" , ");
     Serial.print(setpoint2);
     Serial.println();
-
-    if (output2 >= 0) {
+    */
+   if (output2 >= 0 && setpoint2!=0) {
       analogWrite(EnA, output2);
     }
+    else if (setpoint2==0) {
+      analogWrite(EnA,0);
+    }
+
     knobLeft.write(0);
   }
 }
@@ -69,5 +74,5 @@ void loop()
 {
   nh.spinOnce();
   delay(1);
-  asservissement(50, false);
+  asservissement(setpoint2, false);
 }
