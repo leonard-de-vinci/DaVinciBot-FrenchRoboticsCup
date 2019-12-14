@@ -28,7 +28,8 @@ CAD            |  Real Word Robot
 
 Debugging Interfaces : 
 
-<img src="GUI_Robot.png" width="70%" align="middle">
+<img src="https://drive.google.com/uc?export=view&id=1GNL13aNwliJCtiTgYWe9DbqdmLaCd74n
+" width="70%" align="middle">
 
 # Hardware : 
 
