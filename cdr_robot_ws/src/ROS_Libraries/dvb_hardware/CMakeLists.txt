@@ -16,7 +16,6 @@ find_package(dvb_spinner REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS system)
 
-set(wiringPi_include "/usr/local/include")
 
 
 ###################################
