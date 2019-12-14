@@ -36,7 +36,6 @@ catkin_package(
 include_directories(
  include
   ${catkin_INCLUDE_DIRS}
-  ${wiringPi_include}
   ${dvb_spinner_INCLUDE_DIRS}
 )
 LINK_DIRECTORIES("/usr/local/lib")
@@ -49,7 +48,6 @@ add_library(dvb_hardware
 
 target_link_libraries(dvb_hardware
   ${catkin_LIBRARIES} 
-  wiringPi
   dvb_spinner
 )
 
