@@ -116,7 +116,6 @@ before_script:
 # fails. Running `catkin_test_results` aggregates all the results and returns
 # non-zero when a test fails (which notifies Travis the build failed).
 script:
-  - cd ~/cdr_robot_ws
   - source /opt/ros/$ROS_DISTRO/setup.bash
   #- catkin_make $( [ -f $CATKIN_OPTIONS ] && cat $CATKIN_OPTIONS )
   # Run the tests, ensuring the path is set correctly.
