@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/leonard-de-vinci/DaVinciBot-FrenchRoboticsCup-2020.svg?token=zyxpWbzFhQ63qqpwHDuU&branch=master)](https://travis-ci.com/leonard-de-vinci/DaVinciBot-FrenchRoboticsCup-2020)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7a324ed61b8f4c49ad23716e1b8748e5)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=leonard-de-vinci/DaVinciBot-FrenchRoboticsCup-2020&amp;utm_campaign=Badge_Grade)
 
 # Presentation
 Project for the french cup of robotic 2020. 
