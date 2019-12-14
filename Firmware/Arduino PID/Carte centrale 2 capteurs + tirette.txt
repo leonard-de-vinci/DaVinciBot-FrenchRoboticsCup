@@ -1,0 +1,100 @@
+const byte TRIGGER_PIN1 = 12; // Broche TRIGGER
+const byte ECHO_PIN1 = 13;    // Broche ECHO
+
+const byte TRIGGER_PIN2 = 11; // Broche TRIGGER
+const byte ECHO_PIN2 = 10;    // Broche ECHO
+
+/** Fonction setup() */
+void setup() {
+   
+  /* Initialise le port série */
+  Serial.begin(115200);
+   
+  /* Initialise les broches */
+  pinMode(TRIGGER_PIN1, OUTPUT);
+  digitalWrite(TRIGGER_PIN1, LOW); // La broche TRIGGER doit être à LOW au repos
+  pinMode(ECHO_PIN1, INPUT);
+  pinMode(TRIGGER_PIN2, OUTPUT);
+  digitalWrite(TRIGGER_PIN2, LOW); // La broche TRIGGER doit être à LOW au repos
+  pinMode(ECHO_PIN2, INPUT);
+  pinMode(9,OUTPUT); //par defaut les capteurs voient rien
+  digitalWrite(9,LOW);
+  pinMode(8, OUTPUT); //par defaut la tirette est off
+  digitalWrite(8, LOW);
+}
+ 
+/** Fonction loop() */
+void loop() {
+
+  /*______________________________________________
+   *                    TIRETTE
+   *______________________________________________              
+   */
+  
+
+int valdepart = digitalRead(A0); //lecture valeur tirette
+if(!valdepart)
+{
+  digitalWrite(8, HIGH); //GOOO
+}
+else
+{
+  digitalWrite(8, LOW); //STOOOP
+}
+   /*______________________________________________
+   *                    CAPTEUR 1
+   *______________________________________________              
+   */
+
+   
+  /* 1. Lance une mesure de distance en envoyant une impulsion HIGH de 10µs sur la broche TRIGGER */
+  digitalWrite(TRIGGER_PIN1, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN1, LOW);
+  
+  
+  /* 2. Mesure le temps entre l'envoi de l'impulsion ultrasonique et son écho (si il existe) */
+  long measure1 = pulseIn(ECHO_PIN1, HIGH);
+ /* 3. Calcul la distance à partir du temps mesuré */
+  float distance1 = measure1 / 2.0 * 0.0340;
+
+  
+  /*______________________________________________
+   *                    CAPTEUR 2
+   *______________________________________________              
+   */
+   
+ /* 1. Lance une mesure de distance en envoyant une impulsion HIGH de 10µs sur la broche TRIGGER */
+  digitalWrite(TRIGGER_PIN2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN2, LOW);
+  
+  
+  /* 2. Mesure le temps entre l'envoi de l'impulsion ultrasonique et son écho (si il existe) */
+  long measure2 = pulseIn(ECHO_PIN2, HIGH);
+ /* 3. Calcul la distance à partir du temps mesuré */
+  float distance2 = measure2 / 2.0 * 0.0340;
+ 
+
+  
+Serial.print("distance1 : ");
+  Serial.print(distance1);
+  Serial.print("  ;  distance2 : ");
+  Serial.println(distance2);
+  
+  if (distance1 < 20 || distance2<20)
+  {
+    digitalWrite(9,HIGH);
+    
+    
+  }
+  else
+  {
+    digitalWrite(9 ,LOW);
+    
+  }
+
+  delay(50);
+  /* Délai d'attente pour éviter d'afficher trop de résultats à la seconde */
+  
+}
