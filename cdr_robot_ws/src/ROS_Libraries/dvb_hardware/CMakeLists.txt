@@ -52,7 +52,6 @@ target_link_libraries(dvb_hardware
 )
 
 ##target_link_libraries(sonar_controller
-  ## ${catkin_LIBRARIES} wiringPi
  ##)
 
 #############
