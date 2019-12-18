@@ -4,11 +4,12 @@
 #include <PID_v1.h>
 #include <ros.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/UInt8MultiArray.h>
+#include <std_msgs/Float64.h>
 
 int EnA = 7;
 int In1 = 8;
 int In2 = 9;
-
 
 Encoder knobLeft(4, 5);
 double kp = 2 , ki = 1.1 , kd = 0;            
@@ -19,16 +20,30 @@ double input2, output2, setpoint2;
 PID myPID2(&input2, &output2, &setpoint2, kp, ki, kd, DIRECT); 
 
 
-void messageCb( const std_msgs::Int16& toggle_msg){
+void speedCb( const std_msgs::Int16& toggle_msg){
   setpoint2=toggle_msg.data;
 }
 
-ros::Subscriber<std_msgs::Int16> sub("/speedLeft", &messageCb );
+void pidCb(const std_msgs::UInt8MultiArray& toggle_msg){
+  kp = toggle_msg.data[0];
+  ki = toggle_msg.data[1];
+  kd = toggle_msg.data[2];
+}
+
+
+std_msgs::Float64 encoderCbMsg;
+
+
+ros::Subscriber<std_msgs::Int16> speedTopic("/speedLeft", &speedCb );
+ros::Subscriber<std_msgs::UInt8MultiArray> PIDTopic("/PIDLeft", &pidCb );
+//ros::Publisher encoderCb("leftEncoder", &encoderCbMsg);
 
 void setup() {
 
   nh.initNode();
-  nh.subscribe(sub);
+  nh.subscribe(speedTopic);
+  nh.subscribe(PIDTopic);
+  //nh.advertise(encoderCb);
 
   pinMode(EnA, OUTPUT);
   pinMode(In1, OUTPUT);
@@ -51,6 +66,7 @@ void asservissement(double cible, bool arret)
 {
   setpoint2=cible;
   input2 = -knobLeft.read();
+  
   if (myPID2.Compute()) {
     /*
     Serial.print(input2);
@@ -65,7 +81,6 @@ void asservissement(double cible, bool arret)
     else if (setpoint2==0) {
       analogWrite(EnA,0);
     }
-
     knobLeft.write(0);
   }
 }
@@ -75,4 +90,6 @@ void loop()
   nh.spinOnce();
   delay(1);
   asservissement(setpoint2, false);
+  encoderCbMsg.data = (float)input2;
+  encoderCb.publish(&encoderCbMsg);
 }
