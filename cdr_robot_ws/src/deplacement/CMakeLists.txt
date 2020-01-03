@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
 )
 
-FIND_LIBRARY(WIRINGPI_LIBRARY wiringPi /home/WiringPi)
+FIND_LIBRARY(WIRINGPI_LIBRARY wiringPi /home/wiringPi)
 find_package(dvb_hardware REQUIRED)
 
 
