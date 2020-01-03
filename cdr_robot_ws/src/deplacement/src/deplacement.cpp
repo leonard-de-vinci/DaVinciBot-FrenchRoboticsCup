@@ -1,64 +1,34 @@
-#include <ros/ros.h>
-#include "std_msgs/Int32.h"
+#include "ros/ros.h"
 #include "std_msgs/String.h"
-class SubscribeAndPublish
-{
-public:
-  SubscribeAndPublish()
-  {
-    //Topic you want to publish
-    pub_ = n_.advertise<std_msgs::Int32>("/motor/left", 1);
-    pub2_ = n_.advertise<std_msgs::Int32>("/motor/right", 1);
-
-    //Topic you want to subscribe
-    sub_ = n_.subscribe("robot_deplacement", 1, &SubscribeAndPublish::callback, this);
-  }
-
-  void callback(const std_msgs::String& input)
-  { 
-   std::cout << input << std::endl;
-  if(input.data == "forward"){
-   ROS_INFO("forward");
-
-    std_msgs::Int32 output;
-   output.data = 300;
-    pub_.publish(output);
-    pub2_.publish(output);
-   }
-if(input.data == "stop"){
-ROS_INFO("Stop");
-    std_msgs::Int32 output;
-   output.data = 0;
-    pub_.publish(output);
-    pub2_.publish(output);
-   }
-if(input.data == "right"){
-    std_msgs::Int32 output;
-   output.data = 600;
-    pub_.publish(output);
-   output.data = 200;
-    pub2_.publish(output);
-   }
-  }
-
-private:
-  ros::NodeHandle n_; 
-  ros::Publisher pub_;
-  ros::Subscriber sub_;
-  ros::Publisher pub2_;
-
-};//End of class SubscribeAndPublish
+#include <sstream>
+#include <wiringPi.h>
+#include "std_msgs/Int16.h"
 
 int main(int argc, char **argv)
 {
-  //Initiate ROS
-  ros::init(argc, argv, "subscribe_and_publish");
+  ros::init(argc, argv, "deplacement robot");
+  ros::NodeHandle n;
+  ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 
-  //Create an object of class SubscribeAndPublish that will take care of everything
-  SubscribeAndPublish SAPObject;
+  ros::Publisher pub_right = n.advertise<std_msgs::Int16>("/robot/wheel/left", 1000);
+  ros::Publisher pub_left = n.advertise<std_msgs::Int16>("/robot/wheel/right", 1000);
+  
+  ros::Rate loop_rate(10);
+  int count = 0;
+  
+  wiringPiSetup();
+  while (ros::ok())
+  {
+    std_msgs::String msg;
+    std::stringstream ss;
+    ss << "hello world " << count;
+    msg.data = ss.str();
 
-  ros::spin();
-
+    ROS_INFO("%s", msg.data.c_str());
+    chatter_pub.publish(msg);
+    ros::spinOnce();
+    loop_rate.sleep();
+    ++count;
+  }
   return 0;
 }
-

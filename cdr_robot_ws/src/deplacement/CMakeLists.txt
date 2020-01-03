@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
 )
 
+FIND_LIBRARY(WIRINGPI_LIBRARY wiringPi /home/wiringPi)
 find_package(dvb_hardware REQUIRED)
 
 
@@ -37,9 +38,12 @@ include_directories(
 
 LINK_DIRECTORIES("/usr/local/lib")
 
-add_executable(deplacement_robot src/deplacement.cpp)
+add_executable(deplacement src/deplacement.cpp)
+target_link_libraries(deplacement ${CATKIN_LIBRARIES} ${WIRINGPI_LIBRARY})
 
-target_link_libraries(deplacement_robot
+target_link_libraries(deplacement
+   dvb_map
+   dvb_robot
    dvb_hardware
    ${catkin_LIBRARIES}
 )
