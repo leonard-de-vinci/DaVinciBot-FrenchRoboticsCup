@@ -81,6 +81,8 @@ before_install:
   - sudo rosdep init
   - rosdep update --include-eol-distros  # Support EOL distros.
   - sudo git clone https://github.com/WiringPi/WiringPi.git /home/wiringPi
+  - cd /home/wiringPi 
+  - sudo ./build
 # Create a catkin workspace with the package under integration.
 install:
   - mkdir -p ~/catkin_ws/src
