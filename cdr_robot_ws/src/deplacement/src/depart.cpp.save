@@ -1,0 +1,37 @@
+#include "ros/ros.h"
+#include "std_msgs/String.h"
+#include <sstream>
+#include <wiringPi.h>
+#include "std_msgs/Int16.h"
+
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "Go");
+  ros::NodeHandle n;
+  ros::Publisher pin_go_pub = n.advertise<std_msgs::Int16>("Pin Go", 1000);
+  wiringPiSetup();
+
+  pinMode(0, INPUT); //wiringPi pin 0 is BCM_GPIO 17.
+  
+  
+  ros::Rate loop_rate(10);
+  int count = 0;
+  
+	
+  
+ 
+  while (ros::ok())
+  {
+    std_msgs::Int16 msg;
+    
+        msg.data = digitalRead(0);
+
+    ROS_INFO("%s", msg.data.c_str());
+    pin_go_pub.publish(msg);
+
+    ros::spinOnce();
+    loop_rate.sleep();
+    ++count;
+  }
+  return 0;
+}
