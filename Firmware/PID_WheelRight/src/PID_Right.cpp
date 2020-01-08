@@ -33,8 +33,8 @@ void setup() {
   pinMode(In1, OUTPUT);
   pinMode(In2, OUTPUT);
 
-  digitalWrite(In1, HIGH);
-  digitalWrite(In2, LOW);
+  digitalWrite(In1, LOW);
+  digitalWrite(In2, HIGH);
 
   input2 = 0;
   setpoint2 = 0;
@@ -49,7 +49,7 @@ void setup() {
 void asservissement(double cible, bool arret)
 {
   setpoint2=cible;
-  input2 = knobLeft.read();
+  input2 = -knobLeft.read();
   if (myPID2.Compute()) {
     /*
     Serial.print(input2);
