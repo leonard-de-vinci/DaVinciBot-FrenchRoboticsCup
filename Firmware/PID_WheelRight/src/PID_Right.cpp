@@ -3,14 +3,16 @@
 #include <PID_v1.h>
 #include <ros.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Float64.h>
 
 int EnA = 4;
 int In1 = 5;
 int In2 = 6;
 
+int count = 0;
 
 Encoder knobLeft(9, 10);
-double kp = 2 , ki = 1.1 , kd = 0;            
+double kp = 13 , ki = 0 , kd = 0;            
 
 ros::NodeHandle nh;
 
@@ -22,13 +24,16 @@ void messageCb( const std_msgs::Int16& toggle_msg){
   setpoint2=toggle_msg.data;
 }
 
+std_msgs::Float64 enco_right;
+ros::Publisher encoder_right("encoRight", &enco_right);
+
 ros::Subscriber<std_msgs::Int16> sub("/speedRight", &messageCb );
 
 void setup() {
 
   nh.initNode();
   nh.subscribe(sub);
-
+  nh.advertise(encoder_right);
   pinMode(EnA, OUTPUT);
   pinMode(In1, OUTPUT);
   pinMode(In2, OUTPUT);
@@ -64,6 +69,7 @@ void asservissement(double cible, bool arret)
     else if (setpoint2==0) {
       analogWrite(EnA,0);
     }
+    enco_right.data= input2;
     knobLeft.write(0);
   }
 }
@@ -73,4 +79,9 @@ void loop()
   nh.spinOnce();
   delay(1);
   asservissement(setpoint2, false);
+  count++;
+  if (count == 10){
+    encoder_right.publish(&enco_right);
+    count = 0;
+  }
 }
