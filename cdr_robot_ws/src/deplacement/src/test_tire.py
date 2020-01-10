@@ -4,7 +4,7 @@
 import rospy
 from std_msgs.msg import Float64
 from std_msgs.msg import Int16
-
+from sensor_msgs.msg import Range
 
 class Robot():
    def __init__(self):
@@ -14,9 +14,12 @@ class Robot():
       self.pub2 = rospy.Publisher('/speedRight', Int16, queue_size=10)
       self.go = 1
       self.tirette = rospy.Subscriber ("/PinGo", Int16, self.tirette_callback)
+	
+
+
       self.pub.publish(0)       
       self.pub2.publish(0)
-
+      
 
       self.rate = rospy.Rate(10)
       try:
@@ -44,7 +47,7 @@ class Robot():
 	now = rospy.get_rostime()
 	self.pub.publish(10)
 	self.pub2.publish(10)   
-	while (now.secs - begin.secs < 2.5):
+	while (now.secs - begin.secs < 2.5) :
            self.pub.publish(50)	   
            self.pub2.publish(50)
            now = rospy.get_rostime() 

@@ -3,8 +3,8 @@
 #include <sensor_msgs/Range.h>
 
 //define the pins
-#define trigPin 5
-#define echoPin 4
+#define trigPin 3
+#define echoPin 2
 
 //define the constants
 #define maxDistance 400
