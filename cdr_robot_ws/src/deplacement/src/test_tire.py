@@ -42,19 +42,19 @@ class Robot():
       #rospy.loginfo("La distance est %i",self.distance)
    
    def straight(self, time):
-      begin = rospy.get_rostime()
-      now = rospy.get_rostime()
+      begin = rospy.get_time()
+      now = rospy.get_time()
       temps_ecoule = 0
-      while (now.secs - begin.secs < time):
+      while (now - begin < time):
          if (self.distance < 20):
             self.stop()
-            temps_ecoule = rospy.get_time() - now.secs
+            temps_ecoule = rospy.get_time() - now
             rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
             continue
          self.pub.publish(40)
          self.pub2.publish(40)
-         begin.secs += temps_ecoule
-         now = rospy.get_rostime()
+         begin += temps_ecoule
+         now = rospy.get_time()
          temps_ecoule = 0
       rospy.loginfo("Fin de la ligne droite")
       self.stop()
