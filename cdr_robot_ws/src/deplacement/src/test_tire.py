@@ -46,19 +46,19 @@ class Robot():
       now = rospy.get_rostime()
       temps_ecoule = 0
       while (now.secs - begin.secs < time):
-         if (self.distance < 40):
+         if (self.distance < 20):
             self.stop()
             temps_ecoule = rospy.get_time() - now.secs
             rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
             continue
-         self.pub.publish(50)
-         self.pub2.publish(50)
-         begin.secs = temps_ecoule + begin.secs
+         self.pub.publish(40)
+         self.pub2.publish(40)
+         begin.secs += temps_ecoule
          now = rospy.get_rostime()
          temps_ecoule = 0
       rospy.loginfo("Fin de la ligne droite")
       self.stop()
-      rospy.spin()
+      
 
    def run(self):
       while(self.go == 1):
@@ -67,7 +67,26 @@ class Robot():
       
       #self.pub.publish(10)
       #self.pub2.publish(10)
-      self.straight(2)
+      self.straight(6)
+      begin = rospy.get_rostime()
+      now = rospy.get_rostime()
+      temps_ecoule = 0
+      while (now.secs - begin.secs < 3):
+         if (self.distance < 20):
+            self.stop()
+            temps_ecoule = rospy.get_time() - now.secs
+            rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
+            continue
+         self.pub.publish(40)
+         self.pub2.publish(20)
+         rospy.loginfo("Il est censé tourner")
+         begin.secs += temps_ecoule
+         now = rospy.get_rostime()
+         temps_ecoule = 0
+      rospy.loginfo("Fin du virage")
+      self.stop()
+      rospy.spin()
+      
                
 	   	
 
