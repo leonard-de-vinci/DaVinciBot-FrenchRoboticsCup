@@ -41,7 +41,7 @@ class Robot():
       self.distance = msg.range
       #rospy.loginfo("La distance est %i",self.distance)
    
-   def straight(self, time):
+   def straight(self, time, speed):
       begin = rospy.get_time()
       now = rospy.get_time()
       temps_ecoule = 0
@@ -51,8 +51,8 @@ class Robot():
             temps_ecoule = rospy.get_time() - now
             rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
             continue
-         self.pub.publish(40)
-         self.pub2.publish(40)
+         self.pub.publish(speed)
+         self.pub2.publish(speed)
          begin += temps_ecoule
          now = rospy.get_time()
          temps_ecoule = 0
@@ -67,11 +67,12 @@ class Robot():
       
       #self.pub.publish(10)
       #self.pub2.publish(10)
-      self.straight(6)
+      self.straight(4,-40)
       begin = rospy.get_rostime()
       now = rospy.get_rostime()
       temps_ecoule = 0
-      while (now.secs - begin.secs < 3):
+     
+      while (now.secs - begin.secs < 0):
          if (self.distance < 20):
             self.stop()
             temps_ecoule = rospy.get_time() - now.secs
@@ -84,6 +85,8 @@ class Robot():
          now = rospy.get_rostime()
          temps_ecoule = 0
       rospy.loginfo("Fin du virage")
+      self.straight(4,40)
+      
       self.stop()
       rospy.spin()
       
