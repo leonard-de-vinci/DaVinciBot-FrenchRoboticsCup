@@ -8,22 +8,36 @@
 #include <std_msgs/Float64.h>
 
 
-int EnA = 7;
-int In1 = 8;
-int In2 = 9;
+int EnA = 5;
+int In1 = 6; 
+int In2 = 7; 
 
+int count = 0;
+double sens = 1;
 
-Encoder knobLeft(4, 5);
+Encoder knobLeft(12, 13);
 double kp = 13, ki = 0 , kd = 0;            
 
 ros::NodeHandle nh;
 
 double input2, output2, setpoint2; 
 PID myPID2(&input2, &output2, &setpoint2, kp, ki, kd, DIRECT); 
-int count = 0;
+
 
 void messageCb( const std_msgs::Int16& toggle_msg){
   setpoint2=toggle_msg.data;
+  if (setpoint2 < 0){
+    digitalWrite(In1, HIGH);
+    digitalWrite(In2, LOW);
+    sens = 1;
+    setpoint2 = -setpoint2;
+
+  }
+  else if (setpoint2 > 0){
+    digitalWrite(In1, LOW);
+    digitalWrite(In2, HIGH);
+    sens = -1;
+  }
 }
 std_msgs::Float64 enco_left;
 ros::Publisher encoder_left("encoLeft", &enco_left);
@@ -41,7 +55,7 @@ void setup() {
   pinMode(In2, OUTPUT);
 
   digitalWrite(In1, HIGH);
-  digitalWrite(In2, HIGH);
+  digitalWrite(In2, LOW);
 
   input2 = 0;
   setpoint2 = 0;
@@ -56,17 +70,17 @@ void setup() {
 void asservissement(double cible, bool arret)
 {
   setpoint2=cible;
-  input2 = knobLeft.read();
+  input2 = knobLeft.read() * sens;
 
   if (myPID2.Compute()) {
-    
     /*
+    
     Serial.print(input2);
     Serial.print(" , ");
     Serial.print(" , ");
     Serial.print(setpoint2);
     Serial.println();
-   */
+    */
 
    if (output2 >= 0 && setpoint2!=0) {
       analogWrite(EnA, output2);
@@ -85,7 +99,7 @@ void loop()
   
   nh.spinOnce();
   delay(1);
-  asservissement(setpoint2, false);
+  asservissement(50, false);
   count++;
   if (count == 10){
     

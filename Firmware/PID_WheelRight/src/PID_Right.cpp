@@ -4,12 +4,14 @@
 #include <ros.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float64.h>
+//l'Encodeur droit c'est celui qui fonctionne 
 
 int EnA = 4;
 int In1 = 5;
 int In2 = 6;
 
 int count = 0;
+double sens = -1;
 
 Encoder knobLeft(9, 10);
 double kp = 13 , ki = 0 , kd = 0;            
@@ -22,6 +24,18 @@ PID myPID2(&input2, &output2, &setpoint2, kp, ki, kd, DIRECT);
 
 void messageCb( const std_msgs::Int16& toggle_msg){
   setpoint2=toggle_msg.data;
+  if (setpoint2 < 0){
+    digitalWrite(In1, HIGH);   
+    digitalWrite(In2, LOW);
+    sens = 1;
+    setpoint2 = -setpoint2;
+
+  }
+  else if (setpoint2 > 0){
+    digitalWrite(In1, LOW);   
+    digitalWrite(In2, HIGH);
+    sens = -1;
+  }
 }
 
 std_msgs::Float64 enco_right;
@@ -38,8 +52,8 @@ void setup() {
   pinMode(In1, OUTPUT);
   pinMode(In2, OUTPUT);
 
-  digitalWrite(In1, LOW);
-  digitalWrite(In2, HIGH);
+  digitalWrite(In1, LOW);   
+  digitalWrite(In2, HIGH);   //Avance dans le bon sens
 
   input2 = 0;
   setpoint2 = 0;
@@ -54,7 +68,10 @@ void setup() {
 void asservissement(double cible, bool arret)
 {
   setpoint2=cible;
-  input2 = -knobLeft.read();
+  input2 = knobLeft.read() * sens;
+  
+  
+  
   if (myPID2.Compute()) {
     /*
     Serial.print(input2);
@@ -66,9 +83,15 @@ void asservissement(double cible, bool arret)
     if (output2 >= 0 && setpoint2!=0) {
       analogWrite(EnA, output2);
     }
+    /*
+    else if (output2 < 0 && setpoint2!=0) {
+      analogWrite(EnA,output2);
+    }
+    */
     else if (setpoint2==0) {
       analogWrite(EnA,0);
     }
+
     enco_right.data= input2;
     knobLeft.write(0);
   }
