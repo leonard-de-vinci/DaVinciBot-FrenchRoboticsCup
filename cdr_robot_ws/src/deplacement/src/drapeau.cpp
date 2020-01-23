@@ -24,11 +24,11 @@ int main(int argc, char **argv)
     while (ros::ok() && msg.data != 1)
     {
         
-        /*
+        
         while (global == 0){
             int wait = 1;
         }
-        */
+        
         double begin = ros::Time::now().toSec();
         double now = ros::Time::now().toSec();
         while (now - begin < 95)
