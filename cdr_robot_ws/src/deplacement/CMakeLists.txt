@@ -45,7 +45,10 @@ add_executable(depart  src/depart.cpp)
 target_link_libraries(depart ${CATKIN_LIBRARIES} ${WIRINGPI_LIBRARY})
 
 add_executable(drapeau  src/drapeau.cpp)
-target_link_libraries(depart ${CATKIN_LIBRARIES} ${WIRINGPI_LIBRARY})
+target_link_libraries(drapeau ${CATKIN_LIBRARIES} ${WIRINGPI_LIBRARY})
+
+add_executable(nodenulle src/nodenulle.cpp)
+target_link_libraries(nodenulle ${CATKIN_LIBRARIES} ${WIRINGPI_LIBRARY})
 
 target_link_libraries(deplacement
    dvb_map
@@ -68,3 +71,9 @@ target_link_libraries(drapeau
    ${catkin_LIBRARIES}
 )
 
+target_link_libraries(nodenulle
+   dvb_map
+   dvb_robot
+   dvb_hardware
+   ${catkin_LIBRARIES}
+)

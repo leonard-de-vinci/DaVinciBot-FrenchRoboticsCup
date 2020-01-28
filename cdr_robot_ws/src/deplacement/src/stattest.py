@@ -13,7 +13,7 @@ class Robot():
       self.pub = rospy.Publisher('/speedLeft', Int16, queue_size=10)
       self.pub2 = rospy.Publisher('/speedRight', Int16, queue_size=10)
       self.go = 1
-      self.distance = 30      
+      
       self.tirette = rospy.Subscriber ("/PinGo", Int16, self.tirette_callback)
       self.ultrasons = rospy.Subscriber("/ultrasound", Range, self.ultrasound_cb)
 
@@ -60,7 +60,7 @@ class Robot():
       self.stop()
    
    
-   def virage(self, cote,speed):
+   def virage(self, cote):
       begin = rospy.get_rostime()
       now = rospy.get_rostime()
       temps_ecoule = 0
@@ -71,37 +71,12 @@ class Robot():
             rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
             continue
          if (cote == 1):
-            self.pub.publish(-speed)
-            self.pub2.publish(-speed/2)
-         
-         elif (cote == 0):
-            self.pub.publish(-speed/2)
-            self.pub2.publish(-speed)
-
-         rospy.loginfo("Il est censé tourner")
-         begin.secs += temps_ecoule
-         now = rospy.get_rostime()
-         temps_ecoule = 0
-      rospy.loginfo("Fin du virage")
-      self.stop()
-   
-   def autotour(self, cote, time):
-      begin = rospy.get_rostime()
-      now = rospy.get_rostime()
-      temps_ecoule = 0
-      while (now.secs - begin.secs < time):
-         if (self.distance < 20):
-            self.stop()
-            temps_ecoule = rospy.get_time() - now.secs
-            rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
-            continue
-         if (cote == 1):
             self.pub.publish(-40)
-            self.pub2.publish(0)
+            self.pub2.publish(-20)
          
          elif (cote == 0):
-            self.pub.publish(40)
-            self.pub2.publish(0)
+            self.pub.publish(-20)
+            self.pub2.publish(-40)
 
          rospy.loginfo("Il est censé tourner")
          begin.secs += temps_ecoule
@@ -115,11 +90,9 @@ class Robot():
          rospy.loginfo("J'att")
          self.stop()
       
-      self.pub.publish(10)
-      self.pub2.publish(10)
+      #self.pub.publish(10)
+      #self.pub2.publish(10)
       self.straight(4,40)
-      #self.autotour(1,5)
-      #self.autotour(0,5)
       self.straight(10,-40)
       self.virage(0)
       self.straight(1,-40)

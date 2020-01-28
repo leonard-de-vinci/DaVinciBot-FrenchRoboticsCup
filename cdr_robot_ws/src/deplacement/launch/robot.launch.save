@@ -13,9 +13,9 @@
         <param name="port" value="/dev/ttyACM1" />
     </node>
 
- <node name="Go" pkg="deplacement" type="depart" respawn="true" />
-
+ <node name="Go" pkg="deplacement" type="depart" respawn="true" 
  
- <node name="tirrette" pkg="deplacement" type="stattest.py" respawn="true" />
+ 
+ <node name="tirrette" pkg="deplacement" type="test_tire.py" respawn="true" />
     
 </launch>
