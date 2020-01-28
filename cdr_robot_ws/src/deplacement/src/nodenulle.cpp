@@ -22,6 +22,8 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "drapo");
   ros::NodeHandle n;
   ros::Subscriber sub = n.subscribe("PinGo", 1000, chatterCallback);
+  ros::Publisher flag_pub = n.advertise<std_msgs::Int16>("flagGo", 1000);
+
   ros::Rate r(10);
   bool go = begin();
  
@@ -30,6 +32,18 @@ int main(int argc, char **argv)
      ros::spinOnce();
      r.sleep();
   }
+  double begin = ros::Time::now().toSec();
+  double now = ros::Time::now().toSec();
+  std_msgs::Int16 msg_servo;
+  msg_servo.data = 0;
+  while(now - begin < 15)
+  {
+    now = ros::Time::now().toSec();
+    
+    flag_pub.publish(msg_servo);
+  }
+  msg_servo.data = 1;
+  flag_pub.publish(msg_servo);
   ROS_INFO("C'est good");
   return 0;
 }
