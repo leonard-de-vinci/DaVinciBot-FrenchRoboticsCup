@@ -35,7 +35,7 @@ def servo():
     now = rospy.get_time()
     while(now - begin < 95):
         now = rospy.get_time()
-        #rospy.loginfo("J'attends encore")
+        rospy.loginfo("J'attends encore")
    
     servoPIN = 23
     GPIO.setmode(GPIO.BCM)

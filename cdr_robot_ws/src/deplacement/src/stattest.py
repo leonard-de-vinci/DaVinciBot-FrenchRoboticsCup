@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import time
 import rospy
 from std_msgs.msg import Float64
 from std_msgs.msg import Int16
@@ -45,6 +46,7 @@ class Robot():
       begin = rospy.get_time()
       now = rospy.get_time()
       temps_ecoule = 0
+      self.distance = 30
       while (now - begin < time):
          if (self.distance < 20):
             self.stop()
@@ -89,14 +91,14 @@ class Robot():
       while(self.go == 1):
          rospy.loginfo("J'att")
          self.stop()
-      
+      time.sleep(1)
       #self.pub.publish(10)
       #self.pub2.publish(10)
-      self.straight(4,40)
-      self.straight(10,-40)
-      self.virage(0)
-      self.straight(1,-40)
-      self.straight(3,40)
+      #self.straight(4,40)
+      self.straight(3,-100)
+      #self.virage(0)
+      #self.straight(1,-40)
+      #self.straight(3,40)
       rospy.spin()
       
                
