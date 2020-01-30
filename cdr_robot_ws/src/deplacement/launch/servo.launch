@@ -1,0 +1,7 @@
+
+<launch>
+ <node name="Go" pkg="deplacement" type="depart" respawn="true" />
+ <node name="tirrette" pkg="deplacement" type="nodenulle" output="screen" />
+</launch>
+
+
