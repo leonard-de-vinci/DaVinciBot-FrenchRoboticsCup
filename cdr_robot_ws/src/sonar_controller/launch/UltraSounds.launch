@@ -1,0 +1,22 @@
+ <node name="URSS" pkg="rosserial_python" type="serial_node.py" output="screen">
+        <param name="port" value="/dev/ttyUSB0" />
+
+        <param name="US1/triggPin" type="int" value="1" />
+        <param name="US1/echoPin" type="int" value="2" />
+
+        <param name="US2/triggPin" type="int" value="3" />
+        <param name="US2/echoPin" type="int" value="4" />
+
+        <param name="US3/triggPin" type="int" value="5" />
+        <param name="US3/echoPin" type="int" value="6" />
+
+        <param name="US4/triggPin" type="int" value="7" />
+        <param name="US4/echoPin" type="int" value="8" />
+
+        <param name="US5/triggPin" type="int" value="9" />
+        <param name="US5/echoPin" type="int" value="10" />
+
+        <param name="US6/triggPin" type="int" value="11" />
+        <param name="US6/echoPin" type="int" value="12" />
+
+    </node>
