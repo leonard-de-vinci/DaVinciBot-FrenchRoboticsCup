@@ -31,6 +31,8 @@ int main(int argc, char **argv)
      go = begin();
      ros::spinOnce();
      r.sleep();
+  ROS_INFO("j'attends");
+
   }
 
   double begin = ros::Time::now().toSec();
