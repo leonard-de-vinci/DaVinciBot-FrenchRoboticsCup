@@ -1,0 +1,8 @@
+
+ultrasonics:
+  # 0: trig / 1: echo 
+  length: 2
+  pins: [
+    [1, 2],
+    [3, 5]
+  ]

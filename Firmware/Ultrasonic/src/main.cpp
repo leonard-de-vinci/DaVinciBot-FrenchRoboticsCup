@@ -1,64 +1,77 @@
-#include "NewPing.h" //ultrasonic sensor specific library
+#include <NewPing.h>
 #include <ros.h>
+#include <Arduino.h>
 #include <sensor_msgs/Range.h>
-
-//define the pins
-#define trigPin 3
-#define echoPin 2
 
 //define the constants
 #define maxDistance 400
-#define intervalR 200
+#define intervalR 60
 
-NewPing sonar(trigPin, echoPin, maxDistance);
+ros::NodeHandle nh;
+sensor_msgs::Range range_msg;
+ros::Publisher pub_range_ultrasound("/ultrasound", &range_msg);
+unsigned int index = 0, triggPin = 0, echoPin = 0;
+
+int paramLength, duetSize = 2; 
+int *ptr, *array, **pins;
+NewPing *ultrasonics; 
 
 //variables
 float range;
 unsigned long range_timer;
 float duration, distance;
 
-ros::NodeHandle nh;
-
-sensor_msgs::Range range_msg;
-
-ros::Publisher pub_range_ultrasound("/ultrasound", &range_msg);
-
-
-float returnDistance()
-{
-
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-
-
-  duration = pulseIn(echoPin, HIGH);
-
-  // convert the time into a distance
-  return duration/58; //    duration/29/2, return centimeters
-}
- 
 void setup() {
-     //pin mode for the ultrasonic sensor
-   pinMode(trigPin, OUTPUT);
-   pinMode(echoPin, INPUT);
+  nh.initNode();
+  nh.loginfo("setup");
 
-   nh.initNode();
-   nh.advertise(pub_range_ultrasound);
+    while (!nh.connected()) {
+        nh.spinOnce();
+    }
+
+    if ( nh.getParam("/ultrasonics/length", &paramLength) ) {
+
+      nh.loginfo("Ultrasonic setup (1/2 ok)");
+      nh.loginfo(""+paramLength);
+      array = (int *)malloc(2 * paramLength * sizeof(int));
+
+      /*
+      pins = (int **)malloc(sizeof(int *) * length + sizeof(int) * duetSize * length); // malloc Init of 2D ultrasonics pins
+      ptr = (int *)(pins + length); 
+      for(int i = 0; i < length; i++) {
+          pins[i] = (ptr + duetSize * i); 
+      }
+      */
+
+      if ( nh.getParam("ultrasonics/pins", array)) {
+        nh.loginfo("Ultrasonics setup (2/2 ok)");
+        ultrasonics = (NewPing *)malloc(paramLength * sizeof(NewPing));
+        // Init 'ultrasonics' from 'array' data
+      }
+      else {
+        nh.logerror("Can't get 'pins' in 'ultrasonics/' param namespace");
+      }
+    }
+    else {
+      nh.logerror("Can't get 'length' in 'ultrasonics/' param namespace");
+    }
+
+    
+    nh.advertise(pub_range_ultrasound);
 }
 
 void loop() {
-  unsigned long currentMillis = millis();
+  unsigned long currentMicros = micros();
  
-  if (currentMillis-range_timer >= intervalR)
+  if (currentMicros-range_timer >= intervalR)
   {
-    range_timer = currentMillis+intervalR;
-   
-    range_msg.range = returnDistance();
+    range_timer = currentMicros + intervalR;
+    
+    range_msg.range = ultrasonics[index].ping_cm();
     pub_range_ultrasound.publish(&range_msg);
-    }
-   
-   nh.spinOnce();
+  }
+
+  index = index >= sizeof(ultrasonics) ? 0 : index + 1;
+  nh.spinOnce();
 }
+
