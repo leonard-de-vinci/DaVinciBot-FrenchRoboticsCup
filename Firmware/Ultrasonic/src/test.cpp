@@ -22,27 +22,22 @@ unsigned long range_timer;
 
 void setup() {
   nh.initNode();
-    
-  while (!nh.connected()) {
-      nh.spinOnce();
-  }
-
+  nh.advertise(pub_msgs_ultrasound);
   nh.loginfo("Finished setup");
 }
 
 void loop() {
-  nh.loginfo("In the loop");
   currentMicros = micros();
  
-  //if (currentMicros-range_timer >= intervalR)
-  //{
-    //range_timer = currentMicros + intervalR;
+  if (currentMicros-range_timer >= intervalR)
+  {
+    range_timer = currentMicros + intervalR;
     
     TopicMessage.data[0] = ultrasonics[0].ping_cm();
     TopicMessage.data[1] = ultrasonics[1].ping_cm();
 
     pub_msgs_ultrasound.publish(&TopicMessage);
-  //}
+  }
 
   nh.spinOnce();
 }
