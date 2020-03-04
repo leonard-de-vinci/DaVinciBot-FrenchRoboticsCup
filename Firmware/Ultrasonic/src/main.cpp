@@ -1,77 +1,70 @@
-#include <NewPing.h>
 #include <ros.h>
-#include <Arduino.h>
 #include <sensor_msgs/Range.h>
 
-//define the constants
-#define maxDistance 400
-#define intervalR 60
+#define MAXDISTANCE 400         // Max distance allowed to be returned by the sensors
+#define INTERVAL_R 200          // Interval between each measurement
+#define NUMBER 2                // Number of sensors
 
-ros::NodeHandle nh;
+u_int sonarIndex = 0;           // Index of the current sensor measuring
+unsigned long range_timer;      // Time (in millisecond) from which any sensor can start a new measurement
+float duration;                 // Duration of the sensor pulse
+
+int trigs[NUMBER] = {1, 5}; //{1, 5, 7, 16, 20, 22};      // Array of trigger pins for all sensors
+int echos[NUMBER] = {2, 4}; //{2, 4, 8, 17, 19, 23};      // Same for echo pins
+
+ros::NodeHandle nh;                             // Object permitting the comunication with ROS
+
 sensor_msgs::Range range_msg;
+sensor_msgs::Range range_msg2;
+sensor_msgs::Range ranges[NUMBER] = {range_msg, range_msg2};                           // Initializing range messages and getting them in an array
+
 ros::Publisher pub_range_ultrasound("/ultrasound", &range_msg);
-unsigned int index = 0, triggPin = 0, echoPin = 0;
+ros::Publisher pub_range_ultrasound2("/ultrasound2", &range_msg2);
+ros::Publisher publishers[NUMBER] = {pub_range_ultrasound, pub_range_ultrasound2};       // Initializing publishers and getting them in an array
 
-int paramLength, duetSize = 2; 
-int *ptr, *array, **pins;
-NewPing *ultrasonics; 
+float returnDistance(int i) {               // Return the distance between the sensor number <i> and the nearest object 
+  digitalWrite(trigs[i], LOW);              // Next lines triggers a sensor 
+  delayMicroseconds(2);
+  digitalWrite(trigs[i], HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigs[i], LOW);
 
-//variables
-float range;
-unsigned long range_timer;
-float duration, distance;
+  duration = pulseIn(echos[i], HIGH);       // Getting the duration of sensor pulse
 
+  return duration/58;                       // Conversion from time to distance (duration/29/2, return centimeters)
+}
+ 
 void setup() {
-  nh.initNode();
-  nh.loginfo("setup");
 
-    while (!nh.connected()) {
-        nh.spinOnce();
+    for (u_int i = 0; i < NUMBER; i++)          // Setting modes for all the sensor's pins
+    {
+        pinMode(trigs[i], OUTPUT);
+        pinMode(echos[i], INPUT);
     }
 
-    if ( nh.getParam("/ultrasonics/length", &paramLength) ) {
-
-      nh.loginfo("Ultrasonic setup (1/2 ok)");
-      nh.loginfo(""+paramLength);
-      array = (int *)malloc(2 * paramLength * sizeof(int));
-
-      /*
-      pins = (int **)malloc(sizeof(int *) * length + sizeof(int) * duetSize * length); // malloc Init of 2D ultrasonics pins
-      ptr = (int *)(pins + length); 
-      for(int i = 0; i < length; i++) {
-          pins[i] = (ptr + duetSize * i); 
-      }
-      */
-
-      if ( nh.getParam("ultrasonics/pins", array)) {
-        nh.loginfo("Ultrasonics setup (2/2 ok)");
-        ultrasonics = (NewPing *)malloc(paramLength * sizeof(NewPing));
-        // Init 'ultrasonics' from 'array' data
-      }
-      else {
-        nh.logerror("Can't get 'pins' in 'ultrasonics/' param namespace");
-      }
-    }
-    else {
-      nh.logerror("Can't get 'length' in 'ultrasonics/' param namespace");
-    }
-
+    nh.initNode();
     
-    nh.advertise(pub_range_ultrasound);
+    for (u_int i = 0; i < NUMBER; i++)          // Logging state of connexion between the node and the concerned topics
+    {
+        nh.advertise(publishers[i]);
+    }
 }
 
 void loop() {
-  unsigned long currentMicros = micros();
+    unsigned long currentMillis = millis();
  
-  if (currentMicros-range_timer >= intervalR)
-  {
-    range_timer = currentMicros + intervalR;
+    if (currentMillis-range_timer >= INTERVAL_R) {              // (interval from previous measure and now >= minimum interval)
+        range_timer = currentMillis + INTERVAL_R;
+
+        ranges[sonarIndex].range = returnDistance(sonarIndex);
+        publishers[sonarIndex].publish(&ranges[sonarIndex]);          // Publishing sensor's value in the topic with the same number
+
+        ++sonarIndex;                                           // Getting to the next sensor
+    }
     
-    range_msg.range = ultrasonics[index].ping_cm();
-    pub_range_ultrasound.publish(&range_msg);
-  }
+    if (sonarIndex >= NUMBER){                                  // Condition to loop in the pins arrays
+        sonarIndex = 0;
+    }
 
-  index = index >= sizeof(ultrasonics) ? 0 : index + 1;
-  nh.spinOnce();
+    nh.spinOnce();
 }
-
