@@ -1,5 +1,5 @@
 #include <ros.h>
-#include <sensor_msgs/Range.h>
+#include <std_msgs/Int32MultiArray.h>
 
 #define MAXDISTANCE 400         // Max distance allowed to be returned by the sensors
 #define INTERVAL_R 200          // Interval between each measurement
@@ -9,18 +9,14 @@ u_int sonarIndex = 0;           // Index of the current sensor measuring
 unsigned long range_timer;      // Time (in millisecond) from which any sensor can start a new measurement
 float duration;                 // Duration of the sensor pulse
 
-int trigs[NUMBER] = {1, 5}; //{1, 5, 7, 16, 20, 22};      // Array of trigger pins for all sensors
-int echos[NUMBER] = {2, 4}; //{2, 4, 8, 17, 19, 23};      // Same for echo pins
+int trigs[NUMBER] = {1, 7}; //{1, 5, 7, 16, 20, 22};      // Array of trigger pins for all sensors
+int echos[NUMBER] = {2, 8}; //{2, 4, 8, 17, 19, 23};      // Same for echo pins
 
 ros::NodeHandle nh;                             // Object permitting the comunication with ROS
 
-sensor_msgs::Range range_msg;
-sensor_msgs::Range range_msg2;
-sensor_msgs::Range ranges[NUMBER] = {range_msg, range_msg2};                           // Initializing range messages and getting them in an array
+std_msgs::Int32MultiArray sensorsValues;      // Array of the values from all the sensors
 
-ros::Publisher pub_range_ultrasound("/ultrasound", &range_msg);
-ros::Publisher pub_range_ultrasound2("/ultrasound2", &range_msg2);
-ros::Publisher publishers[NUMBER] = {pub_range_ultrasound, pub_range_ultrasound2};       // Initializing publishers and getting them in an array
+ros::Publisher publisher("/ultrasound", &sensorsValues);   //
 
 float returnDistance(int i) {               // Return the distance between the sensor number <i> and the nearest object 
   digitalWrite(trigs[i], LOW);              // Next lines triggers a sensor 
@@ -35,6 +31,8 @@ float returnDistance(int i) {               // Return the distance between the s
 }
  
 void setup() {
+    sensorsValues.data_length = NUMBER;         // Initializing the data array and length
+    sensorsValues.data = new int32_t[NUMBER];
 
     for (u_int i = 0; i < NUMBER; i++)          // Setting modes for all the sensor's pins
     {
@@ -43,26 +41,22 @@ void setup() {
     }
 
     nh.initNode();
-    
-    for (u_int i = 0; i < NUMBER; i++)          // Logging state of connexion between the node and the concerned topics
-    {
-        nh.advertise(publishers[i]);
-    }
+
+    nh.advertise(publisher);    // Initializing publisher 
 }
 
 void loop() {
     unsigned long currentMillis = millis();
  
-    if (currentMillis-range_timer >= INTERVAL_R) {              // (interval from previous measure and now >= minimum interval)
-        range_timer = currentMillis + INTERVAL_R;
+    if (currentMillis-range_timer >= INTERVAL_R) {                              // (interval from previous measure and now >= minimum interval)
+        range_timer = currentMillis + INTERVAL_R;                               // Updating the delay before the next measure
 
-        ranges[sonarIndex].range = returnDistance(sonarIndex);
-        publishers[sonarIndex].publish(&ranges[sonarIndex]);          // Publishing sensor's value in the topic with the same number
-
-        ++sonarIndex;                                           // Getting to the next sensor
+        sensorsValues.data[sonarIndex] = round(returnDistance(sonarIndex));     // Updating the array with a new measure
+        publisher.publish(&sensorsValues);                                      // Publishing the updated array
+        ++sonarIndex;                                                           // Getting to the next sensor
     }
     
-    if (sonarIndex >= NUMBER){                                  // Condition to loop in the pins arrays
+    if (sonarIndex >= NUMBER){                                                  // Condition to loop in the pins arrays without getting out of index
         sonarIndex = 0;
     }
 
