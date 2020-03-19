@@ -17,11 +17,9 @@ class Robot():
       self.tirette = rospy.Subscriber ("/PinGo", Int16, self.tirette_callback)
       self.ultrasons = rospy.Subscriber("/ultrasound", Range, self.ultrasound_cb)
 
-
       self.pub.publish(0)       
       self.pub2.publish(0)
       
-
       self.rate = rospy.Rate(10)
       try:
          self.run()
