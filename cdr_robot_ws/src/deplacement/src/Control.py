@@ -19,6 +19,7 @@ class Robot():
         self.MAX_DISTANCE = 40
         self.isSafe = True
         self.distances = []
+        self.ultrasoundsState = []
         self.tirette = rospy.Subscriber ("/PinGo", Int16, self.tirette_callback)
         self.ultrasons = rospy.Subscriber("/ultrasound", Int32MultiArray, self.ultrasound_cb)
 
@@ -39,15 +40,16 @@ class Robot():
         self.go = msg.data
 
     def ultrasound_cb(self, msg):
-        self.ultrasoundsState = []
         temp = True
-        for i in range(len(msg.data)):
-            if (msg.data[i] < self.MAX_DISTANCE):
+        self.ultrasoundsState = [None] * msg.layout.dim[0].size
+        for i in range(msg.layout.dim[0].size):
+            if (msg.data[i] > self.MAX_DISTANCE):
                 self.ultrasoundsState[i] = True
             else:
                 self.ultrasoundsState[i] = False
                 temp = False
         self.isSafe = temp
+        rospy.loginfo(self.isSafe)
         self.distances = msg.data
 
     def straight(self, speed, duration):
@@ -56,6 +58,9 @@ class Robot():
         now = begin
         temps_ecoule = 0
         while (now - begin < duration):
+            if rospy.is_shutdown():
+                rospy.logwarn("Shutting down the node...")
+                break
             if (not self.isSafe):
                 self.stop()
                 temps_ecoule = rospy.get_time() - now
@@ -75,6 +80,9 @@ class Robot():
         now = begin
         temps_ecoule = 0
         while (now.secs - begin.secs < 5):
+            if rospy.is_shutdown():
+                rospy.logwarn("Shutting down the node...")
+                break
             if (not self.isSafe):
                 self.stop()
                 temps_ecoule = rospy.get_time() - now.secs
@@ -100,12 +108,15 @@ class Robot():
         now = begin
         temps_ecoule = 0
         while (now.secs - begin.secs < duration):
+            if rospy.is_shutdown():
+                rospy.logwarn("Shutting down the node...")
+                break
             if (not self.isSafe):
                 self.stop()
                 temps_ecoule = rospy.get_time() - now.secs
                 rospy.loginfo("Current waiting duration : %i",temps_ecoule)
                 continue
-
+            
             if (rotation == 1):                         # counter clockwise
                 self.leftSpeed.publish(-speed)
                 self.rightSpeed.publish(0)
