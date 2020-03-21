@@ -58,6 +58,19 @@ To launch the ros node pid quickly:
      $ source devel/setup.bash
      $ roslaunch deplacement base.launch
 ```
+
+To launch the unit test node :
+
+Terminal 1 (The node):
+```bash
+     $ cd DaVinciBot-FrenchRoboticsCup-2020/
+     $ source cdr_robot_ws/devel/setup.bash
+     $ rosrun deplacement Control.py
+```
+Terminal 2 (GUI):
+```bash
+     $ rosrun rqt_reconfiure rqt_reconfigure
+```
     
 # More about the project :
 ### **[Video of the cup 2019](https://www.youtube.com/watch?v=CekWTSOTMr8)**
