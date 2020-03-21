@@ -157,7 +157,6 @@ if __name__ == '__main__':
         while True:
             if (srv.config.launch):
                 robot.run(srv.config.action)
-                #srv.config.launch = False
                 srv.update_configuration({"launch":False})
             robot.rate.sleep()
             if rospy.is_shutdown():
