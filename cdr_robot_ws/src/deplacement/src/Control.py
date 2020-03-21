@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-from std_msgs.msg import Float64
 from std_msgs.msg import Int16
 from std_msgs.msg import Int32MultiArray
 
@@ -35,7 +34,6 @@ class Robot():
         self.rightSpeed.publish(0)
         rospy.loginfo("stopping wheels")
 
-
     def tirette_callback(self, msg):
         self.go = msg.data
 
@@ -49,7 +47,6 @@ class Robot():
                 self.ultrasoundsState[i] = False
                 temp = False
         self.isSafe = temp
-        rospy.loginfo(self.isSafe)
         self.distances = msg.data
 
     def straight(self, speed, duration):
@@ -71,6 +68,7 @@ class Robot():
             begin += temps_ecoule
             now = rospy.get_time()
             temps_ecoule = 0
+            self.rate.sleep()
         rospy.loginfo('End of straight line')
         self.stop()
 
@@ -99,11 +97,12 @@ class Robot():
             begin.secs += temps_ecoule
             now = rospy.get_rostime()
             temps_ecoule = 0
+            self.rate.sleep()
         rospy.loginfo("End of turn")
         self.stop()
     
     def spin(self, speed, duration, rotation):
-        rospy.loginfo('Starting to turn {0}clockwise for {1} seconds'.format("counter " if rotation==1 else "", duration))
+        rospy.loginfo('Starting to spin {0}clockwise for {1} seconds'.format("counter " if rotation==1 else "", duration))
         begin = rospy.get_rostime()
         now = begin
         temps_ecoule = 0
@@ -127,6 +126,7 @@ class Robot():
             begin.secs += temps_ecoule
             now = rospy.get_rostime()
             temps_ecoule = 0
+            self.rate.sleep()
         rospy.loginfo("End of spin")
         self.stop()
 
@@ -134,6 +134,10 @@ class Robot():
         while(self.go == 1):
             rospy.loginfo("Waiting...")
             self.stop()
+            if rospy.is_shutdown():
+                rospy.logwarn("Shutting down the node...")
+                quit()
+            self.rate.sleep()
         
         if (action == 'straight'):
             self.straight(srv.config.direction * srv.config.speed, srv.config.duration)
@@ -141,8 +145,6 @@ class Robot():
             self.turn(srv.config.direction * srv.config.speed, srv.config.duration, srv.config.rotation)
         elif (action =='spin'):
             self.spin(srv.config.direction * srv.config.speed, srv.config.duration, srv.config.rotation)
-
-        rospy.spin()
 
 def srvCallback(config, level):
     return config
@@ -154,8 +156,9 @@ if __name__ == '__main__':
         robot.MAX_DISTANCE = srv.config.max_distance
         while True:
             if (srv.config.launch):
-                srv.config.launch = False
                 robot.run(srv.config.action)
+                #srv.config.launch = False
+                srv.update_configuration({"launch":False})
             robot.rate.sleep()
             if rospy.is_shutdown():
                 rospy.logwarn("Shutting down the node...")
