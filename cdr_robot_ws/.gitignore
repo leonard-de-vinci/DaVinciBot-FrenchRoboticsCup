@@ -1,3 +1,7 @@
 /build
 /devel
+/logs
+/.catkin_tools
 .vscode/
+/src/deplacement/src/deplacement
+/src/deplacement/docs
