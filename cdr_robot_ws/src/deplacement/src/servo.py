@@ -45,7 +45,7 @@ def servo():
     time.sleep(1)
 
 #Go at 90°
-    p.ChangeDutyCycle(angle_to_percent(90))
+    p.ChangeDutyCycle(angle_to_percent(45))
     time.sleep(1)
    # p.ChangeDutyCycle(angle_to_percent(0))
    # time.sleep(1)
