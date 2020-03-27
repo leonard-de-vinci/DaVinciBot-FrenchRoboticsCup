@@ -1,8 +1,0 @@
-<launch>
-    <node name="URSS" pkg="rosserial_python" type="serial_node.py" output="screen">
-        <param name="port" value="/dev/ttyUSB0" />
-
-        <!-- <rosparam command="load" file="$(find rosparam)/example.yaml" /> -->
-
-    </node>
-</launch>
