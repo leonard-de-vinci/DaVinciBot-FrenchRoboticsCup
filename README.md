@@ -42,6 +42,10 @@ CAD            |  Real Word Robot
 - Raspberry Pi 4
 - Sensor TOF (future implementation in this repository)
 
+# Architectural view 
+More details are in the ros packages.
+![](https://github.com/leonard-de-vinci/DaVinciBot-FrenchRoboticsCup-2020/blob/master/cdr_robot_ws/stucture.png)
+
 # Installation Guide (Work in progress) 
 
 First you need Ubuntu 16.04 (Ubuntu Mate 16.04 on the Raspberry Pi 3) with Ros Kinetic : [ROS kinetic](http://wiki.ros.org/kinetic)
@@ -71,7 +75,7 @@ Terminal 2 (GUI):
 ```bash
      $ rosrun rqt_reconfiure rqt_reconfigure
 ```
-    
+
 # More about the project :
 ### **[Video of the cup 2019](https://www.youtube.com/watch?v=CekWTSOTMr8)**
 ### **[Association](http://davincibot.org/) (Project team of this competition 12 Members)**
