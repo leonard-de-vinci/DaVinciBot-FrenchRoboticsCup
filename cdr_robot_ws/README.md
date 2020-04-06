@@ -3,9 +3,8 @@
 ---
 
 You could see the CDR Robot   
-![](https://github.com/leonard-de-vinci/DaVinciBot-CDR_ATOM_FACTORY_2019/blob/FlorianQui/Divers/Rapports/ROS_CDR_Node_Graph.png)
+![](structure.png))
 
-See the [picture](https://github.com/leonard-de-vinci/DaVinciBot-CDR_ATOM_FACTORY_2019/blob/FlorianQui/Divers/Rapports/ROS_CDR_Node_Graph.png)
 
 ---
 
