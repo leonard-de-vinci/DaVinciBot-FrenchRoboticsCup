@@ -3,7 +3,7 @@
 ---
 
 You could see the CDR Robot   
-![](structure.png))
+![](https://github.com/leonard-de-vinci/DaVinciBot-FrenchRoboticsCup-2020/blob/master/cdr_robot_ws/stucture.png)
 
 
 ---
