@@ -8,14 +8,14 @@
 #include <std_msgs/Float64.h>
 
 
-int EnA = 5;
-int In1 = 6; 
-int In2 = 7; 
+int EnA = 3;
+int In1 = 4; 
+int In2 = 5; 
 
 int count = 0;
 double sens = 1;
 
-Encoder knobLeft(12, 13);
+Encoder knobLeft(6, 7);
 double kp = 13, ki = 0 , kd = 0;            
 
 ros::NodeHandle nh;
@@ -99,7 +99,7 @@ void loop()
   
   nh.spinOnce();
   delay(1);
-  asservissement(50, false);
+  asservissement(setpoint2, false);
   count++;
   if (count == 10){
     

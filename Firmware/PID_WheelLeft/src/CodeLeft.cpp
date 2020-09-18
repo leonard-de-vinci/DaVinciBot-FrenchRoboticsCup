@@ -1,3 +1,4 @@
+/*
 /*+------------/*
  * Code arduino pour codeurs incrémentaux magnétique ou optique.
  * 
@@ -19,7 +20,7 @@
 */
 
 /************* SETUP ******************/
-
+/*
 #define EnA 2
 #define In1 3
 #define In2 4
@@ -28,7 +29,7 @@
 #define TOPIC_MOTOR_LEFT_NAME "/robot/base/wheel/left/control_effort"
 
 
-/**************************************/
+
 
 #include <ros.h>
 #include <std_msgs/Float64.h>
@@ -48,7 +49,7 @@ std_msgs::Float64 encoder_pos;
 void encoder_reset(const std_msgs::Int16& toggle_msg) {
   pos=0;
 }
-*/
+
 void messageCb( const std_msgs::Float64& msg){
   value_PID_Rasp = msg.data;
   if (value_PID_Rasp <= 0){
@@ -68,6 +69,7 @@ ros::Publisher pub_encoder(TOPIC_ENCODER_NAME, &encoder_pos);
 /*
 ros::Subscriber <std_msgs::Int16>  sub_encoder(TOPIC_ENCODER_RESET_NAME, &encoder_reset);
 */
+/*
 ros::Subscriber <std_msgs::Float64> sub_tension(TOPIC_MOTOR_LEFT_NAME, &messageCb);
 
 
@@ -93,3 +95,4 @@ void loop(){
   pub_encoder.publish( &value_encodeur);
   delay(10);
 }
+*/

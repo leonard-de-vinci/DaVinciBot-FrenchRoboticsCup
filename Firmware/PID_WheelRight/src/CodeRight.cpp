@@ -16,10 +16,10 @@
  *    - GREEN : SIGNAL A en PIN 2 pour gauche, PIN 3 pour droit
  *    
  * 
-*/
+
 
 /************* SETUP ******************/
-
+/*
 #define EnA 2
 #define In1 3
 #define In2 4
@@ -29,7 +29,7 @@
 
 
 /**************************************/
-
+/*
 #include <ros.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int16.h>
@@ -44,11 +44,11 @@ double value_PID_Rasp;
 
 Encoder knobLeft(5, 6);
 std_msgs::Float64 encoder_pos;
-/*
+
 void encoder_reset(const std_msgs::Int16& toggle_msg) {
   pos=0;
 }
-*/
+
 void messageCb( const std_msgs::Float64& msg){
   value_PID_Rasp = msg.data;
   if (value_PID_Rasp <= 0){
@@ -65,9 +65,9 @@ void messageCb( const std_msgs::Float64& msg){
 }
 
 ros::Publisher pub_encoder(TOPIC_ENCODER_NAME, &encoder_pos);
-/*
+
 ros::Subscriber <std_msgs::Int16>  sub_encoder(TOPIC_ENCODER_RESET_NAME, &encoder_reset);
-*/
+
 ros::Subscriber <std_msgs::Float64> sub_tension(TOPIC_MOTOR_RIGHT_NAME, &messageCb);
 
 
@@ -93,3 +93,4 @@ void loop(){
   pub_encoder.publish( &value_encodeur);
   delay(10);
 }
+*/
