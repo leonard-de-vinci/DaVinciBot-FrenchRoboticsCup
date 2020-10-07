@@ -11,8 +11,8 @@ class Robot():
    def __init__(self):
       rospy.init_node("test")
       rospy.loginfo("Press CTRL + C to terminate")
-      self.pub = rospy.Publisher('/speedLeft', Int16, queue_size=1)
-      self.pub2 = rospy.Publisher('/speedRight', Int16, queue_size=1)
+      self.speedLeft = rospy.Publisher('/speedLeft', Int16, queue_size=1)
+      self.speedRight = rospy.Publisher('/speedRight', Int16, queue_size=1)
 
       self.go = 1
       self.distance = 30
@@ -22,8 +22,8 @@ class Robot():
       self.ultrasons = rospy.Subscriber("/ultrasound",Int32MultiArray , self.ultrasound_cb)
 
    
-      self.pub.publish(0)       
-      self.pub2.publish(0)
+      self.speedLeft.publish(0)       
+      self.speedRight.publish(0)
 
       self.rate = rospy.Rate(10)
       try:
@@ -34,9 +34,9 @@ class Robot():
          rospy.loginfo("Action finie")
 
    def stop (self):
-      tg = 0
-      self.pub.publish(tg)
-      self.pub2.publish(tg)
+      stop = 0
+      self.speedLeft.publish(stop)
+      self.speedRight.publish(stop)
       
    def tirette_callback(self, msg):
 	   self.go = msg.data
@@ -61,8 +61,8 @@ class Robot():
             temps_ecoule = rospy.get_time() - now
             rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
             continue
-         self.pub.publish(speed)
-         self.pub2.publish(-speed)
+         self.speedLeft.publish(speed)
+         self.speedRight.publish(speed)
          begin += temps_ecoule
          now = rospy.get_time()
          temps_ecoule = 0
@@ -81,12 +81,12 @@ class Robot():
             rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
             continue
          if (cote == 1):
-            self.pub.publish(-speed)
-            self.pub2.publish(-speed/2)
+            self.speedLeft.publish(-speed)
+            self.speedRight.publish(-speed/2)
          
          elif (cote == 0):
-            self.pub.publish(-speed/2)
-            self.pub2.publish(-speed)
+            self.speedLeft.publish(-speed/2)
+            self.speedRight.publish(-speed)
 
          rospy.loginfo("Il est censé tourner")
          begin.secs += temps_ecoule
@@ -106,12 +106,12 @@ class Robot():
             rospy.loginfo("Le temps d'attente est de %i",temps_ecoule)
             continue
          if (cote == 1):
-            self.pub.publish(-40)
-            self.pub2.publish(0)
+            self.speedLeft.publish(-40)
+            self.speedRight.publish(0)
          
          elif (cote == 0):
-            self.pub.publish(40)
-            self.pub2.publish(0)
+            self.speedLeft.publish(40)
+            self.speedRight.publish(0)
 
          rospy.loginfo("Il est censé tourner")
          begin.secs += temps_ecoule
@@ -124,17 +124,10 @@ class Robot():
       while(self.go == 1):
          rospy.loginfo("J'att")
          self.stop()      
-      #self.pub.publish(10)
-      #self.pub2.publish(10)
-      self.straight(5,-50)
-      #self.autotour(1,5)
-      #self.autotour(0,5)
-      #self.straight(10,-40)
-      #self.virage(0)
-      #self.straight(1,-40)
-      #self.straight(3,40)
+      self.straight(5, 50)
       self.stop()
-      rospy.spin()
+      self.stop()
+      #rospy.spin()
      
 if __name__ == '__main__':
     try:

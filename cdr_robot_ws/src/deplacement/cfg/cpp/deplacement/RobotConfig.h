@@ -69,7 +69,7 @@ namespace deplacement
         field(a_f)
       {}
 
-      T (RobotConfig::* field);
+      T RobotConfig::* field;
 
       virtual void clamp(RobotConfig &config, const RobotConfig &max, const RobotConfig &min) const
       {
@@ -216,7 +216,7 @@ namespace deplacement
         }
       }
 
-      T (PT::* field);
+      T PT::* field;
       std::vector<RobotConfig::AbstractGroupDescriptionConstPtr> groups;
     };
 
