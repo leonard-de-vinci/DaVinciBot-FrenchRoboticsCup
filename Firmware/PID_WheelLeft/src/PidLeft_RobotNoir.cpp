@@ -8,14 +8,14 @@
 #include <std_msgs/Float64.h>
 
 
-int EnA = 3;
-int In1 = 4; 
-int In2 = 5; 
+int EnA = 2;
+int In1 = 3; 
+int In2 = 4; 
 
 int count = 0;
 double sens = 1;
 
-Encoder knobLeft(6, 7);
+Encoder knobLeft(6, 5);
 double kp = 13, ki = 0 , kd = 0;            
 
 ros::NodeHandle nh;
@@ -85,7 +85,7 @@ void asservissement(double cible, bool arret)
    if (output2 >= 0 && setpoint2!=0) {
       analogWrite(EnA, output2);
     }
-    else if (setpoint2==0) {
+   else if (setpoint2==0) {
       analogWrite(EnA,0);
     }
     enco_left.data= input2;

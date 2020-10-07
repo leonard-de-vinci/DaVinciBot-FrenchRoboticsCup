@@ -6,14 +6,14 @@
 #include <std_msgs/Float64.h>
 //l'Encodeur droit c'est celui qui fonctionne 
 
-int EnA = 3;
-int In1 = 4;
-int In2 = 5;
+int EnA = 2;
+int In1 = 3;
+int In2 = 4;
 
 int count = 0;
 double sens = -1;
 
-Encoder knobLeft(6, 7);
+Encoder knobLeft(5, 6);
 double kp = 13 , ki = 0 , kd = 0;            
 
 ros::NodeHandle nh;
