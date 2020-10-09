@@ -15,6 +15,7 @@ if __name__ == '__main__':
     # Set up the drawing window
     clock = pg.time.Clock()
     screen = pg.display.set_mode([200, 200])
+    pg.display.set_caption('emergency button')
     # Run until the user asks to quit
     running = True
     while running:
