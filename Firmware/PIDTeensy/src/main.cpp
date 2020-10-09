@@ -5,7 +5,7 @@
 void setup(void)
 {
   //ROS
-  nh.initNode(teensyname); //initialisation du Node ROS
+  nh.initNode(); //initialisation du Node ROS
   nh.advertise(pub_reality); //advertise le topic de publication
   nh.subscribe(sub_target); //on s'abonne à là où on va écouter
   nh.subscribe(sub_emergency_break); //abonnement arrêt d'urgence
@@ -73,8 +73,8 @@ void encoderInterrupt(){
 
 void motorbreak(){
   //! must be tested
-  digitalWriteFast(pin_dir1, HIGH);
-  digitalWriteFast(pin_dir2, HIGH);
+  digitalWriteFast(pin_dir1, LOW);
+  digitalWriteFast(pin_dir2, LOW);
 }
 void emergency_break_callback(const std_msgs::Bool &msg)
 {

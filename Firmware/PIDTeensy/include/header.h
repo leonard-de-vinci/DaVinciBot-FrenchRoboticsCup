@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <ros.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/String.h>
 #include <PID/IntArr.h>
 #include "config.h"
 
@@ -11,7 +12,7 @@ const int period = 100000; //10 Hz ; 1 000 000 microseconds = 1 second
 //ros comm
 volatile int target_ticks=0;//target number of ticks per cycle
 volatile int target_cycles=0;//number of cycles to run
-volatile bool emergency_break=false;//boolean for emergeancy break
+volatile bool emergency_break=true;//boolean for emergeancy break
 
 //PID - variables
 volatile int tick = 0; //encoder ticks

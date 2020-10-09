@@ -1,7 +1,7 @@
 // topic names
 #define TOPIC_TARGET "/right/target"
 #define TOPIC_REALITY "/right/reality"
-#define teensyname "rightTeensy"
+#define teensyname "RightTeensy"
 //pins
 #define pin_encoder 8// pin for the encoder interrupt
 #define pin_dir1 10//pin for H bridge pwm
