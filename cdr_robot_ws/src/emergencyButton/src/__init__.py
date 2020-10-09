@@ -6,7 +6,7 @@ from std_msgs.msg import Bool
 
 
 if __name__ == '__main__':
-    emergencypub = rospy.Publisher("/emergency_break/",Bool,queue_size=1)
+    emergencypub = rospy.Publisher("/breakServo",Bool,queue_size=1)
     rospy.init_node("emergency_button", anonymous=False)
     rospy.loginfo("> emergency publisher correctly initialised")
     STATUS = True
