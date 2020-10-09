@@ -17,6 +17,7 @@ void setup(void)
   pinMode(pin_pwr,OUTPUT);
   pinMode(pin_dir1,OUTPUT);
   pinMode(pin_dir2,OUTPUT);
+  pinMode(LED_BUILTIN,OUTPUT);
   pinMode(pin_encoder,INPUT);
   //encoder initialisation
   attachInterrupt(digitalPinToInterrupt(pin_encoder),encoderInterrupt,RISING); //! slow must be changed to attachInterruptVector
@@ -32,6 +33,7 @@ void setup(void)
 
 void loop(void) ///main loop
 {
+  nh.spinOnce();
   if(target_cycles != old_cycles){
     // create new message
     reality_pub.ticks = reality_ticks;
@@ -40,7 +42,7 @@ void loop(void) ///main loop
     pub_reality.publish(&reality_pub);
     old_cycles = target_cycles;
   }
-  nh.spinOnce();
+  digitalWriteFast(LED_BUILTIN,emergency_break);
 }
 
 void Cycle()///called by the timer
