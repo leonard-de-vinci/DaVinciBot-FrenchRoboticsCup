@@ -3,6 +3,7 @@ import rospy
 import time
 from PID.msg import IntArr
 import matplotlib.pyplot as plt
+plt.ion()
 
 def reality_callback(msg):
     global ylist,xlist,ytarget,xneg
@@ -23,7 +24,7 @@ def display():
     plt.ylabel('ticks')
     plt.xlabel('cycles')
     plt.draw()
-    plt.pause(0.01)
+    plt.pause(0.001)
 
 def main():
     running = True
@@ -41,13 +42,12 @@ def main():
     display()
     try:
         while running:
-            time.sleep(0.5)
             display()
+            time.sleep(0.05)
     except KeyboardInterrupt:
         rospy.loginfo("we out boys")
         
 
 
 if __name__ == '__main__':
-    plt.ion()
     main()
