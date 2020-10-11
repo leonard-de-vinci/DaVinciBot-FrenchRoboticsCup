@@ -5,6 +5,8 @@ from std_msgs.msg import Bool
 from PID.msg import IntArr
 import numpy as np #pylint ignore
 import time
+import signal
+import sys
 
 def target_callback(msg):
     global dtarget,dcycles
@@ -47,6 +49,11 @@ def main():
         dcycles-=1
         noise = np.random.randint(-50,50)
         dval = (8*dval+2*dtarget+noise)/10
+
+def signal_handler(signal, frame):
+  sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 if __name__ == "__main__":
     setup()
