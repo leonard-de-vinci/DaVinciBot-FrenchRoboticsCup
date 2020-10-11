@@ -33,22 +33,20 @@ def setup():
     rospy.loginfo("> succesfully initialised")
     while running:
         if(not breakstate):
-            main()
-            msg = IntArr()
-            msg.ticks = dval
-            msg.cycles = dcycles
-            realitypub.publish(msg)
-            rospy.loginfo("ticks: "+str(msg.ticks)+ " ||  cycles: "+str(msg.cycles))
+            if dcycles>0:
+                dcycles-=1
+                noise = np.random.randint(-50,50)
+                dval = (8*dval+2*dtarget+noise)/10
+                msg = IntArr()
+                msg.ticks = dval
+                msg.cycles = dcycles
+                realitypub.publish(msg)
+                rospy.loginfo("ticks: "+str(msg.ticks)+ " ||  cycles: "+str(msg.cycles))
+            else:
+                rospy.loginfo("cycles empty")
         else:
             rospy.loginfo("____breaking____")
         time.sleep(0.1)
-
-def main():
-    global dtarget,dval,dcycles
-    if dcycles>0:
-        dcycles-=1
-        noise = np.random.randint(-50,50)
-        dval = (8*dval+2*dtarget+noise)/10
 
 def signal_handler(signal, frame):
   sys.exit(0)
