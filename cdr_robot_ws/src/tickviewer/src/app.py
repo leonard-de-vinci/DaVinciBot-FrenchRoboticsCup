@@ -3,12 +3,14 @@ import rospy
 import time
 from PID.msg import IntArr
 import matplotlib.pyplot as plt
+import numpy
 plt.ion()
 
 def reality_callback(msg):
     global ylist,xlist,ytarget,xneg
     ylist.append(msg.ticks)
     xlist.append(xneg-msg.cycles)
+    #rospy.loginfo("___new values___")
 
 def target_callback(msg):
     global ytarget,ylist,xlist,xneg
@@ -18,18 +20,20 @@ def target_callback(msg):
     xneg = msg.cycles
 
 def display():
-    global ytarget,ylist,xlist
-    plt.cla()
-    plt.plot(xlist,ylist)
-    plt.ylabel('ticks')
-    plt.xlabel('cycles')
+    global ytarget,ylist,xlist,theaxis
+    theaxis.clear()
+    theaxis.plot(xlist,ylist,ylabel="ticks",xlabel="cycles")
+    theaxis.legend()
     plt.draw()
     plt.pause(0.001)
 
 def main():
     running = True
 
-    global ylist,xlist,ytarget,xneg
+    global ylist,xlist,ytarget,xneg,theaxis
+    fig = plt.figure()
+    cfg = fig.add_gridspec(1,1)
+    theaxis = fig.add_subplot(cfg[0, 0])
     xlist=[]
     ylist=[]
     xneg=100
