@@ -8,6 +8,8 @@ import signal
 import sys
 
 historic_data = ""
+left_manche_state = False
+right_manche_state = False
 
 
 class controllerFrame(wx.Frame):
@@ -23,11 +25,12 @@ class controllerFrame(wx.Frame):
         self.target_send = wx.Button(self, wx.ID_ANY, "SEND")
         self.target_send.Bind(wx.EVT_BUTTON, self.OnSendClicked)
         self.scroll_panel = wx.ScrolledWindow(self, wx.ID_ANY, style=wx.TAB_TRAVERSAL)
-        self.button_1 = wx.ToggleButton(self, wx.ID_ANY, u"EMERGENCY BREAK")
+        self.button_1 = wx.ToggleButton(self, wx.ID_ANY, u"EMERGENCY BREAK [désactivé]")
         self.button_1.Bind(wx.EVT_TOGGLEBUTTON, self.onBreak)
         self.choice_manche_cote = wx.Choice(self, wx.ID_ANY, choices=["Gauche", "Droit"])
         self.choice_manche_cote.Bind(wx.EVT_CHOICE, self.onMancheChoice)
         self.checkbox_manche = wx.CheckBox(self, wx.ID_ANY, "Actif")
+        self.checkbox_manche.Bind(wx.EVT_CHECKBOX, self.OnMancheChecked)
 
         self.__set_properties()
         self.__do_layout()
@@ -37,14 +40,16 @@ class controllerFrame(wx.Frame):
         # begin wxGlade: controllerFrame.__set_properties
         self.SetTitle("The ultimate controller")
         _icon = wx.NullIcon
-        _icon.CopyFromBitmap(wx.Bitmap("/home/dvb/Downloads/controller.png", wx.BITMAP_TYPE_ANY))
+        _icon.CopyFromBitmap(wx.Bitmap("./icon.png", wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
         self.choice_pid_cote.SetSelection(1)
-        global pid_cote
+        global pid_cote, manche_cote
         pid_cote = 1
         self.scroll_panel.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
         self.scroll_panel.SetScrollRate(10, 10)
         self.choice_manche_cote.SetSelection(0)
+        manche_cote = True
+        self.button_1.SetBackgroundColour((255, 255, 255, 255)) 
         
         # end wxGlade
 
@@ -146,11 +151,30 @@ class controllerFrame(wx.Frame):
             righttargetpub.publish(msg)
         e.Skip()
 
+    def OnMancheChecked(self, e):
+        cb = e.GetEventObject()
+        manchestatepub.publish(cb.IsChecked())
+        global left_manche_state, right_manche_state
+        if manche_cote:
+            left_manche_state = cb.IsChecked()
+        else:
+            right_manche_state = cb.IsChecked()
+
+
+
     def onBreak(self, e):
         cb = e.GetEventObject()
         rospy.loginfo(str(cb.GetValue()))
         global emergencypub
         emergencypub.publish(cb.GetValue())
+        if cb.GetValue():
+            self.button_1.SetLabel("EMERGENCY BREAK [activé]")
+            self.button_1.SetBackgroundColour('red')
+            self.button_1.SetForegroundColour('white')
+        else:
+            self.button_1.SetLabel("EMERGENCY BREAK [désactivé]")
+            self.button_1.SetBackgroundColour('')
+            self.button_1.SetForegroundColour('')
     
     def onPidChoice(self, e):
         cb = e.GetEventObject()
@@ -164,7 +188,14 @@ class controllerFrame(wx.Frame):
 
     def onMancheChoice(self, e):
         cb = e.GetEventObject()
-        
+        global manche_cote
+        manche_cote = (cb.GetSelection() == 0)
+        manchecotepub.publish(manche_cote)
+        if manche_cote:
+            self.checkbox_manche.SetValue(left_manche_state)
+        else:
+            self.checkbox_manche.SetValue(right_manche_state)
+
 
     def right_reality_callback(self, msg):
         if pid_cote == 1:
@@ -190,12 +221,14 @@ class MyApp(wx.App):
     def OnInit(self):
         self.frame = controllerFrame(None, wx.ID_ANY, "")
         self.SetTopWindow(self.frame)
-        global emergencypub, righttargetpub, rightrealitysub, lefttargetpub, leftrealitysub
+        global emergencypub, righttargetpub, rightrealitysub, lefttargetpub, leftrealitysub, manchecotepub, manchestatepub
         emergencypub = rospy.Publisher("/breakServo",Bool,queue_size=1)
         righttargetpub = rospy.Publisher("/right/target",IntArr,queue_size=1)
         rightrealitysub = rospy.Subscriber("/right/reality", IntArr, self.frame.right_reality_callback)
         lefttargetpub = rospy.Publisher("/left/target",IntArr,queue_size=1)
         leftrealitysub = rospy.Subscriber("/left/reality", IntArr, self.frame.left_reality_callback)
+        manchecotepub = rospy.Publisher("/cote", Bool, queue_size=1)
+        manchestatepub = rospy.Publisher("/actif", Bool, queue_size=1)
         rospy.init_node("ultimatecontroller", anonymous=False)
         rospy.loginfo("> ultimate controller correctly initialised")
         self.frame.Show()
