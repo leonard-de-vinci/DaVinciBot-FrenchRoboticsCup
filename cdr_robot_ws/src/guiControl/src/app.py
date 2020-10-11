@@ -4,8 +4,10 @@ import wx
 import rospy
 from std_msgs.msg import Bool
 from PID.msg import IntArr
+import signal
+import sys
 
-historic_data = "historique"
+historic_data = ""
 
 
 class controllerFrame(wx.Frame):
@@ -15,7 +17,7 @@ class controllerFrame(wx.Frame):
         wx.Frame.__init__(self, *args, **kwds)
         self.SetSize((454, 400))
         self.choice_pid_cote = wx.Choice(self, wx.ID_ANY, choices=["Gauche", "Droit"])
-        self.choice_pid_cote.Bind(wx.EVT_CHOICE, self.OnPidChoice)
+        self.choice_pid_cote.Bind(wx.EVT_CHOICE, self.onPidChoice)
         self.ctrl_target_ticks = wx.SpinCtrl(self, wx.ID_ANY, "0", min=0, max=10000)
         self.ctrl_target_cycles = wx.SpinCtrl(self, wx.ID_ANY, "0", min=0, max=10000)
         self.target_send = wx.Button(self, wx.ID_ANY, "SEND")
@@ -24,7 +26,7 @@ class controllerFrame(wx.Frame):
         self.button_1 = wx.ToggleButton(self, wx.ID_ANY, u"EMERGENCY BREAK")
         self.button_1.Bind(wx.EVT_TOGGLEBUTTON, self.onBreak)
         self.choice_manche_cote = wx.Choice(self, wx.ID_ANY, choices=["Gauche", "Droit"])
-        self.choice_manche_cote.Bind(wx.EVT_CHOICE, self.OnMancheChoice)
+        self.choice_manche_cote.Bind(wx.EVT_CHOICE, self.onMancheChoice)
         self.checkbox_manche = wx.CheckBox(self, wx.ID_ANY, "Actif")
 
         self.__set_properties()
@@ -37,7 +39,7 @@ class controllerFrame(wx.Frame):
         _icon = wx.NullIcon
         _icon.CopyFromBitmap(wx.Bitmap("/home/dvb/Downloads/controller.png", wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
-        self.choice_pid_cote.SetSelection(0)
+        self.choice_pid_cote.SetSelection(1)
         global pid_cote
         pid_cote = 1
         self.scroll_panel.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_BTNSHADOW))
@@ -94,18 +96,18 @@ class controllerFrame(wx.Frame):
         label_reality_ticks = wx.StaticText(self, wx.ID_ANY, "Ticks : ")
         sizer_8.Add(label_reality_ticks, 0, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
         sizer_8.Add((8, 0), 0, 0, 0)
-        label_reality_ticks_data = wx.StaticText(self, wx.ID_ANY, "0")
-        label_reality_ticks_data.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
-        sizer_8.Add(label_reality_ticks_data, 1, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
+        self.label_reality_ticks_data = wx.StaticText(self, wx.ID_ANY, "0")
+        self.label_reality_ticks_data.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
+        sizer_8.Add(self.label_reality_ticks_data, 1, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
         sizer_7.Add(sizer_8, 0, wx.EXPAND, 0)
         label_reality_cycles = wx.StaticText(self, wx.ID_ANY, "Cycles : ")
         sizer_9.Add(label_reality_cycles, 0, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
-        label_reality_ticks_data_copy = wx.StaticText(self, wx.ID_ANY, "0")
-        label_reality_ticks_data_copy.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
-        sizer_9.Add(label_reality_ticks_data_copy, 1, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
+        self.label_reality_cycles_data = wx.StaticText(self, wx.ID_ANY, "0")
+        self.label_reality_cycles_data.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, 0, ""))
+        sizer_9.Add(self.label_reality_cycles_data, 1, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
         sizer_7.Add(sizer_9, 0, wx.EXPAND, 0)
-        label_historic = wx.StaticText(self.scroll_panel, wx.ID_ANY, "label_1\ne\ner\ner\ne\ner\n")
-        sizer_10.Add(label_historic, 1, wx.ALL | wx.EXPAND, 8)
+        self.label_historic = wx.StaticText(self.scroll_panel, wx.ID_ANY, repeat_to_length("\n",1000))
+        sizer_10.Add(self.label_historic, 1, wx.ALL | wx.EXPAND, 8)
         self.scroll_panel.SetSizer(sizer_10)
         sizer_7.Add(self.scroll_panel, 1, wx.EXPAND, 0)
         sizer_3.Add(sizer_7, 1, wx.EXPAND, 0)
@@ -149,14 +151,38 @@ class controllerFrame(wx.Frame):
         rospy.loginfo(str(cb.GetValue()))
         global emergencypub
         emergencypub.publish(cb.GetValue())
+    
+    def onPidChoice(self, e):
+        cb = e.GetEventObject()
+        global pid_cote
+        pid_cote = cb.GetSelection()
+        wx.CallAfter(self.label_reality_ticks_data.SetLabel, "0")
+        wx.CallAfter(self.label_reality_cycles_data.SetLabel, "0")
+        historic_data = repeat_to_length("\n",1000)
+        wx.CallAfter(self.label_historic.SetLabel, historic_data)
+        e.Skip()
 
-    def reality_callback(self, msg):
-        rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
-        global historic_data
-        historic_data += 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'
-        wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
-        wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
-        wx.CallAfter(self.label_historic.SetLabel, str(msg.cycles))
+    def onMancheChoice(self, e):
+        cb = e.GetEventObject()
+        
+
+    def right_reality_callback(self, msg):
+        if pid_cote == 1:
+            rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
+            global historic_data
+            historic_data = 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'+historic_data
+            wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
+            wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
+            wx.CallAfter(self.label_historic.SetLabel, historic_data)
+
+    def left_reality_callback(self, msg):
+        if pid_cote == 0:
+            rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
+            global historic_data
+            historic_data = 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'+historic_data
+            wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
+            wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
+            wx.CallAfter(self.label_historic.SetLabel, historic_data)
 
 # end of class controllerFrame
 
@@ -167,15 +193,23 @@ class MyApp(wx.App):
         global emergencypub, righttargetpub, rightrealitysub, lefttargetpub, leftrealitysub
         emergencypub = rospy.Publisher("/breakServo",Bool,queue_size=1)
         righttargetpub = rospy.Publisher("/right/target",IntArr,queue_size=1)
-        rightrealitysub = rospy.Subscriber("/right/reality", IntArr, self.frame.reality_callback)
+        rightrealitysub = rospy.Subscriber("/right/reality", IntArr, self.frame.right_reality_callback)
         lefttargetpub = rospy.Publisher("/left/target",IntArr,queue_size=1)
-        leftrealitysub = rospy.Subscriber("/left/reality", IntArr, self.frame.reality_callback)
+        leftrealitysub = rospy.Subscriber("/left/reality", IntArr, self.frame.left_reality_callback)
         rospy.init_node("ultimatecontroller", anonymous=False)
         rospy.loginfo("> ultimate controller correctly initialised")
         self.frame.Show()
         return True
 
 # end of class MyApp
+
+def repeat_to_length(string_to_expand, length):
+   return (string_to_expand * ((length/len(string_to_expand))+1))[:length]
+
+def signal_handler(signal, frame):
+  sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 if __name__ == "__main__":
     

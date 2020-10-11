@@ -37,8 +37,8 @@ def setup():
             msg = IntArr()
             msg.ticks = dval
             msg.cycles = dcycles
-            realitypub.publish()
-            rospy.loginfo("ticks: "+str(dval)+ " ||  cycles: "+str(dcycles))
+            realitypub.publish(msg)
+            rospy.loginfo("ticks: "+str(msg.ticks)+ " ||  cycles: "+str(msg.cycles))
         else:
             rospy.loginfo("____breaking____")
         time.sleep(0.1)
