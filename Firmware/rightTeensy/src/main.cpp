@@ -4,6 +4,8 @@
 
 void setup(void)
 {
+  pinMode(5, OUTPUT);
+  digitalWriteFast(5, HIGH);
   //ROS
   nh.initNode(); //initialisation du Node ROS
   nh.advertise(pub_reality); //advertise le topic de publication
