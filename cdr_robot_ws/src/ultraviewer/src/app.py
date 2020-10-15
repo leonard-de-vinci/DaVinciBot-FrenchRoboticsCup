@@ -11,12 +11,14 @@ plt.ion()
 def ultrasound_callback(msg):
     global xlist,theaxis
     xlist[msg.cycles]=msg.ticks
-    rospy.loginfo(">> received !!")
+    #rospy.loginfo(">> received !!")
 
 def display():
     global xlist,theaxis
     theaxis.clear()
+    plt.ylim(0, 2200)
     theaxis.bar(range(5),xlist)
+    
     plt.draw()
     plt.pause(0.001)
 
@@ -32,7 +34,7 @@ def main():
     display()
     while running:
         display()
-        time.sleep(0.05)
+        #time.sleep(0.05)
         
 def signal_handler(signal, frame):
   sys.exit(0)

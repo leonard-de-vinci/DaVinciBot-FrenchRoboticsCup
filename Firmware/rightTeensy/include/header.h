@@ -19,8 +19,8 @@ volatile int tick = 0; //encoder ticks
 int e;//error
 int olde=0;//old error
 int E=0;//integrated error or cumulated error
-int de;//derived error or error variation
-
+int de;//derived erro:r or error variation
+int pid_constants[3];//for paramserver
 long PID_;//result of pid calc before mapping to pins
 int mapped;//mapped version of pid
 const int maxpid=4000;//max value of pid for mapping
