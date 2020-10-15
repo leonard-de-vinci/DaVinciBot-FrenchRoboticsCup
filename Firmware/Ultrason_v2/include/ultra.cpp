@@ -18,8 +18,8 @@ int Sensor::getDistance()
     digitalWrite(trigger, HIGH);
     delayMicroseconds(10);
     digitalWrite(trigger, LOW);
-    long duration = pulseIn(echo, HIGH, 4*342000); //changer le 4*oiehcoueh
-    int distance = duration / 5.8;
+    long duration = pulseIn(echo, HIGH, 343000/4); //devrait correspondre a 2m
+    int distance = duration / 5.8;//ca faut verifier je suis pas sur
     return distance;
 }
 

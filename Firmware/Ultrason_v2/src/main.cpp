@@ -2,16 +2,16 @@
 #include <stdint.h>
 #include "config.h"
 #include "header.h"
-
 void setup() {
-
-  Serial.begin(9600);
-  Serial.println("init...");
+  nh.initNode();
+  nh.advertise(publisher);
+  // Serial.begin(9600);
+  // Serial.println("init...");
   for(uint i=0; i < sensorsList.size(); i++){
     Sensor sensor = sensorsList[i];
     sensor.init();
   }
-  Serial.println("initialized");
+  // Serial.println("initialized");
 }
 
 void loop() {
@@ -19,15 +19,19 @@ void loop() {
     Sensor sensor = sensorsList[i];
     int dist = sensor.getDistance();
     if(dist != 0){
-      Serial.print(" id : ");
-    Serial.print(i);
-    Serial.print(" | dist : ");
-    Serial.println(dist);
+    //   Serial.print(" id : ");
+    // Serial.print(i);
+    // Serial.print(" | dist : ");
+    // Serial.println(dist);
+    sensorData.ticks = dist;
+    sensorData.cycles = i;
+    publisher.publish(&sensorData);
     }
-    delay(100);
+    nh.spinOnce();
+    //delay(100); not required
 
   }
-  delay(1000);
+  //delay(1000); we want reactivity
 }
 
 // int triggerPin = 14;

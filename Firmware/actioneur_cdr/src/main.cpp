@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include <Arduino.h>QinHeng USB2.0-Serial
 #include <Servo.h>
 #include "ros.h"
 #include <std_msgs/Bool.h>
@@ -6,7 +6,7 @@
 Servo servo_Actionneur_1;
 Servo servo_Actionneur_2;
 
-int pin_Servo_1 = 3;
+int pin_Servo_1 = 9;
 int pin_servo_2 = 11;
 
 int angle_range = 0;
