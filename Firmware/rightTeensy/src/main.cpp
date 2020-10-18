@@ -10,14 +10,15 @@ void setup(void)
   nh.initNode();
   //initialisation du Node ROS
   nh.advertise(pub_reality);         //advertise le topic de publication
-  nh.subscribe(sub_target);          //on s'abonne à là où on va écouter
+  nh.subscribe(sub_target);
+  nh.subscribe(sub_empty);          //on s'abonne à là où on va écouter
   nh.subscribe(sub_emergency_break); //abonnement arrêt d'urgence
   while (!nh.connected())
   {
     nh.spinOnce();
   }
   
-  if (!nh.getParam("rpid", pid_constants, 3))
+  if (!nh.getParam(PARAM_PID, pid_constants, 3))
   {
     nh.loginfo("error");
     //default values
@@ -104,6 +105,24 @@ void motorbreak()
   //! must be tested
   digitalWriteFast(pin_dir1, LOW);
   digitalWriteFast(pin_dir2, LOW);
+  
+}
+void updatepid_callback(const std_msgs::Empty &msg){
+  if (!nh.getParam("rpid", pid_constants, 3))
+  {
+    nh.loginfo("error");
+    //default values
+    pid_constants[0] = 0;
+    pid_constants[1] = 0;
+    pid_constants[2] = 0;
+  }
+  nh.spinOnce();
+  kp = pid_constants[0];
+  ki = pid_constants[1];
+  kd = pid_constants[2];
+  char cstr[16];
+  itoa(pid_constants[0], cstr, 10);
+  nh.loginfo(cstr);
 }
 void emergency_break_callback(const std_msgs::Bool &msg)
 {

@@ -3,6 +3,7 @@
 #define TOPIC_TARGET "/right/target"
 #define TOPIC_REALITY "/right/reality"
 #define PARAM_PID "rpid"
+#define TOPIC_UPDATEPID "/npid"
 //pins
 #define pin_encoder 6// pin for the encoder interrupt
 #define pin_dir1 4//pin for H bridge pwm

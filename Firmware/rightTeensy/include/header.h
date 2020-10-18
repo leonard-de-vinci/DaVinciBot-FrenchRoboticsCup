@@ -2,17 +2,18 @@
 #include <ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Empty.h>
 #include <PID/IntArr.h>
 #include "config.h"
 
 //CYCLE
 void Cycle();
-const int period = 100000; //10 Hz ; 1 000 000 microseconds = 1 second
+const int period = 50000; //20 Hz ; 1 000 000 microseconds = 1 second
 
 //ros comm
 volatile int target_ticks=0;//target number of ticks per cycle
 volatile int target_cycles=0;//number of cycles to run
-volatile bool emergency_break=true;//boolean for emergeancy break
+volatile bool emergency_break=false;//boolean for emergeancy break
 
 //PID - variables
 volatile int tick = 0; //encoder ticks
@@ -55,6 +56,9 @@ int desired_cycles = 0;
 PID::IntArr target;
 void target_callback(const PID::IntArr &msg);
 ros::Subscriber<PID::IntArr> sub_target(TOPIC_TARGET, &target_callback);
+//update pid
+void updatepid_callback(const std_msgs::Empty &msg);
+ros::Subscriber<std_msgs::Empty> sub_empty(TOPIC_UPDATEPID, &updatepid_callback);
 
 
 // speed reality
