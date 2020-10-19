@@ -31,7 +31,8 @@ PID::IntArr reality_pub;
 //Communication
 const int bauderate = 38400;
 volatile int reality_ticks = 0;
-int old_cycles = 0;
+//int old_cycles = 0;
+volatile bool mainlooppub = false;
 
 //encoder
 void encoderInterrupt();//isr for encoder

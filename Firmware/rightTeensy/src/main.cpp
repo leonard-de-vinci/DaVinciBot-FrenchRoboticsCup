@@ -4,8 +4,6 @@
 
 void setup(void)
 {
-  pinMode(5, OUTPUT);
-  digitalWriteFast(5, HIGH);
   //ROS
   nh.initNode();
   //initialisation du Node ROS
@@ -27,9 +25,16 @@ void setup(void)
     pid_constants[2] = 0;
   }
   nh.loginfo("initialised");
-  char cstr[16];
-  itoa(pid_constants[0], cstr, 10);
-  nh.loginfo(cstr);
+  char pstr[16];
+  char istr[16];
+  char dstr[16];
+  itoa(pid_constants[0],pstr, 10);
+  itoa(pid_constants[1],istr, 10);
+  itoa(pid_constants[2],dstr, 10);
+  nh.loginfo("kpid:");
+  nh.loginfo(pstr);
+  nh.loginfo(istr);
+  nh.loginfo(dstr);
   nh.spinOnce();
   kp = pid_constants[0];
   ki = pid_constants[1];
@@ -39,8 +44,11 @@ void setup(void)
   Timer1.attachInterrupt(Cycle); //attachInterrupt
   //pin init
   pinMode(pin_pwr, OUTPUT);
+  digitalWriteFast(pin_pwr,LOW);
   pinMode(pin_dir1, OUTPUT);
+  digitalWriteFast(pin_dir1,LOW);
   pinMode(pin_dir2, OUTPUT);
+  digitalWriteFast(pin_dir2,LOW);
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(pin_encoder, INPUT);
   //encoder initialisation
@@ -58,14 +66,14 @@ void setup(void)
 void loop(void) ///main loop
 {
   nh.spinOnce();
-  if (target_cycles != old_cycles)
+  if (mainlooppub)
   {
     // create new message
     reality_pub.ticks = reality_ticks; //reality_ticks;
     reality_pub.cycles = target_cycles;
     //publish new message
     pub_reality.publish(&reality_pub);
-    old_cycles = target_cycles;
+    mainlooppub = false;
   }
   digitalWriteFast(LED_BUILTIN, emergency_break);
 }
@@ -73,11 +81,10 @@ void loop(void) ///main loop
 void Cycle() ///called by the timer
 {
   cli(); //éteint les interrupts
-  if (emergency_break)
+  if (emergency_break || target_ticks<=0)
   {
     motorbreak();
-  }
-  else if (target_cycles > 0)
+  } else 
   {
     //calculate error and pid
     e = target_ticks - tick;
@@ -92,6 +99,7 @@ void Cycle() ///called by the timer
     tick = 0;
     target_cycles--;
   }
+  mainlooppub = true;
   sei(); //relance les interrupts
 }
 
@@ -120,9 +128,16 @@ void updatepid_callback(const std_msgs::Empty &msg){
   kp = pid_constants[0];
   ki = pid_constants[1];
   kd = pid_constants[2];
-  char cstr[16];
-  itoa(pid_constants[0], cstr, 10);
-  nh.loginfo(cstr);
+  char pstr[16];
+  char istr[16];
+  char dstr[16];
+  itoa(pid_constants[0],pstr, 10);
+  itoa(pid_constants[1],istr, 10);
+  itoa(pid_constants[2],dstr, 10);
+  nh.loginfo("kpid:");
+  nh.loginfo(pstr);
+  nh.loginfo(istr);
+  nh.loginfo(dstr);
 }
 void emergency_break_callback(const std_msgs::Bool &msg)
 {
@@ -141,7 +156,7 @@ void target_callback(const PID::IntArr &msg)
 {
   target_ticks = msg.ticks;
   target_cycles = msg.cycles;
-  dir = target_ticks > 0;
+  dir = (target_ticks > 0);
   target_ticks = abs(target_ticks);
   digitalWriteFast(pin_dir1, dir);
   digitalWriteFast(pin_dir2, !dir);
