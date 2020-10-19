@@ -29,7 +29,7 @@ def setup():
     realitypub = rospy.Publisher("/right/reality",IntArr)
     targetsub = rospy.Subscriber("/right/target",IntArr,target_callback)
     breaksub = rospy.Subscriber("/breakServo",Bool,break_callback)
-    rospy.init_node("dummy_teensy",anonymous=False)
+    rospy.init_node("dummy_rightteensy",anonymous=False)
     rospy.loginfo("> succesfully initialised")
     while running:
         if(not breakstate):
