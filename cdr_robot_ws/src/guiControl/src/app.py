@@ -10,6 +10,8 @@ import sys
 historic_data = ""
 left_manche_state = False
 right_manche_state = False
+nr = 0
+nl = 0
 
 
 class controllerFrame(wx.Frame):
@@ -216,20 +218,35 @@ class controllerFrame(wx.Frame):
     def right_reality_callback(self, msg):
         if pid_cote == 1:
             #rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
-            global historic_data
+            global historic_data, nr
+            nlines = historic_data.count('\n')
+            if nlines == 300 :
+                historic_data = remove_last_line_from_string(historic_data)
             historic_data = 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'+historic_data
-            wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
-            wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
-            wx.CallAfter(self.label_historic.SetLabel, historic_data)
+            if nr == 5:
+                wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
+                wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
+                wx.CallAfter(self.label_historic.SetLabel, historic_data)
+                nr = 0
+            else:
+                nr += 1
+            
 
     def left_reality_callback(self, msg):
         if pid_cote == 0:
             #rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
-            global historic_data
+            global historic_data, nl
+            nlines = historic_data.count('\n')
+            if nlines == 300 :
+                historic_data = remove_last_line_from_string(historic_data)
             historic_data = 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'+historic_data
-            wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
-            wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
-            wx.CallAfter(self.label_historic.SetLabel, historic_data)
+            if nl == 5:
+                wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
+                wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
+                wx.CallAfter(self.label_historic.SetLabel, historic_data)
+                nl = 0
+            else:
+                nl += 1
 
 # end of class controllerFrame
 
@@ -260,6 +277,9 @@ def repeat_to_length(string_to_expand, length):
 
 def signal_handler(signal, frame):
   sys.exit(0)
+
+def remove_last_line_from_string(s):
+    return s[:s.rfind('\n')]
 
 signal.signal(signal.SIGINT, signal_handler)
 

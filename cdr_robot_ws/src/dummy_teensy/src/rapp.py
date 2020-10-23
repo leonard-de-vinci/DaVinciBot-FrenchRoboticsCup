@@ -46,7 +46,7 @@ def setup():
                 rospy.loginfo("cycles empty")
         else:
             rospy.loginfo("____breaking____")
-        time.sleep(0.1)
+        time.sleep(0.01)
 
 def signal_handler(signal, frame):
   sys.exit(0)
