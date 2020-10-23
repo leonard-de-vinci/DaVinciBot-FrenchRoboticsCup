@@ -199,7 +199,7 @@ class controllerFrame(wx.Frame):
 
     def right_reality_callback(self, msg):
         if pid_cote == 1:
-            rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
+            #rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
             global historic_data
             historic_data = 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'+historic_data
             wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
@@ -208,7 +208,7 @@ class controllerFrame(wx.Frame):
 
     def left_reality_callback(self, msg):
         if pid_cote == 0:
-            rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
+            #rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
             global historic_data
             historic_data = 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'+historic_data
             wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
