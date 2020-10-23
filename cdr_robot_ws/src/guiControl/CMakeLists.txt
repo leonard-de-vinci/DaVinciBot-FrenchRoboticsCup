@@ -146,6 +146,7 @@ include_directories(
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
+#   icon.png
 # )
 
 #############
@@ -187,6 +188,7 @@ include_directories(
 # install(FILES
 #   # myfile1
 #   # myfile2
+#   icon.png
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 

@@ -39,9 +39,6 @@ class controllerFrame(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: controllerFrame.__set_properties
         self.SetTitle("The ultimate controller")
-        _icon = wx.NullIcon
-        _icon.CopyFromBitmap(wx.Bitmap("./icon.png", wx.BITMAP_TYPE_ANY))
-        self.SetIcon(_icon)
         self.choice_pid_cote.SetSelection(1)
         global pid_cote, manche_cote
         pid_cote = 1
@@ -137,18 +134,35 @@ class controllerFrame(wx.Frame):
         # end wxGlade
 
     def OnSendClicked(self, e):
-        ticks = self.ctrl_target_ticks.GetValue() 
-        cycles = self.ctrl_target_cycles.GetValue()
+        try:
+            ticks = self.ctrl_target_ticks.GetValue() 
+            cycles = self.ctrl_target_cycles.GetValue()
+        except ValueError:
+            print("OnSendClicked => can't get ticks/cycles value from inputs")
+            print(ValueError)
         
-        msg = IntArr()
-        msg.ticks = int(ticks)
-        msg.cycles = int(cycles) 
+        try:
+            msg = IntArr()
+            msg.ticks = int(ticks)
+            msg.cycles = int(cycles) 
+        except ValueError:
+            print("OnSendClicked => can't create ros msg")
+            print(ValueError)
         if pid_cote == 0:
-            rospy.loginfo('gauche | ticks : '+str(ticks)+" | cycles : "+str(cycles))
-            lefttargetpub.publish(msg)
+            try:
+                rospy.loginfo('gauche | ticks : '+str(ticks)+" | cycles : "+str(cycles))
+                lefttargetpub.publish(msg)
+            except ValueError:
+                print("OnSendClicked => can't publish msg")
+                print(ValueError)
         else:
-            rospy.loginfo('droit | ticks : '+str(ticks)+" | cycles : "+str(cycles))
-            righttargetpub.publish(msg)
+            try:
+                rospy.loginfo('droit | ticks : '+str(ticks)+" | cycles : "+str(cycles))
+                righttargetpub.publish(msg)
+            except ValueError:
+                print("OnSendClicked => can't publish msg")
+                print(ValueError)
+
         e.Skip()
 
     def OnMancheChecked(self, e):
@@ -156,8 +170,10 @@ class controllerFrame(wx.Frame):
         manchestatepub.publish(cb.IsChecked())
         global left_manche_state, right_manche_state
         if manche_cote:
+            #wx.CallAfter(left_manche_state = cb.IsChecked())
             left_manche_state = cb.IsChecked()
         else:
+            #wx.CallAfter(right_manche_state = cb.IsChecked())
             right_manche_state = cb.IsChecked()
 
 
@@ -168,13 +184,13 @@ class controllerFrame(wx.Frame):
         global emergencypub
         emergencypub.publish(cb.GetValue())
         if cb.GetValue():
-            self.button_1.SetLabel("EMERGENCY BREAK [activé]")
-            self.button_1.SetBackgroundColour('red')
-            self.button_1.SetForegroundColour('white')
+            wx.CallAfter(self.button_1.SetLabel, "EMERGENCY BREAK [activé]")
+            wx.CallAfter(self.button_1.SetBackgroundColour, 'red')
+            wx.CallAfter(self.button_1.SetForegroundColour, 'white')
         else:
-            self.button_1.SetLabel("EMERGENCY BREAK [désactivé]")
-            self.button_1.SetBackgroundColour('')
-            self.button_1.SetForegroundColour('')
+            wx.CallAfter(self.button_1.SetLabel, "EMERGENCY BREAK [désactivé]")
+            wx.CallAfter(self.button_1.SetBackgroundColour, '')
+            wx.CallAfter(self.button_1.SetForegroundColour, '')
     
     def onPidChoice(self, e):
         cb = e.GetEventObject()
@@ -192,9 +208,9 @@ class controllerFrame(wx.Frame):
         manche_cote = (cb.GetSelection() == 0)
         manchecotepub.publish(manche_cote)
         if manche_cote:
-            self.checkbox_manche.SetValue(left_manche_state)
+            wx.CallAfter(self.checkbox_manche.SetValue, left_manche_state)
         else:
-            self.checkbox_manche.SetValue(right_manche_state)
+            wx.CallAfter(self.checkbox_manche.SetValue, right_manche_state)
 
 
     def right_reality_callback(self, msg):
@@ -222,15 +238,18 @@ class MyApp(wx.App):
         self.frame = controllerFrame(None, wx.ID_ANY, "")
         self.SetTopWindow(self.frame)
         global emergencypub, righttargetpub, rightrealitysub, lefttargetpub, leftrealitysub, manchecotepub, manchestatepub
-        emergencypub = rospy.Publisher("/breakServo",Bool,queue_size=1)
-        righttargetpub = rospy.Publisher("/right/target",IntArr,queue_size=1)
-        rightrealitysub = rospy.Subscriber("/right/reality", IntArr, self.frame.right_reality_callback)
-        lefttargetpub = rospy.Publisher("/left/target",IntArr,queue_size=1)
-        leftrealitysub = rospy.Subscriber("/left/reality", IntArr, self.frame.left_reality_callback)
-        manchecotepub = rospy.Publisher("/cote", Bool, queue_size=1)
-        manchestatepub = rospy.Publisher("/actif", Bool, queue_size=1)
-        rospy.init_node("ultimatecontroller", anonymous=False)
-        rospy.loginfo("> ultimate controller correctly initialised")
+        try:
+            emergencypub = rospy.Publisher("/breakServo",Bool,queue_size=1)
+            righttargetpub = rospy.Publisher("/right/target",IntArr,queue_size=1)
+            rightrealitysub = rospy.Subscriber("/right/reality", IntArr, self.frame.right_reality_callback)
+            lefttargetpub = rospy.Publisher("/left/target",IntArr,queue_size=1)
+            leftrealitysub = rospy.Subscriber("/left/reality", IntArr, self.frame.left_reality_callback)
+            manchecotepub = rospy.Publisher("/cote", Bool, queue_size=1)
+            manchestatepub = rospy.Publisher("/actif", Bool, queue_size=1)
+            rospy.init_node("ultimatecontroller", anonymous=False)
+            rospy.loginfo("> ultimate controller correctly initialised")
+        except ValueError:
+            print(ValueError)
         self.frame.Show()
         return True
 
