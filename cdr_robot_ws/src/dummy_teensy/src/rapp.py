@@ -22,8 +22,8 @@ def setup():
     global dtarget,dval,dcycles,breakstate
     running = True
     dval =0
-    dtarget=100
-    dcycles=1000
+    dtarget=40
+    dcycles=10000
     breakstate = False
     global realitypub,targetsub,breaksub
     realitypub = rospy.Publisher("/right/reality",IntArr)
