@@ -22,7 +22,7 @@ def setup():
     global dtarget,dval,dcycles,breakstate
     running = True
     dval =0
-    dtarget=40
+    dtarget=5
     dcycles=10000
     breakstate = False
     global realitypub,targetsub,breaksub
@@ -35,7 +35,7 @@ def setup():
         if(not breakstate):
             if dcycles>0:
                 dcycles-=1
-                noise = np.random.randint(-50,50)
+                noise = np.random.randint(-2,2)
                 dval = (8*dval+2*dtarget+noise)/10
                 msg = IntArr()
                 msg.ticks = dval

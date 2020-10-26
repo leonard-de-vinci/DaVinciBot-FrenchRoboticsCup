@@ -27,7 +27,7 @@ def updatepos(rightmsg,leftmsg):
     Ydot = np.sin(theta)*V
     X+=Xdot
     Y+=Ydot
-    rospy.loginfo("| "+str(Xdot)+" "+str(Ydot)+" "+str(thetadot)+" |")
+    rospy.loginfo("| "+str(X)+" "+str(Y)+" "+str(theta)+" |")
     pload = Coordinates()
     pload.x=X
     pload.y=Y
@@ -45,8 +45,8 @@ def ttomm(ticks):
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     global X,Y,theta
-    X =0.0#mm
-    Y =0.0#mm
+    X =200.0#mm
+    Y =200.0#mm
     theta =0.0 #? rad not sure 
     global wheelDiameter,entraxe,Nticks,wheelRadius
     Nticks = 1024.00#ticks
