@@ -54,11 +54,10 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  TrajectoryGen.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -204,3 +203,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+catkin_install_python(PROGRAMS scripts/gen_trajectory.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
