@@ -15,7 +15,7 @@ def reality_callback(msg):
     if msg.cycles>0:
         if(it<len(thelist)):
             thelist[it]+=msg.ticks
-            thelist[it]/=2
+            thelist[it]*=(generation[0]/(generation[0]+1))
             it+=1
     #rospy.loginfo("___new values___")
 
@@ -38,9 +38,10 @@ def display():
 def main():
     running = True
 
-    global ylist,xlist,ytarget,xneg,theaxis,thelist,it
+    global ylist,xlist,ytarget,xneg,theaxis,thelist,it,generation
     it=0
-    thelist=np.loadtxt("respons.csv",delimiter=',').tolist()
+    thelist=np.loadtxt("respons.csv",delimiter=",").tolist()
+    generation = np.loadtxt("gen.csv",delimiter=",").tolist()
     theaxis = plt.axes()
     xlist=[]
     ylist=[]
@@ -57,7 +58,10 @@ def main():
         time.sleep(0.05)
         if(it>99):
             tmp = np.array(thelist)
+            generation[0]+=1
+            tmp2 = np.array(generation)
             np.savetxt("respons.csv", tmp, delimiter=",")
+            np.savetxt("gen.csv", tmp2, delimiter=",")
             rospy.loginfo("done")
             sys.exit(0)
         

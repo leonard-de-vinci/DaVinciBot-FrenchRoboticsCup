@@ -15,30 +15,7 @@ void setup(void)
   {
     nh.spinOnce();
   }
-  
-  if (!nh.getParam(PARAM_PID, pid_constants, 3))
-  {
-    nh.loginfo("error");
-    //default values
-    pid_constants[0] = 0;
-    pid_constants[1] = 0;
-    pid_constants[2] = 0;
-  }
   nh.loginfo("initialised");
-  char pstr[16];
-  char istr[16];
-  char dstr[16];
-  itoa(pid_constants[0],pstr, 10);
-  itoa(pid_constants[1],istr, 10);
-  itoa(pid_constants[2],dstr, 10);
-  nh.loginfo("kpid:");
-  nh.loginfo(pstr);
-  nh.loginfo(istr);
-  nh.loginfo(dstr);
-  nh.spinOnce();
-  kp = pid_constants[0];
-  ki = pid_constants[1];
-  kd = pid_constants[2];
   //TIMER initialization
   Timer1.initialize(period);     //initialisation du timer
   Timer1.attachInterrupt(Cycle); //attachInterrupt
@@ -59,7 +36,7 @@ void setup(void)
   config = portConfigRegister(pin_encoder);
   */
   //setting up pwm precision
-  analogWriteFrequency(pin_pwr, F_CPU / 1E6); //setting up ideal frequency pedending on cpu frequency
+  analogWriteFrequency(pin_pwr, 1000); //setting up ideal frequency pedending on cpu frequency
   analogWriteResolution(10);                  // 0 - 255
 }
 

@@ -12,6 +12,9 @@ def reality_callback(msg):
     global ylist,xlist,ytarget,xneg
     ylist.append(msg.ticks)
     xlist.append(xneg-msg.cycles)
+    if(len(ylist)>1000):
+        ylist.pop(0)
+        xlist.pop(0)
     #rospy.loginfo("___new values___")
 
 def target_callback(msg):
@@ -26,7 +29,10 @@ def display():
     global ytarget,ylist,xlist,theaxis
     theaxis.clear()
     theaxis.axhline(ytarget,linestyle='--')
-    theaxis.plot(xlist,ylist)
+    if(len(xlist)==len(ylist)):
+        theaxis.plot(xlist,ylist)
+    else:
+        print("length matching ERROR")
     plt.draw()
     plt.pause(0.001)
 
