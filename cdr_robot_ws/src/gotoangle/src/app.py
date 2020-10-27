@@ -3,6 +3,7 @@ import rospy
 import time
 from PID.msg import IntArr
 from bot_coordinates.msg import Coordinates
+from PID.msg import FloatArr
 import matplotlib.pyplot as plt
 import signal
 import sys
@@ -10,6 +11,11 @@ import numpy as np
 
 def signal_handler(signal, frame):
   sys.exit(0)
+
+def control_callback(msg):
+    global V , targetAngle
+    targetAngle = msg.theta
+    V = msg.v
 
 def coordcallback(msg):
     global rightpub, leftpub , V , K, targetAngle, buffer
@@ -39,6 +45,7 @@ if __name__ == '__main__':
     global rightpub , leftpub , coordsub , buffer
     buffer = 0
     rospy.init_node("tickviewer", anonymous=False)
+    instructionsub = rospy.Subscriber("/control",FloatArr,control_callback)
     coordsub = rospy.Subscriber("/coords",Coordinates,coordcallback) 
     rightpub = rospy.Publisher("/N1/target",IntArr,queue_size=1)
     leftpub = rospy.Publisher("/N2/target",IntArr,queue_size=1)
