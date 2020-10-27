@@ -8,8 +8,8 @@ import signal
 import sys
 
 historic_data = ""
-left_manche_state = False
-right_manche_state = False
+N1_manche_state = False
+N2_manche_state = False
 nr = 0
 nl = 0
 
@@ -20,7 +20,7 @@ class controllerFrame(wx.Frame):
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
         self.SetSize((454, 400))
-        self.choice_pid_cote = wx.Choice(self, wx.ID_ANY, choices=["Gauche", "Droit"])
+        self.choice_pid_cote = wx.Choice(self, wx.ID_ANY, choices=["N1", "N2"])
         self.choice_pid_cote.Bind(wx.EVT_CHOICE, self.onPidChoice)
         self.ctrl_target_ticks = wx.SpinCtrl(self, wx.ID_ANY, "0", min=-9999999, max=9999999)
         self.ctrl_target_cycles = wx.SpinCtrl(self, wx.ID_ANY, "0", min=-9999999, max=9999999)
@@ -153,14 +153,14 @@ class controllerFrame(wx.Frame):
         if pid_cote == 0:
             try:
                 rospy.loginfo('gauche | ticks : '+str(ticks)+" | cycles : "+str(cycles))
-                lefttargetpub.publish(msg)
+                N1targetpub.publish(msg)
             except ValueError:
                 print("OnSendClicked => can't publish msg")
                 print(ValueError)
         else:
             try:
                 rospy.loginfo('droit | ticks : '+str(ticks)+" | cycles : "+str(cycles))
-                righttargetpub.publish(msg)
+                N2targetpub.publish(msg)
             except ValueError:
                 print("OnSendClicked => can't publish msg")
                 print(ValueError)
@@ -170,13 +170,13 @@ class controllerFrame(wx.Frame):
     def OnMancheChecked(self, e):
         cb = e.GetEventObject()
         manchestatepub.publish(cb.IsChecked())
-        global left_manche_state, right_manche_state
+        global N1_manche_state, N2_manche_state
         if manche_cote:
-            #wx.CallAfter(left_manche_state = cb.IsChecked())
-            left_manche_state = cb.IsChecked()
+            #wx.CallAfter(N1_manche_state = cb.IsChecked())
+            N1_manche_state = cb.IsChecked()
         else:
-            #wx.CallAfter(right_manche_state = cb.IsChecked())
-            right_manche_state = cb.IsChecked()
+            #wx.CallAfter(N2_manche_state = cb.IsChecked())
+            N2_manche_state = cb.IsChecked()
 
 
 
@@ -210,12 +210,12 @@ class controllerFrame(wx.Frame):
         manche_cote = (cb.GetSelection() == 0)
         manchecotepub.publish(manche_cote)
         if manche_cote:
-            wx.CallAfter(self.checkbox_manche.SetValue, left_manche_state)
+            wx.CallAfter(self.checkbox_manche.SetValue, N1_manche_state)
         else:
-            wx.CallAfter(self.checkbox_manche.SetValue, right_manche_state)
+            wx.CallAfter(self.checkbox_manche.SetValue, N2_manche_state)
 
 
-    def right_reality_callback(self, msg):
+    def N2_reality_callback(self, msg):
         if pid_cote == 1:
             #rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
             global historic_data, nr
@@ -232,7 +232,7 @@ class controllerFrame(wx.Frame):
                 nr += 1
             
 
-    def left_reality_callback(self, msg):
+    def N1_reality_callback(self, msg):
         if pid_cote == 0:
             #rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
             global historic_data, nl
@@ -254,13 +254,13 @@ class MyApp(wx.App):
     def OnInit(self):
         self.frame = controllerFrame(None, wx.ID_ANY, "")
         self.SetTopWindow(self.frame)
-        global emergencypub, righttargetpub, rightrealitysub, lefttargetpub, leftrealitysub, manchecotepub, manchestatepub
+        global emergencypub, N2targetpub, N2realitysub, N1targetpub, N1realitysub, manchecotepub, manchestatepub
         try:
             emergencypub = rospy.Publisher("/breakServo",Bool,queue_size=1)
-            righttargetpub = rospy.Publisher("/right/target",IntArr,queue_size=1)
-            rightrealitysub = rospy.Subscriber("/right/reality", IntArr, self.frame.right_reality_callback)
-            lefttargetpub = rospy.Publisher("/left/target",IntArr,queue_size=1)
-            leftrealitysub = rospy.Subscriber("/left/reality", IntArr, self.frame.left_reality_callback)
+            N2targetpub = rospy.Publisher("/N2/target",IntArr,queue_size=1)
+            N2realitysub = rospy.Subscriber("/N2/reality", IntArr, self.frame.N2_reality_callback)
+            N1targetpub = rospy.Publisher("/N1/target",IntArr,queue_size=1)
+            N1realitysub = rospy.Subscriber("/N1/reality", IntArr, self.frame.N1_reality_callback)
             manchecotepub = rospy.Publisher("/cote", Bool, queue_size=1)
             manchestatepub = rospy.Publisher("/actif", Bool, queue_size=1)
             rospy.init_node("ultimatecontroller", anonymous=False)

@@ -36,8 +36,8 @@ def setup():
     dcycles=10000
     breakstate = False
     global realitypub,targetsub,breaksub
-    realitypub = rospy.Publisher("/right/reality",IntArr)
-    targetsub = rospy.Subscriber("/right/target",IntArr,target_callback)
+    realitypub = rospy.Publisher("/N2/reality",IntArr)
+    targetsub = rospy.Subscriber("/N2/target",IntArr,target_callback)
     breaksub = rospy.Subscriber("/breakServo",Bool,break_callback)
     rospy.init_node("dummy_rightteensy",anonymous=False)
     rospy.loginfo("> succesfully initialised")
