@@ -220,10 +220,10 @@ class controllerFrame(wx.Frame):
             #rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
             global historic_data, nr
             nlines = historic_data.count('\n')
-            if nlines == 300 :
+            if nlines >= 50 :
                 historic_data = remove_last_line_from_string(historic_data)
             historic_data = 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'+historic_data
-            if nr == 5:
+            if nr >= 10:
                 wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
                 wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
                 wx.CallAfter(self.label_historic.SetLabel, historic_data)
@@ -237,10 +237,10 @@ class controllerFrame(wx.Frame):
             #rospy.loginfo('rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles))
             global historic_data, nl
             nlines = historic_data.count('\n')
-            if nlines == 300 :
+            if nlines >= 50 :
                 historic_data = remove_last_line_from_string(historic_data)
             historic_data = 'rticks : '+str(msg.ticks)+" | rcycles : "+str(msg.cycles)+'\n'+historic_data
-            if nl == 5:
+            if nl >= 10:
                 wx.CallAfter(self.label_reality_ticks_data.SetLabel, str(msg.ticks))
                 wx.CallAfter(self.label_reality_cycles_data.SetLabel, str(msg.cycles))
                 wx.CallAfter(self.label_historic.SetLabel, historic_data)

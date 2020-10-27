@@ -2,13 +2,15 @@
 import robot
 import sys
 import pygame as pg
+import pygame.freetype
 pg.init() 
+myfont = pygame.freetype.SysFont('calibri', 14)
 # Set up the drawing window
 background = pg.image.load('smol.png')
 screen = pg.display.set_mode(background.get_size())
 running = True
 
-thebot = robot.rob(200,200,0,screen)
+thebot = robot.rob(250,150,0,screen,myfont)
 
 while running:
 # Did the user click the window close button?

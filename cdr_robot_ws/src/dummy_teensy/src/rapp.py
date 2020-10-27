@@ -18,6 +18,16 @@ def break_callback(msg):
     global breakstate
     breakstate = msg.data
 
+def p(x):
+    A=0.6093
+    B = 2.794
+    C = 99.69
+    a = 1
+    b = 30.04
+    c = 390
+    d = 2080
+    return ((A*x*x)+(B*x)+C)/((a*x*x*x)+(b*x*x)+(c*x)+d)
+
 def setup():
     global dtarget,dval,dcycles,breakstate
     running = True

@@ -1,7 +1,7 @@
 // topic names
 
-#define TOPIC_TARGET "/right/target"
-#define TOPIC_REALITY "/right/reality"
+#define TOPIC_TARGET "/N2/target"
+#define TOPIC_REALITY "/N2/reality"
 #define PARAM_PID "rpid"
 #define TOPIC_UPDATEPID "/npid"
 //pins

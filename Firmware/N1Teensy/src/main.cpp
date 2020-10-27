@@ -45,6 +45,9 @@ void loop(void) ///main loop
   if (mainlooppub)
   {
     // create new message
+    if( ! dir){
+      reality_ticks*=-1;
+    }
     reality_pub.ticks = reality_ticks; //reality_ticks;
     reality_pub.cycles = target_cycles;
     //publish new message
@@ -75,10 +78,11 @@ void Cycle() ///called by the timer
     analogWrite(pin_pwr, mapped);
     //reset
     //olde = e;
-    reality_ticks = tick;
-    tick = 0;
+    
     target_cycles--;
   }
+  reality_ticks = tick;
+  tick = 0;
   mainlooppub = true;
   sei(); //relance les interrupts
 }

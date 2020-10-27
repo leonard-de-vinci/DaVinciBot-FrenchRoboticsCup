@@ -17,14 +17,14 @@ def signal_handler(signal, frame):
 
 
 def updatepos(rightmsg,leftmsg):
-    global entraxe , X , Y , theta , coordpub , wheelRadius
-    Vr = ttomm(rightmsg.ticks)/0.01#rot/s
-    Vl = ttomm(leftmsg.ticks)/0.01#rot/s
-    V = wheelRadius*(Vr+Vl)/2.0#mm*rot/s
-    thetadot = np.pi*2.00*wheelRadius*(Vr-Vl)/entraxe#rad/s
-    theta+=thetadot#rad
+    global entraxe , X , Y , theta , coordpub , wheelRadius ,Nticks ,wheelDiameter
+    Vr = np.pi*wheelDiameter*(rightmsg.ticks/Nticks)#mm Dr
+    Vl = np.pi*wheelDiameter*(leftmsg.ticks/Nticks)#mm Dl
+    V = (Vr+Vl)/2.0#mm DC
+    thetadot = (Vr-Vl)/entraxe#rad
     Xdot = np.cos(theta)*V
     Ydot = np.sin(theta)*V
+    theta+=thetadot#rad
     X+=Xdot
     Y+=Ydot
     rospy.loginfo("| "+str(X)+" "+str(Y)+" "+str(theta)+" |")
@@ -45,8 +45,8 @@ def ttomm(ticks):
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     global X,Y,theta
-    X =200.0#mm
-    Y =200.0#mm
+    X =1000.0#mm
+    Y =1500.0#mm
     theta =0.0 #? rad not sure 
     global wheelDiameter,entraxe,Nticks,wheelRadius
     Nticks = 1024.00#ticks
