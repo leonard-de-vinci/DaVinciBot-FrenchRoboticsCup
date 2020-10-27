@@ -9,15 +9,23 @@ import numpy as np
 coord = Coordinates()
 
 def handle_trajectory_generator(req):
-    distance = np.sqrt(math.pow((req.x - coord.x), 2) + math.pow((req.y - coord.y),2)) #√( (xb - xa)² + (yb - ya)² ) distance entre les anciennes coordonnées et la target en mm
-    vecX = req.x - coord.x # vecteur du chemin a parcourir pour atteindre la target
-    vecY = req.y - coord.y
-    theta = np.arccos(vecY/(np.sqrt(math.pow(vecX,2) + math.pow(vecY,2)))) # angle du vecteur par rapport a l'axe Y : arccos(u.v/(||u||*||v||)) en rad
+    global coord
+    targetcoords = np.array([req.x,req.y])
+    botcoords = np.array([coord.x,coord.y])
+    relcoords = targetcoords - botcoords
+    distance = np.linalg.norm(relcoords)
+    #distance = np.sqrt(math.pow((req.x - coord.x), 2) + math.pow((req.y - coord.y),2)) #√( (xb - xa)² + (yb - ya)² ) distance entre les anciennes coordonnées et la target en mm
+    #vecX = req.x - coord.x # vecteur du chemin a parcourir pour atteindre la target
+    #vecY = req.y - coord.y
+    u=np.array([0,1])
+    u2 = relcoords/distance
+    theta = np.arccos(np.dot(u,u2))
+    #theta = np.arccos(vecY/(np.sqrt(math.pow(vecX,2) + math.pow(vecY,2)))) # angle du vecteur par rapport a l'axe Y : arccos(u.v/(||u||*||v||)) en rad
     compensation = 1
     if req.x < coord.x:
         compensation = -1 # si la target est a "gauche" du point actuel l'angle doit etre négatif ou sinon faut le soustraire a 360 
     newtheta = compensation*theta
-    rospy.loginfo("theta : "+str(newtheta)+" | distance : "+str(distance))
+    rospy.loginfo("theta : "+str(theta)+" | distance : "+str(distance))
     return TrajectoryGenResponse(True)
 
 def coordsub_callback(msg):

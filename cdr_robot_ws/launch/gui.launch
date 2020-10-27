@@ -9,5 +9,4 @@
     </node>
     <node name="trackername" pkg = "tracker" type = "app.py" />
     <node name="controller" pkg = "guiControl" type = "app.py" />
-    <node name="visualiser" pkg = "visurobot" type ="app.py" output="screen"/>
 </launch>
