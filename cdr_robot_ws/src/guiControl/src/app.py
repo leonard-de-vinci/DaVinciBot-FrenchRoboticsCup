@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import wx
+import wx.lib.agw.floatspin as FS
 import rospy
 from std_msgs.msg import Bool
-from PID.msg import IntArr
+from PID.msg import IntArr, FloatArr
 import signal
 import sys
 
@@ -19,11 +20,13 @@ class controllerFrame(wx.Frame):
         # begin wxGlade: controllerFrame.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
-        self.SetSize((454, 400))
+        self.SetSize((500, 500))
         self.choice_pid_cote = wx.Choice(self, wx.ID_ANY, choices=["N1", "N2"])
         self.choice_pid_cote.Bind(wx.EVT_CHOICE, self.onPidChoice)
         self.ctrl_target_ticks = wx.SpinCtrl(self, wx.ID_ANY, "0", min=-9999999, max=9999999)
         self.ctrl_target_cycles = wx.SpinCtrl(self, wx.ID_ANY, "0", min=-9999999, max=9999999)
+        self.ctrl_target_angle = FS.FloatSpin(self, wx.ID_ANY, value=0.0, min_val=-9999999.0, max_val=9999999.0)
+        self.ctrl_target_vitesse = FS.FloatSpin(self, wx.ID_ANY, value=0.0, min_val=-9999999.0, max_val=9999999.0)
         self.target_send = wx.Button(self, wx.ID_ANY, "SEND")
         self.target_send.Bind(wx.EVT_BUTTON, self.OnSendClicked)
         self.scroll_panel = wx.ScrolledWindow(self, wx.ID_ANY, style=wx.TAB_TRAVERSAL)
@@ -49,6 +52,8 @@ class controllerFrame(wx.Frame):
         self.choice_manche_cote.SetSelection(0)
         manche_cote = True
         self.button_1.SetBackgroundColour((255, 255, 255, 255)) 
+        self.ctrl_target_angle.SetDigits(2)
+        self.ctrl_target_vitesse.SetDigits(2)
         
         # end wxGlade
 
@@ -64,6 +69,8 @@ class controllerFrame(wx.Frame):
         sizer_9 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_8 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_4 = wx.BoxSizer(wx.VERTICAL)
+        sizer_16 = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_15 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_6 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_5 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
@@ -83,13 +90,22 @@ class controllerFrame(wx.Frame):
         sizer_4.Add(title_target, 0, wx.ALL | wx.EXPAND, 7)
         label_target_ticks = wx.StaticText(self, wx.ID_ANY, "Ticks : ")
         sizer_5.Add(label_target_ticks, 0, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
-        sizer_5.Add((8, 20), 0, 0, 0)
+        sizer_5.Add((8, 0), 0, 0, 0)
         sizer_5.Add(self.ctrl_target_ticks, 1, wx.BOTTOM | wx.RIGHT | wx.TOP, 8)
         sizer_4.Add(sizer_5, 0, wx.EXPAND, 0)
         label_target_cycles = wx.StaticText(self, wx.ID_ANY, "Cycles : ")
         sizer_6.Add(label_target_cycles, 0, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
         sizer_6.Add(self.ctrl_target_cycles, 1, wx.BOTTOM | wx.RIGHT | wx.TOP, 8)
         sizer_4.Add(sizer_6, 0, wx.EXPAND, 0)
+        label_target_angle = wx.StaticText(self, wx.ID_ANY, "Angle : ")
+        sizer_15.Add(label_target_angle, 0, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
+        sizer_15.Add((2, 0), 0, 0, 0)
+        sizer_15.Add(self.ctrl_target_angle, 1, wx.BOTTOM | wx.RIGHT | wx.TOP, 8)
+        sizer_4.Add(sizer_15, 0, wx.EXPAND, 0)
+        label_target_vitesse = wx.StaticText(self, wx.ID_ANY, "Vitesse : ")
+        sizer_16.Add(label_target_vitesse, 0, wx.ALIGN_CENTER_VERTICAL | wx.BOTTOM | wx.LEFT | wx.TOP, 8)
+        sizer_16.Add(self.ctrl_target_vitesse, 1, wx.BOTTOM | wx.RIGHT | wx.TOP, 8)
+        sizer_4.Add(sizer_16, 0, wx.EXPAND, 0)
         sizer_4.Add(self.target_send, 0, wx.ALL | wx.EXPAND, 8)
         sizer_3.Add(sizer_4, 1, wx.EXPAND, 0)
         static_line_3 = wx.StaticLine(self, wx.ID_ANY, style=wx.LI_VERTICAL)
@@ -139,16 +155,27 @@ class controllerFrame(wx.Frame):
         try:
             ticks = self.ctrl_target_ticks.GetValue() 
             cycles = self.ctrl_target_cycles.GetValue()
+            angle = self.ctrl_target_angle.GetValue()
+            vitesse = self.ctrl_target_vitesse.GetValue()
         except ValueError:
-            print("OnSendClicked => can't get ticks/cycles value from inputs")
+            print("OnSendClicked => can't get values from inputs")
             print(ValueError)
         
         try:
             msg = IntArr()
             msg.ticks = int(ticks)
             msg.cycles = int(cycles) 
+            ctrlMsg = FloatArr()
+            ctrlMsg.theta = float(angle)
+            ctrlMsg.v = float(vitesse)
         except ValueError:
-            print("OnSendClicked => can't create ros msg")
+            print("OnSendClicked => can't create ros msgs")
+            print(ValueError)
+        try:
+            rospy.loginfo("control => angle : "+str(angle)+" | vitesse : "+str(vitesse))
+            controlpub.publish(ctrlMsg)
+        except ValueError:
+            print("OnSendClicked => can't publish msg")
             print(ValueError)
         if pid_cote == 0:
             try:
@@ -254,7 +281,7 @@ class MyApp(wx.App):
     def OnInit(self):
         self.frame = controllerFrame(None, wx.ID_ANY, "")
         self.SetTopWindow(self.frame)
-        global emergencypub, N2targetpub, N2realitysub, N1targetpub, N1realitysub, manchecotepub, manchestatepub
+        global emergencypub, N2targetpub, N2realitysub, N1targetpub, N1realitysub, manchecotepub, manchestatepub, controlpub
         try:
             emergencypub = rospy.Publisher("/breakServo",Bool,queue_size=1)
             N2targetpub = rospy.Publisher("/N2/target",IntArr,queue_size=1)
@@ -263,6 +290,7 @@ class MyApp(wx.App):
             N1realitysub = rospy.Subscriber("/N1/reality", IntArr, self.frame.N1_reality_callback)
             manchecotepub = rospy.Publisher("/cote", Bool, queue_size=1)
             manchestatepub = rospy.Publisher("/actif", Bool, queue_size=1)
+            controlpub = rospy.Publisher("/control", FloatArr, queue_size=1)
             rospy.init_node("ultimatecontroller", anonymous=False)
             rospy.loginfo("> ultimate controller correctly initialised")
         except ValueError:
