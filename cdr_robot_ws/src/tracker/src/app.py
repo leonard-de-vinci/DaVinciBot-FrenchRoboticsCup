@@ -54,8 +54,8 @@ if __name__ == "__main__":
     wheelDiameter = 69.00#mm
     wheelRadius = wheelDiameter/2.0#mm
     global coordpub,rightsub,leftsub
-    rightsub = Subscriber("/right/reality",IntArr)
-    leftsub = Subscriber("/left/reality",IntArr)
+    rightsub = Subscriber("/N2/reality",IntArr)
+    leftsub = Subscriber("/N1/reality",IntArr)
     q = 3#buffer queu size
     deltaT = 0.005# time interval for sync in s
     timesync = ApproximateTimeSynchronizer([rightsub,leftsub],q,deltaT,allow_headerless=True)#time sync to sync right with left

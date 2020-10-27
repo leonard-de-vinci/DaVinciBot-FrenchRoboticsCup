@@ -46,8 +46,8 @@ def main():
     xneg=100
     ytarget=0
     global targetsub,realitysub
-    realitysub = rospy.Subscriber("/right/reality",IntArr,reality_callback)
-    targetsub = rospy.Subscriber("/right/target",IntArr,target_callback)
+    realitysub = rospy.Subscriber("/N2/reality",IntArr,reality_callback)
+    targetsub = rospy.Subscriber("/N2/target",IntArr,target_callback)
     rospy.init_node("tickviewer", anonymous=False)
     rospy.loginfo("> viewer correctly initialised")
     display()

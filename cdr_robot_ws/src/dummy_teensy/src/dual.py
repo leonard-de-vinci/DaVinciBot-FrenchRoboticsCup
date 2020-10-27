@@ -7,8 +7,8 @@ import signal
 import rospy
 
 rospy.init_node("dualdummys")
-rightdummy = dumdum.teensy("right")
-leftdummy = dumdum.teensy("left")
+rightdummy = dumdum.teensy("N2")
+leftdummy = dumdum.teensy("N1")
 rospy.loginfo("nodes are runnning, no noise to be seen...")
 global t1,t2
 
