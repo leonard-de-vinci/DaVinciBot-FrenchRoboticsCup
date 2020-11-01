@@ -54,6 +54,7 @@ if __name__ == "__main__":
     wheelDiameter = 69.00#mm
     wheelRadius = wheelDiameter/2.0#mm
     global coordpub,rightsub,leftsub
+    rospy.init_node("rospy_tracker",anonymous=False)
     rightsub = Subscriber("/N2/reality",IntArr)
     leftsub = Subscriber("/N1/reality",IntArr)
     q = 3#buffer queu size
@@ -61,6 +62,5 @@ if __name__ == "__main__":
     timesync = ApproximateTimeSynchronizer([rightsub,leftsub],q,deltaT,allow_headerless=True)#time sync to sync right with left
     timesync.registerCallback(updatepos)
     coordpub = rospy.Publisher("/coords",Coordinates,queue_size=3)
-    rospy.init_node("rospy_tracker",anonymous=False)
     rospy.loginfo("> tracker succesfully initialised")
     rospy.spin()# while true for ros

@@ -1,0 +1,8 @@
+prefix=/home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/install
+
+Name: bot_coordinates
+Description: Description of bot_coordinates
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime roscpp rospy std_msgs

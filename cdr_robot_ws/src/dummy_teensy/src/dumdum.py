@@ -12,10 +12,10 @@ class teensy():
         self.breaksub = rospy.Subscriber("/breakServo",Bool,self.emergencybreakcallback)
         self.P = 30
         self.I = 30
-        self.targetcycle=1000
-        self.targetticks = 40
+        self.targetcycle=0
+        self.targetticks = 0
         self.actualticks=0
-        self.emergencybreak = False
+        self.emergencybreak = True
         self.E = 0
         self.st=0.01
 

@@ -1,0 +1,5 @@
+<launch>
+    <node name="teensys" pkg="dummy_teensy" type="dual.py" />
+    <node name="trackername" pkg = "tracker" type = "app.py" />
+    <node name="controller" pkg = "guiControl" type = "app.py" />
+</launch>
