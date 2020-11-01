@@ -268,7 +268,7 @@ if __name__ == '__main__':
 
         if not args.local:
             # environment at generation time
-            CMAKE_PREFIX_PATH = r'/opt/ros/kinetic'.split(';')
+            CMAKE_PREFIX_PATH = r'/home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/devel;/opt/ros/kinetic'.split(';')
         else:
             # don't consider any other prefix path than this one
             CMAKE_PREFIX_PATH = []
