@@ -15,6 +15,10 @@ def signal_handler(signal, frame):
   rospy.signal_shutdown("manual stop")#gracefully shutdown
   sys.exit(0)
 
+def w(angle):
+    alpha = np.arctan2(np.sin(angle), np.cos(angle))
+    #alpha = ((np.pi + alpha) % 2*np.pi) - np.pi
+    return alpha
 
 def updatepos(rightmsg,leftmsg):
     global entraxe , X , Y , theta , coordpub , wheelRadius ,Nticks ,wheelDiameter
@@ -31,7 +35,7 @@ def updatepos(rightmsg,leftmsg):
     pload = Coordinates()
     pload.x=X
     pload.y=Y
-    pload.theta = theta
+    pload.theta = w(theta)
     pload.xdot = Xdot 
     pload.ydot = Ydot 
     pload.thetadot = thetadot

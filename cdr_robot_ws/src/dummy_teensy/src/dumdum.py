@@ -81,7 +81,17 @@ class teensy():
             if(self.it>=6):
                 rospy.loginfo(str(self.actualticks))
                 self.it=0
-
+    def scalc(self):
+        if((self.emergencybreak) or self.targetcycle<=0):
+            self.Mbreak()
+        else:
+            self.targetcycle-=1
+            e = self.targetticks - self.actualticks
+            self.actualticks +=  int(e/3 )
+            self.it+=1
+            if(self.it>=6):
+                rospy.loginfo(str(self.actualticks))
+                self.it=0
     def mainloop(self):
         while True:
             self.calc()
@@ -91,4 +101,11 @@ class teensy():
             self.realityPub.publish(msg)
             time.sleep(self.st)
 
-        
+    def simplemainloop(self):
+        while True:
+            self.scalc()
+            msg = IntArr()
+            msg.ticks = self.actualticks*self.sens
+            msg.cycles = self.targetcycle
+            self.realityPub.publish(msg)
+            time.sleep(self.st)

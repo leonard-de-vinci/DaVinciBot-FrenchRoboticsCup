@@ -4,7 +4,6 @@ import time
 from PID.msg import IntArr
 from bot_coordinates.msg import Coordinates
 from PID.msg import FloatArr
-import matplotlib.pyplot as plt
 import signal
 import sys
 import numpy as np
@@ -14,13 +13,19 @@ def signal_handler(signal, frame):
 
 def control_callback(msg):
     global V , targetAngle
-    targetAngle = msg.theta
+    targetAngle = w(msg.theta)
     V = msg.v
+
+def w(angle):
+    alpha = np.arctan2(np.sin(angle), np.cos(angle))
+    #alpha = ((np.pi + alpha) % 2*np.pi) - np.pi
+    return alpha
 
 def coordcallback(msg):
     global rightpub, leftpub , V , K, targetAngle, buffer
     if(buffer%10==0):
-        alpha = targetAngle - msg.theta
+        alpha = w(targetAngle) - w(msg.theta)
+        alpha = w(alpha)
         Vr = V*(np.cos(alpha)+K*np.sin(alpha))  #rad/s
         Vl = V*(np.cos(alpha)-K*np.sin(alpha))  #rad/s
         msg = IntArr()

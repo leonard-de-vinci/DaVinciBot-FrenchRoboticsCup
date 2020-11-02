@@ -3,5 +3,6 @@
     <node name="N2sim" pkg="dummy_teensy" type="simpleN2.py" />
     <node name="the_tracker" pkg = "tracker" type = "app.py" />
     <node name="gotoAngle" pkg = "gotoangle" type = "app.py" />
+    <node name="gotoGoal_hardcaoded_waypoint" pkg = "gotogoal" type = "app.py" />
     <node name="controller" pkg = "guiControl" type = "app.py" />
 </launch>
