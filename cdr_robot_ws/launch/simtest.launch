@@ -2,7 +2,5 @@
     <node name="N1sim" pkg="dummy_teensy" type="N1.py" output = "screen"/>
     <node name="N2sim" pkg="dummy_teensy" type="N2.py" output = "screen"/>
     <node name="the_tracker" pkg = "tracker" type = "app.py" />
-    <node name="gotoAngle" pkg = "gotoangle" type = "app.py" />
     <node name="controller" pkg = "guiControl" type = "app.py" />
-    <node name="gotoangle" pkg = "gotoangle" type = "app.py" />
 </launch>

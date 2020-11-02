@@ -2,6 +2,7 @@ import pygame as pg
 import numpy as np
 import rospy
 from bot_coordinates.msg import Coordinates
+#from bot_coordinates.msg import Coordinates
 
 class rob():
     def __init__(self,startX,startY,startAngle,mapp,font):

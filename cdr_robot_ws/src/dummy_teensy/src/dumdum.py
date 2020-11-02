@@ -3,10 +3,12 @@ from PID.msg import IntArr
 from std_msgs.msg import Bool
 import time
 import numpy as np
+import scipy.signal as signal
 class teensy():
 
     def __init__(self,parentTopic):
         #rospy.init_node(parentTopic+"_Dummy")
+        self.parent = parentTopic
         self.realityPub = rospy.Publisher("/"+parentTopic+"/reality",IntArr,queue_size=3)
         self.targetsub = rospy.Subscriber("/"+parentTopic+"/target",IntArr,self.subcallback)
         self.breaksub = rospy.Subscriber("/breakServo",Bool,self.emergencybreakcallback)
@@ -15,13 +17,24 @@ class teensy():
         self.targetcycle=0
         self.targetticks = 0
         self.actualticks=0
+        self.sens = 1
         self.emergencybreak = True
         self.E = 0
         self.st=0.01
+        self.it=0
+        self.x0=0
+        self.lastorder = 0
+        num = [0.6093,2.794,99.69]
+        den = [1,30.04,390,2080]
+        self.tf = signal.TransferFunction(num, den,dt=0.01)
+
 
     def Mbreak(self):
-        #rospy.loginfo("breaking")
-        pass
+        self.it+=1
+        if(self.it>=6):
+            rospy.loginfo(self.parent + " breaking")
+            self.it=0
+        self.actualticks=0
 
     def emergencybreakcallback(self,msg):
         self.emergencybreak = msg.data
@@ -30,7 +43,17 @@ class teensy():
         self.E = 0
         self.targetcycle = msg.cycles
         self.targetticks = abs(msg.ticks)
+        if(msg.ticks>0):
+            self.sens = 1
+        else:
+            self.sens =-1
 
+    def calculate(self,x):
+        orders = [self.lastorder, x]
+        self.x0 = self.actualticks
+        t,y = signal.dlsim(self.tf,orders)
+        self.lastorder = x
+        return y[1]
 
     def p(self,x):
         A=0.6093
@@ -43,7 +66,7 @@ class teensy():
         return ((A*x*x)+(B*x)+C)/((a*x*x*x)+(b*x*x)+(c*x)+d)
 
     def calc(self):
-        if(self.emergencybreak or self.targetcycle<=0):
+        if((self.emergencybreak) or self.targetcycle<=0):
             self.Mbreak()
         else:
             self.targetcycle-=1
@@ -53,15 +76,17 @@ class teensy():
             PID+=min(self.I*self.E,2046)
             PID = min(PID,1023)
             PID = max(PID,0)
-            self.actualticks =  self.p(PID)+ np.random.randint(-3,3)
-            #rospy.loginfo(str(self.actualticks))
-        
+            self.actualticks =  int(self.calculate(PID))
+            self.it+=1
+            if(self.it>=6):
+                rospy.loginfo(str(self.actualticks))
+                self.it=0
 
     def mainloop(self):
         while True:
             self.calc()
             msg = IntArr()
-            msg.ticks = self.actualticks
+            msg.ticks = self.actualticks*self.sens
             msg.cycles = self.targetcycle
             self.realityPub.publish(msg)
             time.sleep(self.st)
