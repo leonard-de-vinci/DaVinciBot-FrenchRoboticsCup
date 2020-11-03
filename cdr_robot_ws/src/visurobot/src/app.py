@@ -9,7 +9,7 @@ myfont = pygame.freetype.SysFont('calibri', 14)
 background = pg.image.load('smol.png')
 screen = pg.display.set_mode(background.get_size())
 running = True
-
+clock = pg.time.Clock()
 thebot = robot.rob(250,150,0,screen,myfont)
 
 while running:
@@ -26,6 +26,6 @@ while running:
     # Draw a solid blue circle in the center
     # Flip the display
     pg.display.flip()
- 
+    clock.tick(30)
 # Done! Time to quit.
 pg.quit()

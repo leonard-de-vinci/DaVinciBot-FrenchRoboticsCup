@@ -44,11 +44,11 @@ if __name__ == '__main__':
     global pointlist , itlist ,repit
     itlist = 0
     repit=0
-    pointA = np.array([200,200])
-    pointB = np.array([2800,1800])
-    pointC = np.array([200,1800])
-    pointlist = [pointA,pointB,pointC]
-    #pointlist = np.loadtxt("waypoints.csv",delimiter=';')
+    # pointA = np.array([200,200])qsdqsddqsdqsd
+    # pointB = np.array([2800,1800])
+    # pointC = np.array([200,1800])
+    # pointlist = [pointA,pointB,pointC]qfqfsf
+    pointlist = np.loadtxt("waypoints.csv",delimiter=';')
     global  coordsub, instructionpub
     rospy.init_node("goToGoal", anonymous=False)
     instructionpub = rospy.Publisher("/control",FloatArr,queue_size=3)

@@ -87,7 +87,7 @@ class teensy():
         else:
             self.targetcycle-=1
             e = self.targetticks - self.actualticks
-            self.actualticks +=  int(e/3 )
+            self.actualticks +=  int(e/3 ) +np.random.randint(-3,3)
             self.it+=1
             if(self.it>=6):
                 rospy.loginfo(str(self.actualticks))
