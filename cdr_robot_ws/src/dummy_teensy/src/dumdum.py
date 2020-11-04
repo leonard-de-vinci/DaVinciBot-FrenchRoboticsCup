@@ -26,7 +26,7 @@ class teensy():
         self.lastorder = 0
         num = [0.6093,2.794,99.69]
         den = [1,30.04,390,2080]
-        self.tf = signal.TransferFunction(num, den,dt=0.01)
+        #self.tf = signal.TransferFunction(num, den,dt=0.01)
 
 
     def Mbreak(self):
@@ -51,7 +51,7 @@ class teensy():
     def calculate(self,x):
         orders = [self.lastorder, x]
         self.x0 = self.actualticks
-        t,y = signal.dlsim(self.tf,orders)
+        #t,y = signal.dlsim(self.tf,orders)
         self.lastorder = x
         return y[1]
 
@@ -76,7 +76,7 @@ class teensy():
             PID+=min(self.I*self.E,2046)
             PID = min(PID,1023)
             PID = max(PID,0)
-            self.actualticks =  int(self.calculate(PID))
+            #self.actualticks =  int(self.calculate(PID))
             self.it+=1
             if(self.it>=6):
                 rospy.loginfo(str(self.actualticks))
