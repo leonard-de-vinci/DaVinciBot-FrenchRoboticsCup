@@ -67,14 +67,14 @@ set(gotoangle_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(gotoangle_SOURCE_PREFIX /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/src/gotoangle)
-  set(gotoangle_DEVEL_PREFIX /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/devel)
+  set(gotoangle_SOURCE_PREFIX /home/pi/cdr/cdr_robot_ws/src/gotoangle)
+  set(gotoangle_DEVEL_PREFIX /home/pi/cdr/cdr_robot_ws/devel)
   set(gotoangle_INSTALL_PREFIX "")
   set(gotoangle_PREFIX ${gotoangle_DEVEL_PREFIX})
 else()
   set(gotoangle_SOURCE_PREFIX "")
   set(gotoangle_DEVEL_PREFIX "")
-  set(gotoangle_INSTALL_PREFIX /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/install)
+  set(gotoangle_INSTALL_PREFIX /home/pi/cdr/cdr_robot_ws/install)
   set(gotoangle_PREFIX ${gotoangle_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/install/lib;/home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/pi/cdr/cdr_robot_ws/install/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

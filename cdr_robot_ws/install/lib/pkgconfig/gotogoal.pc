@@ -1,0 +1,8 @@
+prefix=/home/pi/cdr/cdr_robot_ws/install
+
+Name: gotogoal
+Description: Description of gotogoal
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,4 +1,4 @@
-prefix=/home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/install
+prefix=/home/pi/cdr/cdr_robot_ws/install
 
 Name: tracker
 Description: Description of tracker

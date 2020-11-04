@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/install/setup.sh
+    local-name: /home/pi/cdr/cdr_robot_ws/install/setup.sh

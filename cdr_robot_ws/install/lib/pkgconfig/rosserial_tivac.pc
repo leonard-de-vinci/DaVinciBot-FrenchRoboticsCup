@@ -1,0 +1,8 @@
+prefix=/home/pi/cdr/cdr_robot_ws/install
+
+Name: rosserial_tivac
+Description: Description of rosserial_tivac
+Version: 0.9.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

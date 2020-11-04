@@ -67,14 +67,14 @@ set(dummy_ultrasound_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(dummy_ultrasound_SOURCE_PREFIX /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/src/dummy_ultrasound)
-  set(dummy_ultrasound_DEVEL_PREFIX /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/devel)
+  set(dummy_ultrasound_SOURCE_PREFIX /home/pi/cdr/cdr_robot_ws/src/dummy_ultrasound)
+  set(dummy_ultrasound_DEVEL_PREFIX /home/pi/cdr/cdr_robot_ws/devel)
   set(dummy_ultrasound_INSTALL_PREFIX "")
   set(dummy_ultrasound_PREFIX ${dummy_ultrasound_DEVEL_PREFIX})
 else()
   set(dummy_ultrasound_SOURCE_PREFIX "")
   set(dummy_ultrasound_DEVEL_PREFIX "")
-  set(dummy_ultrasound_INSTALL_PREFIX /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/install)
+  set(dummy_ultrasound_INSTALL_PREFIX /home/pi/cdr/cdr_robot_ws/install)
   set(dummy_ultrasound_PREFIX ${dummy_ultrasound_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/install/lib;/home/dvb/dvb/DaVinciBot-FrenchRoboticsCup-2020/cdr_robot_ws/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/pi/cdr/cdr_robot_ws/install/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
