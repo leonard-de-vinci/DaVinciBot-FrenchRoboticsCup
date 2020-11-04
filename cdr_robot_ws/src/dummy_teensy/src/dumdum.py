@@ -3,7 +3,7 @@ from PID.msg import IntArr
 from std_msgs.msg import Bool
 import time
 import numpy as np
-import scipy.signal as signal
+#import scipy.signal as signal
 class teensy():
 
     def __init__(self,parentTopic):
