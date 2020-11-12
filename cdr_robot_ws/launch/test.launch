@@ -1,0 +1,7 @@
+<launch>
+    <node name="N1sim" pkg="dummy_teensy" type="simpleN1.py" />
+    <node name="N2sim" pkg="dummy_teensy" type="simpleN2.py" />
+    <node name="the_tracker" pkg = "tracker" type = "app.py" />
+    <node name="gotoAngle" pkg = "gotoangle" type = "app.py" />
+    <node name="gotoGoal" pkg = "gotogoal" type = "listen.py" />
+</launch>

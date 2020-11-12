@@ -44,9 +44,9 @@ if __name__ == '__main__':
     wheelRadius = wheelDiameter/2
     entraxe = 160.00#mm
     l = 160.00#mm? not sure
-    K = entraxe/(2*l)#main parameter
+    K = entraxe/(2*l)#main parameter    K [1/2:1]
     targetAngle = 1
-    V = 10.00#mm/s
+    V = 0.00
     global rightpub , leftpub , coordsub , buffer
     buffer = 0
     rospy.init_node("tickviewer", anonymous=False)
