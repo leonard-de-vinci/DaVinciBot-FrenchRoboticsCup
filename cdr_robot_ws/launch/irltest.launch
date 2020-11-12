@@ -1,0 +1,13 @@
+<launch>
+    <node name="serial1" pkg="rosserial_python" type="serial_node.py" output="screen">
+        <param name="port" value="/dev/ttyACM0"/>
+        <param name="baud" value="4608000"/>
+    </node>
+    <node name="serial2" pkg="rosserial_python" type="serial_node.py" output="screen">
+        <param name="port" value="/dev/ttyACM1"/>
+        <param name="baud" value="4608000"/>
+    </node>
+    <node name="the_tracker" pkg = "tracker" type = "app.py" />
+    <node name="gotoAngle" pkg = "gotoangle" type = "app.py" />
+    <node name="gotoGoal" pkg = "gotogoal" type = "listen.py" />
+</launch>
