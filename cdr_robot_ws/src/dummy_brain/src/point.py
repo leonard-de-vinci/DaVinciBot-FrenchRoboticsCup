@@ -21,6 +21,6 @@ class waypoint:
         colorc = (16, 5, 135)
         if(self.mod == 1):
             colorc = (6, 186, 27)
-        pg.draw.circle(self.surface,colorc,(self.x,self.y),self.rad)
-        self.myfont.render_to(self.surface,(self.x-5,self.y-5),str(n), (255, 255, 255))
-        self.myfont.render_to(self.surface,(self.x-4,self.y+7),str(self.mod), (255, 255, 255))
+        pg.draw.circle(self.surface,colorc,(int(self.x),int(self.y)),int(self.rad))
+        self.myfont.render_to(self.surface,(int(self.x-5),int(self.y-5)),str(n), (255, 255, 255))
+        self.myfont.render_to(self.surface,(int(self.x-4),int(self.y+7)),str(self.mod), (255, 255, 255))

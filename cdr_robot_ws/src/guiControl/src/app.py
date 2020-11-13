@@ -180,14 +180,14 @@ class controllerFrame(wx.Frame):
         if pid_cote == 0:
             try:
                 rospy.loginfo('gauche | ticks : '+str(ticks)+" | cycles : "+str(cycles))
-                N1targetpub.publish(msg)
+                #N1targetpub.publish(msg)
             except ValueError:
                 print("OnSendClicked => can't publish msg")
                 print(ValueError)
         else:
             try:
                 rospy.loginfo('droit | ticks : '+str(ticks)+" | cycles : "+str(cycles))
-                N2targetpub.publish(msg)
+                #N2targetpub.publish(msg)
             except ValueError:
                 print("OnSendClicked => can't publish msg")
                 print(ValueError)

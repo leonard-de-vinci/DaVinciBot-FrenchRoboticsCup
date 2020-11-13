@@ -118,10 +118,10 @@ while running:
         colorc = (16, 5, 135)
         if(mod == 1):
             colorc = (6, 186, 27)
-        pg.draw.line(screen, colorc, (tempcoord[0], tempcoord[1]), (x, y))
+        pg.draw.line(screen, colorc, (int(tempcoord[0]), int(tempcoord[1])), (int(x), int(y)))
         radius = np.linalg.norm(tempcoord - temp)
         radius /= 2
-        myfont.render_to(screen,(x-5,y-5),str(radius), colorc)
+        myfont.render_to(screen,(int(x-5),int(y-5)),str(radius), colorc)
     pg.display.flip()
     clock.tick(30)
 
