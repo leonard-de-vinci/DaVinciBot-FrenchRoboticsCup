@@ -92,15 +92,14 @@ while running:
                 newlist=[]
                 for point in waypoints:
                     diff = point.coord() - temp
-                    if(np.linalg.norm(diff)>=(point.rad + 3)):
+                    if(np.linalg.norm(diff)>=(point.dist() + 3)):
                         newlist.append(point)
                 waypoints = newlist
         elif event.type == pygame.MOUSEBUTTONUP:
             temp = np.array([x,y])
             if(event.button == 1):
                 holding = False
-                radius = np.linalg.norm(tempcoord - temp)
-                radius /= 2
+                radius = np.linalg.norm(tempcoord - temp) 
                 if radius <=1:
                     radius == 1
                 waypoints.append(waypoint(tempcoord[0], tempcoord[1], radius, myfont, screen, mod))
@@ -120,7 +119,6 @@ while running:
             colorc = (6, 186, 27)
         pg.draw.line(screen, colorc, (int(tempcoord[0]), int(tempcoord[1])), (int(x), int(y)))
         radius = np.linalg.norm(tempcoord - temp)
-        radius /= 2
         myfont.render_to(screen,(int(x-5),int(y-5)),str(radius), colorc)
     pg.display.flip()
     clock.tick(30)

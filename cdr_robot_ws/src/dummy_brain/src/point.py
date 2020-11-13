@@ -10,6 +10,7 @@ class waypoint:
         self.rx = x*3000.00/width
         self.ry = y*2000.00/height
         self.rad = rad
+        self.w = width
         self.surface = surface
         self.myfont = myfont
         self.mod = mod
@@ -17,10 +18,13 @@ class waypoint:
     def coord(self):
         return np.array([self.x, self.y])
 
+    def dist(self):
+        return int(self.rad*self.w/3000.00)
+
     def draw(self,n):
         colorc = (16, 5, 135)
         if(self.mod == 1):
             colorc = (6, 186, 27)
-        pg.draw.circle(self.surface,colorc,(int(self.x),int(self.y)),int(self.rad))
+        pg.draw.circle(self.surface,colorc,(int(self.x),int(self.y)),self.dist())
         self.myfont.render_to(self.surface,(int(self.x-5),int(self.y-5)),str(n), (255, 255, 255))
         self.myfont.render_to(self.surface,(int(self.x-4),int(self.y+7)),str(self.mod), (255, 255, 255))
