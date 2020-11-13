@@ -22,7 +22,7 @@ def coordcallback(msg):
         distance = np.linalg.norm(diff)
         theta = np.arctan2(diff[1],diff[0])#angle of the trajectory vector,  might need to swap argument order
         #! taking care of the speed
-        V = 48.00
+        V = 20.00
         if (mod == 1):
             V = min(distance/7,V)
         if distance<=epsilon:
