@@ -110,8 +110,9 @@ while running:
     else:
         targetcoord = np.array([thebot.rx, thebot.ry])
     thebot.draw(targetcoord)
-    for i in range(len(waypoints)):
-        waypoints[i].draw(i)
+    cop = waypoints[:]
+    for i in range(len(cop)):
+        cop[i].draw(i)
     if holding:
         temp = np.array([x, y])
         colorc = (16, 5, 135)
