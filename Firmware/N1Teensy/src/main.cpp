@@ -95,8 +95,9 @@ void encoderInterrupt()
 void motorbreak()
 {
   //! must be tested
-  digitalWriteFast(pin_dir1, LOW);
-  digitalWriteFast(pin_dir2, LOW);
+  digitalWriteFast(pin_pwr, LOW);
+  digitalWriteFast(pin_dir1, HIGH);
+  digitalWriteFast(pin_dir2, HIGH);
   //digitalWriteFast(pin_pwr,LOW);
   
 }
@@ -120,6 +121,9 @@ void target_callback(const PID::IntArr &msg)
   dir = (target_ticks > 0);
   E = 0;
   target_ticks = abs(target_ticks);
-  digitalWriteFast(pin_dir1, dir);
-  digitalWriteFast(pin_dir2, !dir);
+  if(! emergency_break){
+    digitalWriteFast(pin_dir1, dir);
+    digitalWriteFast(pin_dir2, !dir);
+  }
+  
 }
