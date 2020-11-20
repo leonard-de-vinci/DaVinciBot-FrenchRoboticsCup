@@ -18,8 +18,6 @@ def leftcallback(msg):
   tmsg = IntArr()
   tmsg.ticks = ltarget
   tmsg.cycles = 32000
-  if lcount%100==0:
-    print(lcount)
 
 def rightcallback(msg):
   global rcount , rightpub , rtarget
@@ -27,12 +25,14 @@ def rightcallback(msg):
   tmsg = IntArr()
   tmsg.ticks = rtarget
   tmsg.cycles = 32000
-  if rcount%100==0:
-    print(rcount)
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     global rightpub , leftpub , lcount , rcount ,ltarget , rtarget
+    lcount = 0
+    rcount = 0
+    rtarget = 0
+    ltarget = 0
     rospy.init_node("tickviewer", anonymous=False)
     breakpub = rospy.Publisher("/breakServo",Bool, queue_size=1)
     rightpub = rospy.Publisher("/N1/target",IntArr,queue_size=1)
@@ -49,6 +49,7 @@ if __name__ == '__main__':
     msg.ticks = 0
     leftpub.publish(msg)
     bmsg = Bool()
+
     bmsg.data = True
     breakpub.publish(bmsg)
     print("ON TEST BENCH")
@@ -70,7 +71,7 @@ if __name__ == '__main__':
     print("in any direction")
     print("when finished press enter ...")
     raw_input("...")
-    res = lcount/(N*10)
+    res = lcount/(N)
     print("rots = ",res)
     print("diff = ",lcount - (N*10))
     print("enter for next")
@@ -90,7 +91,7 @@ if __name__ == '__main__':
     print("in any direction")
     print("when finished press enter ...")
     raw_input("...")
-    res = rcount/(N*10)
+    res = rcount/(N)
     print("rots = ",res)
     print("diff = ",rcount - (N*10))
     raw_input("...")
@@ -109,7 +110,7 @@ if __name__ == '__main__':
     print("in any direction")
     print("when finished press enter ...")
     raw_input("...")
-    res = lcount/(N*10)
+    res = lcount/(N)
     print("rots = ",res)
     print("diff = ",lcount - (N*10))
     print("enter for next")
@@ -129,7 +130,7 @@ if __name__ == '__main__':
     print("in any direction")
     print("when finished press enter ...")
     raw_input("...")
-    res = rcount/(N*10)
+    res = rcount/(N)
     print("rots = ",res)
     print("diff = ",rcount - (N*10))
     raw_input("...")

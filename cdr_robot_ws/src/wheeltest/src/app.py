@@ -17,8 +17,8 @@ if __name__ == '__main__':
     global rightpub , leftpub 
     rospy.init_node("tickviewer", anonymous=False)
     breakpub = rospy.Publisher("/breakServo",Bool, queue_size=1)
-    rightpub = rospy.Publisher("/N1/target",IntArr,queue_size=1)
-    leftpub = rospy.Publisher("/N2/target",IntArr,queue_size=1)
+    rightpub = rospy.Publisher("/N1/target",IntArr,queue_size=2)
+    leftpub = rospy.Publisher("/N2/target",IntArr,queue_size=2)
     print("waiting for full init")
     time.sleep(5)
     msg = IntArr()
@@ -36,6 +36,7 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 30
     rightpub.publish(msg)
+    time.sleep(0.2)
     msg.ticks = 0
     leftpub.publish(msg)
     bmsg = False
@@ -48,10 +49,11 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 0
     rightpub.publish(msg)
+    time.sleep(0.2)
     msg.ticks = 30
     leftpub.publish(msg)
-    bmsg = False
-    breakpub.publish(bmsg)
+    # bmsg = False
+    # breakpub.publish(bmsg)
     print("--------------------------------------------")
     print("RIGHT 0")
     print("LEFT FORWARD")
@@ -60,10 +62,11 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 0
     rightpub.publish(msg)
+    time.sleep(0.2)
     msg.ticks = -30
     leftpub.publish(msg)
-    bmsg = False
-    breakpub.publish(bmsg)
+    # bmsg = False
+    # breakpub.publish(bmsg)
     print("--------------------------------------------")
     print("RIGHT 0")
     print("LEFT BACKWARDS")
@@ -72,10 +75,11 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = -30
     rightpub.publish(msg)
+    time.sleep(0.2)
     msg.ticks = 0
     leftpub.publish(msg)
-    bmsg = False
-    breakpub.publish(bmsg)
+    # bmsg = False
+    # breakpub.publish(bmsg)
     print("--------------------------------------------")
     print("RIGHT BACKWARDS")
     print("LEFT 0")
@@ -84,10 +88,10 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 0
     rightpub.publish(msg)
-    msg.ticks = 0
+    time.sleep(0.2)
     leftpub.publish(msg)
-    bmsg = False
-    breakpub.publish(bmsg)
+    # bmsg = False
+    # breakpub.publish(bmsg)
     print("--------------------------------------------")
     print("RIGHT 0")
     print("LEFT 0")
@@ -96,10 +100,10 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = -30
     rightpub.publish(msg)
-    msg.ticks = -30
+    time.sleep(0.2)
     leftpub.publish(msg)
-    bmsg = False
-    breakpub.publish(bmsg)
+    # bmsg = False
+    # breakpub.publish(bmsg)
     print("--------------------------------------------")
     print("RIGHT BACKWARDS")
     print("LEFT BACKWARDS")
@@ -108,10 +112,10 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 30
     rightpub.publish(msg)
-    msg.ticks = 30
+    time.sleep(0.2)
     leftpub.publish(msg)
-    bmsg = False
-    breakpub.publish(bmsg)
+    # bmsg = False
+    # breakpub.publish(bmsg)
     print("--------------------------------------------")
     print("RIGHT FORWARD")
     print("LEFT FORWARD")
@@ -120,7 +124,7 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 30
     rightpub.publish(msg)
-    msg.ticks = 30
+    time.sleep(0.2)
     leftpub.publish(msg)
     bmsg = True
     breakpub.publish(bmsg)
