@@ -20,11 +20,11 @@ void setup(void)
   Timer1.attachInterrupt(Cycle); //attachInterrupt
   //pin init
   pinMode(pin_pwr, OUTPUT);
-  digitalWriteFast(pin_pwr,LOW);
+  digitalWrite(pin_pwr,LOW);
   pinMode(pin_dir1, OUTPUT);
-  digitalWriteFast(pin_dir1,LOW);
+  digitalWrite(pin_dir1,LOW);
   pinMode(pin_dir2, OUTPUT);
-  digitalWriteFast(pin_dir2,LOW);
+  digitalWrite(pin_dir2,LOW);
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(pin_encoder, INPUT);
   //encoder initialisation
@@ -54,7 +54,7 @@ void loop(void) ///main loop
     pub_reality.publish(&reality_pub);
     mainlooppub = false;
   }
-  digitalWriteFast(LED_BUILTIN, emergency_break);
+  digitalWrite(LED_BUILTIN, emergency_break);
 }
 
 void Cycle() ///called by the timer
@@ -95,10 +95,10 @@ void encoderInterrupt()
 void motorbreak()
 {
   //! must be tested
-  digitalWriteFast(pin_pwr, LOW);
-  digitalWriteFast(pin_dir1, HIGH);
-  digitalWriteFast(pin_dir2, HIGH);
-  //digitalWriteFast(pin_pwr,LOW);
+  digitalWrite(pin_pwr, LOW);
+  digitalWrite(pin_dir1, HIGH);
+  digitalWrite(pin_dir2, HIGH);
+  //digitalWrite(pin_pwr,LOW);
   
 }
 void emergency_break_callback(const std_msgs::Bool &msg)
@@ -110,8 +110,8 @@ void emergency_break_callback(const std_msgs::Bool &msg)
   }
   else
   {
-    digitalWriteFast(pin_dir1, dir);
-    digitalWriteFast(pin_dir2, !dir);
+    digitalWrite(pin_dir1, dir);
+    digitalWrite(pin_dir2, !dir);
   }
 }
 void target_callback(const PID::IntArr &msg)
@@ -122,7 +122,8 @@ void target_callback(const PID::IntArr &msg)
   E = 0;
   target_ticks = abs(target_ticks);
   if(! emergency_break){
-    digitalWriteFast(pin_dir1, dir);
-    digitalWriteFast(pin_dir2, !dir);
+    digitalWrite(pin_dir1, dir);
+    digitalWrite(pin_dir2, !dir);
   }
+  
 }
