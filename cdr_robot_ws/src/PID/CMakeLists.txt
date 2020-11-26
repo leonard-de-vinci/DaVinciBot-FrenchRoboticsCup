@@ -52,6 +52,7 @@ add_message_files(
   FILES
   IntArr.msg
   FloatArr.msg
+  speed.msg
 )
 
 ## Generate services in the 'srv' folder
