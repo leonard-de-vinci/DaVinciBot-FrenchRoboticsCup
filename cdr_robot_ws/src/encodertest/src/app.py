@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-import rospy 
+import rospy
 import time
-from PID.msg import IntArr
+from PID.msg import speed
 from bot_coordinates.msg import Coordinates
 from PID.msg import FloatArr
 from std_msgs.msg import Bool
@@ -9,42 +9,41 @@ import signal
 import sys
 import numpy as np
 
+
 def signal_handler(signal, frame):
-  sys.exit(0)
+    sys.exit(0)
+
 
 def leftcallback(msg):
-  global lcount , leftpub , ltarget
-  lcount+=msg.ticks
-  tmsg = IntArr()
-  tmsg.ticks = ltarget
-  tmsg.cycles = 32000
+    global lcount, leftpub, ltarget, ddir
+    lcount += msg.ticks
+
 
 def rightcallback(msg):
-  global rcount , rightpub , rtarget
-  rcount+=msg.ticks
-  tmsg = IntArr()
-  tmsg.ticks = rtarget
-  tmsg.cycles = 32000
+    global rcount, rightpub, rtarget, ddir
+    rcount += msg.ticks
+
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
-    global rightpub , leftpub , lcount , rcount ,ltarget , rtarget
+    global rightpub, leftpub, lcount, rcount, ltarget, rtarget, ddir
+    ddir = True
     lcount = 0
     rcount = 0
     rtarget = 0
     ltarget = 0
     rospy.init_node("tickviewer", anonymous=False)
-    breakpub = rospy.Publisher("/breakServo",Bool, queue_size=1)
-    rightpub = rospy.Publisher("/N1/target",IntArr,queue_size=1)
-    leftpub = rospy.Publisher("/N2/target",IntArr,queue_size=1)
-    leftsub = rospy.Subscriber("/N2/reality", IntArr,leftcallback)
-    rightsub = rospy.Subscriber("/N1/reality", IntArr,rightcallback)
+    breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
+    rightpub = rospy.Publisher("/N1/target", speed, queue_size=1)
+    leftpub = rospy.Publisher("/N2/target", speed, queue_size=1)
+    leftsub = rospy.Subscriber("/N2/reality", speed, leftcallback)
+    rightsub = rospy.Subscriber("/N1/reality", speed, rightcallback)
     print("waiting for full init")
     time.sleep(5)
     N = 1024
-    msg = IntArr()
-    msg.cycles = 32000
+    msg = speed()
     msg.ticks = 0
+    msg.dir = ddir
     rightpub.publish(msg)
     msg.ticks = 0
     leftpub.publish(msg)
@@ -72,8 +71,8 @@ if __name__ == '__main__':
     print("when finished press enter ...")
     raw_input("...")
     res = lcount/(N)
-    print("rots = ",res)
-    print("diff = ",lcount - (N*10))
+    print("rots = ", res)
+    print("diff = ", lcount - (N*10))
     print("enter for next")
     raw_input("...")
     msg.ticks = 30
@@ -92,17 +91,18 @@ if __name__ == '__main__':
     print("when finished press enter ...")
     raw_input("...")
     res = rcount/(N)
-    print("rots = ",res)
-    print("diff = ",rcount - (N*10))
+    print("rots = ", res)
+    print("diff = ", rcount - (N*10))
     raw_input("...")
-    msg.ticks = -30
+    msg.dir = False
+    msg.ticks = 30
     rightpub.publish(msg)
-    msg.ticks = -30
+    msg.ticks = 30
     leftpub.publish(msg)
     bmsg = True
     breakpub.publish(bmsg)
-    rtarget = -30
-    ltarget = -30
+    rtarget = 30
+    ltarget = 30
     lcount = 0
     rcount = 0
     print("--------------------------------------------")
@@ -111,18 +111,19 @@ if __name__ == '__main__':
     print("when finished press enter ...")
     raw_input("...")
     res = lcount/(N)
-    print("rots = ",res)
-    print("diff = ",lcount - (N*10))
+    print("rots = ", res)
+    print("diff = ", lcount - (N*10))
     print("enter for next")
     raw_input("...")
-    msg.ticks = -30
+    msg.dir = False
+    msg.ticks = 30
     rightpub.publish(msg)
-    msg.ticks = -30
+    msg.ticks = 30
     leftpub.publish(msg)
     bmsg = True
     breakpub.publish(bmsg)
-    rtarget = -30
-    ltarget = -30
+    rtarget = 30
+    ltarget = 30
     lcount = 0
     rcount = 0
     print("--------------------------------------------")
@@ -131,8 +132,8 @@ if __name__ == '__main__':
     print("when finished press enter ...")
     raw_input("...")
     res = rcount/(N)
-    print("rots = ",res)
-    print("diff = ",rcount - (N*10))
+    print("rots = ", res)
+    print("diff = ", rcount - (N*10))
     raw_input("...")
     print("                                                            __......_ ")
     print("                             .---.       _________    _.---`.-----_.'| ")
