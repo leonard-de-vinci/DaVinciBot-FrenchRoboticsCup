@@ -18,7 +18,7 @@ def signal_handler(signal, frame):
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     global rightpub, leftpub
-    rospy.init_node("tickviewer", anonymous=False)
+    rospy.init_node("tster", anonymous=False)
     breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
     rightpub = rospy.Publisher("/N1/target", speed, queue_size=2)
     leftpub = rospy.Publisher("/N2/target", speed, queue_size=2)
