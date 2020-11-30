@@ -25,7 +25,7 @@ class rob():
         self.lidar_max_angle = 1
         self.lidar_inc = 1
         self.angle = startAngle
-        self.lidar = rospy.Subscriber("/lidarout", LaserScan, self.lidar_callback)
+        self.lidar = rospy.Subscriber("/scan", LaserScan, self.lidar_callback)
         self.mysub = rospy.Subscriber("/coords", Coordinates, self.coord_callback)
         self.breaker = rospy.Subscriber("/breakServo", Bool, self.break_callback)
 
