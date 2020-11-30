@@ -12,16 +12,18 @@ import numpy as np
 
 waypoints = []
 
+
 def feedback_callback(msg):
     global waypoints
-    if len(waypoints)>=1 and not emergencybreak:
+    if len(waypoints) >= 1 and not emergencybreak:
         rospy.loginfo("fullfiled a waypoint")
         bybye = waypoints.pop(0)
     sendmovement()
 
+
 def sendmovement():
     global mvpub, waypoints
-    if len(waypoints)>=1:
+    if len(waypoints) >= 1:
         target = waypoints[0]
         msg = movement()
         msg.x = target.rx
@@ -31,44 +33,45 @@ def sendmovement():
         rospy.loginfo(str(target.rx)+" | "+str(target.ry))
         mvpub.publish(msg)
 
-### ROS -------------------------------------------------------------
+# ## ROS -------------------------------------------------------------
+
+
 rospy.init_node("fake_brain")
-breakpub = rospy.Publisher("/breakServo",Bool, queue_size=1)
+breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
 mvpub = rospy.Publisher("/movement", movement, queue_size=1)
-feedbacksub = rospy.Subscriber("/feedback", Int32,feedback_callback)
-### end ros ---------------------------------------------------------
+feedbacksub = rospy.Subscriber("/feedback", Int32, feedback_callback)
+# ## end ros ---------------------------------------------------------
 
-
-
-pg.init() 
+pg.init()
 myfont = pygame.freetype.SysFont('calibri', 14)
 background = pg.image.load('smol.png')
 screen = pg.display.set_mode(background.get_size())
-width,height = background.get_size()
+width, height = background.get_size()
 running = True
 clock = pg.time.Clock()
-thebot = robot.rob(250,150,0,screen,myfont)
+thebot = robot.rob(250, 150, 0, screen, myfont)
 
 tempcoord = np.array([0, 0])
 holding = False
 emergencybreak = True
+showlidar = False
 mod = 1
 targetcoord = np.array([1000, 1500])
-### initial setups 
+# ## initial setups
 msg = Bool()
-msg.data =emergencybreak
+msg.data = emergencybreak
 breakpub.publish(emergencybreak)
 sendmovement()
 
 while running:
-# Did the user click the window close button?
-    x,y = pygame.mouse.get_pos()
+    # Did the user click the window close button?
+    x, y = pygame.mouse.get_pos()
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
             sys.exit()
-        if event.type==pygame.KEYDOWN:
-            if event.key==pygame.K_RETURN:#save waypoints
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:  # save waypoints
                 emergencybreak = not emergencybreak
                 msg = Bool()
                 msg.data = emergencybreak
@@ -83,32 +86,33 @@ while running:
                 mod -= 1
                 mod = mod % 2
                 print("mod:= ", mod)
-        if event.type == pygame.MOUSEBUTTONDOWN:  
-            temp = np.array([x,y])
-            if(event.button==1):  # left click
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            temp = np.array([x, y])
+            if(event.button == 1):  # left click
                 holding = True
                 tempcoord = temp
             elif(event.button == 3):  # right click
-                newlist=[]
+                newlist = []
                 for point in waypoints:
                     diff = point.coord() - temp
-                    if(np.linalg.norm(diff)>=(point.dist() + 3)):
+                    if(np.linalg.norm(diff) >= (point.dist() + 3)):
                         newlist.append(point)
                 waypoints = newlist
         elif event.type == pygame.MOUSEBUTTONUP:
-            temp = np.array([x,y])
+            temp = np.array([x, y])
             if(event.button == 1):
                 holding = False
-                radius = np.linalg.norm(tempcoord - temp) 
-                if radius <=1:
+                radius = np.linalg.norm(tempcoord - temp)
+                if radius <= 1:
                     radius == 1
                 waypoints.append(waypoint(tempcoord[0], tempcoord[1], radius, myfont, screen, mod))
     # Fill the background with white
-    screen.blit(background,(0,0))
-    if len(waypoints)>=1:
-        targetcoord = np.array([waypoints[0].rx , waypoints[0].ry])
+    screen.blit(background, (0, 0))
+    if len(waypoints) >= 1:
+        targetcoord = np.array([waypoints[0].rx, waypoints[0].ry])
     else:
         targetcoord = np.array([thebot.rx, thebot.ry])
+    thebot.draw_the_rays()
     thebot.draw(targetcoord)
     cop = waypoints[:]
     for i in range(len(cop)):
@@ -120,7 +124,7 @@ while running:
             colorc = (6, 186, 27)
         pg.draw.line(screen, colorc, (int(tempcoord[0]), int(tempcoord[1])), (int(x), int(y)))
         radius = np.linalg.norm(tempcoord - temp)
-        myfont.render_to(screen,(int(x-5),int(y-5)),str(radius), colorc)
+        myfont.render_to(screen, (int(x-5), int(y-5)), str(radius), colorc)
     pg.display.flip()
     clock.tick(30)
 
