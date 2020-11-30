@@ -86,6 +86,9 @@ while running:
                 mod -= 1
                 mod = mod % 2
                 print("mod:= ", mod)
+            if event.key == pg.K_SPACE:
+                showlidar = not showlidar
+                print("toggle lidar")
         if event.type == pygame.MOUSEBUTTONDOWN:
             temp = np.array([x, y])
             if(event.button == 1):  # left click
