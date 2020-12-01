@@ -17,6 +17,7 @@ volatile bool emergency_break=false;//boolean for emergeancy break
 
 //PID - variables
 volatile int tick = 0; //encoder ticks
+int copytick = 0;
 int e;//error
 int olde=0;//old error
 volatile int E=0;//integrated error or cumulated error

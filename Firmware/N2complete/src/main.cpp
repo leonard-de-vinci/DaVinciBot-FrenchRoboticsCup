@@ -58,13 +58,16 @@ void loop(void) ///main loop
 void Cycle() ///called by the timer
 {
   cli(); //éteint les interrupts
+  copytick = tick;
+  tick = 0; //
+  sei();
   if (emergency_break || (target_cycles<=0))
   {
     motorbreak();
   } else 
   {
     //calculate error and pid
-    e = target_ticks - tick;
+    e = target_ticks - copytick;
     E = E + e;
     //de = e - olde;
     PID_ = (kp * e); 
@@ -80,10 +83,8 @@ void Cycle() ///called by the timer
     
     target_cycles--;
   }
-  reality_ticks = tick;
-  tick = 0;
+  reality_ticks = copytick;
   mainlooppub = true;
-  sei(); //relance les interrupts
 }
 
 void encoderInterrupt()
