@@ -45,9 +45,9 @@ void loop(void) ///main loop
   if (mainlooppub)
   {
     // create new message
-    if( ! dir){
-      reality_ticks*=-1;
-    }
+    // if( ! dir){
+    //   reality_ticks*=-1;
+    // }
     reality_pub.ticks = reality_ticks; //reality_ticks;
     reality_pub.dir = dir;
     //publish new message

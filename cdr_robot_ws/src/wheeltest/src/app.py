@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import rospy 
 import time
-from PID.msg import IntArr
 from PID.msg import speed
 from bot_coordinates.msg import Coordinates
 from PID.msg import FloatArr

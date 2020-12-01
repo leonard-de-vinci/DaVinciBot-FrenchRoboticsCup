@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import rospy
 from std_msgs.msg import Bool
-from PID.msg import IntArr
 from bot_coordinates.msg import Coordinates
 from message_filters import ApproximateTimeSynchronizer
 from message_filters import Subscriber

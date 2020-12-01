@@ -1,5 +1,4 @@
 import rospy
-from PID.msg import IntArr
 from PID.msg import speed
 from std_msgs.msg import Bool
 import time
@@ -92,15 +91,6 @@ class teensy():
             if(self.it >= 6):
                 rospy.loginfo(str(self.actualticks))
                 self.it = 0
-
-    def mainloop(self):
-        while True:
-            self.calc()
-            msg = IntArr()
-            msg.ticks = self.actualticks*self.sens
-            msg.cycles = self.targetcycle
-            self.realityPub.publish(msg)
-            time.sleep(self.st)
 
     def simplemainloop(self):
         while True:
