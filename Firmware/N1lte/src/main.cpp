@@ -45,9 +45,7 @@ void loop(void) ///main loop
   if (mainlooppub)
   {
     // create new message
-    // if( ! dir){
-    //   reality_ticks*=-1;
-    // }
+
     reality_pub.ticks = reality_ticks; //reality_ticks;
     reality_pub.dir = dir;
     //publish new message
@@ -60,13 +58,16 @@ void loop(void) ///main loop
 void Cycle() ///called by the timer
 {
   cli(); //éteint les interrupts
+  copytick = tick; //
+  tick=0;
+  sei(); //relance les interrupts
   if (emergency_break)
   {
     motorbreak();
   } else 
   {
     //calculate error and pid
-    e = target_ticks - tick;
+    e = target_ticks - copytick;
     E = E + e;
     //de = e - olde;
     PID_ = (kp * e); 
@@ -80,10 +81,8 @@ void Cycle() ///called by the timer
     //olde = e;
     
   }
-  reality_ticks = tick;
-  tick = 0;
+  reality_ticks = copytick;
   mainlooppub = true;
-  sei(); //relance les interrupts
 }
 
 void encoderInterrupt()

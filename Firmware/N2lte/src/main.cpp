@@ -36,7 +36,7 @@ void setup(void)
   */
   //setting up pwm precision
   analogWriteFrequency(pin_pwr, 10000); //setting up ideal frequency pedending on cpu frequency
-  analogWriteResolution(10);                  // 0 - 255
+  analogWriteResolution(10);                  // 0 - 1023
 }
 
 void loop(void) ///main loop
@@ -45,9 +45,6 @@ void loop(void) ///main loop
   if (mainlooppub)
   {
     // create new message
-    if( ! dir){
-      reality_ticks*=-1;
-    }
     reality_pub.ticks = reality_ticks; //reality_ticks;
     reality_pub.dir = dir;
     //publish new message
@@ -60,30 +57,31 @@ void loop(void) ///main loop
 void Cycle() ///called by the timer
 {
   cli(); //éteint les interrupts
+  copytick = tick; //
+  tick=0;
+  sei(); //relance les interrupts
   if (emergency_break)
   {
     motorbreak();
   } else 
   {
     //calculate error and pid
-    e = target_ticks - tick;
+    e = target_ticks - copytick;
     E = E + e;
     //de = e - olde;
     PID_ = (kp * e); 
     int temp = (ki * E);// + (kd * de);
     int I = (temp < IMAX) ? temp : IMAX;
-    PID_ +=I;
+    PID_ += I;
     mapped = ( PID_ < 0) ? 0 : PID_;
     mapped = ( PID_ < 1023) ? PID_ : 1023;
     analogWrite(pin_pwr, mapped);
     //reset
     //olde = e;
-    
   }
-  reality_ticks = tick;
-  tick = 0;
+  reality_ticks = copytick;
   mainlooppub = true;
-  sei(); //relance les interrupts
+  
 }
 
 void encoderInterrupt()
