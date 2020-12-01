@@ -58,7 +58,7 @@ if __name__ == '__main__':
     buffer = 0
     rospy.init_node("tickviewer", anonymous=False)
     instructionsub = rospy.Subscriber("/control", FloatArr, control_callback)
-    coordsub = rospy.Subscriber("/coords", Coordinates, coordcallback) 
+    coordsub = rospy.Subscriber("/coords", Coordinates, coordcallback)
     rightpub = rospy.Publisher("/N1/target", speed, queue_size=1)
     leftpub = rospy.Publisher("/N2/target", speed, queue_size=1)
     rospy.loginfo("> viewer correctly initialised")
