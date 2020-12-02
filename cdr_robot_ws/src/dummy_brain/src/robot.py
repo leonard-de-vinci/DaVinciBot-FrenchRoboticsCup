@@ -1,8 +1,8 @@
 import pygame as pg
 import numpy as np
 import rospy
-from bot_coordinates.msg import Coordinates
 from std_msgs.msg import Bool
+from bot_coordinates.msg import Coordinates
 from sensor_msgs.msg import LaserScan
 # from bot_coordinates.msg import Coordinates
 
@@ -31,9 +31,10 @@ class rob():
 
     def lidar_callback(self, msg):
         self.valuearray = np.array(msg.ranges)
-        self.lidar_max_angle = msg.angle_max
-        self.lidar_min_angle = msg.angle_min
+        self.lidar_max_angle = float(msg.angle_max)
+        self.lidar_min_angle = float(msg.angle_min)
         self.lidar_inc = msg.angle_increment
+        #print(self.lidar_min_angle, self.lidar_max_angle)
 
     def coord_callback(self, msg):
         self.rx = msg.x
@@ -51,11 +52,14 @@ class rob():
     #             pg.draw.circle(self.surface, (155, 0, 155), (int(point[0]), int(point[1])), 2)
 
     def draw_the_rays(self):
-        for i in range(self.lidar_min_angle, self.lidar_max_angle, self.lidar_inc):
-            angle = self.angle + i * np.pi * 2 / self.lidar_max_angle
-            x2 = ((np.cos(angle)*self.valuearray[i])*self.width/3000.0)+self.x
-            y2 = ((np.sin(angle)*self.valuearray[i])*self.height/2000.0)+self.y
-            pg.draw.line(self.surface, (150, 150, 150), (int(self.x), int(self.y)), (int(x2), int(y2)))
+        temp = np.copy(self.valuearray)
+        for i in range(len(temp)):
+            if(not np.isinf(temp[i])):
+                angle = self.angle + self.lidar_min_angle + (self.lidar_max_angle - self.lidar_min_angle)*(float(i)/(float(len(temp))))
+                x2 = ((np.cos(angle)*float(temp[i])*1000.00)*self.width/3000.0)+self.x
+                y2 = ((np.sin(angle)*float(temp[i])*1000.00)*self.height/2000.0)+self.y
+                #pg.draw.line(self.surface, (150, 150, 150), (int(self.x), int(self.y)), (int(x2), int(y2)), 3)
+                pg.draw.circle(self.surface, (255, 50, 50), (int(x2), int(y2)),2)
 
     def draw(self, targetcoord):
         diff = targetcoord - np.array([self.rx, self.ry])
