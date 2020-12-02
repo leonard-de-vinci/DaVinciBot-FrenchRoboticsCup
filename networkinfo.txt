@@ -1,0 +1,6 @@
+MATHIEU
+ -> rasplidar ethernet   10.42.0.185
+
+GENERAL
+ -> raspmaster wifi 10.3.141.1
+ -> rasplidar wifi 10.3.141.79
