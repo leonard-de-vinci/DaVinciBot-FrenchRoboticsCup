@@ -35,8 +35,7 @@ if __name__ == '__main__':
     print("ON TEST BENCH")
     print("test for motor connectivity")
     print("when ready press enter:")
-    raw_input("...")
-    while true:
+    while True:
         msg.dir = True
         msg.ticks = 30
         rightpub.publish(msg)
