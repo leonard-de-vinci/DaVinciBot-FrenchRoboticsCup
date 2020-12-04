@@ -20,15 +20,12 @@ if __name__ == '__main__':
     rospy.init_node("tster", anonymous=False)
     breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
     rightpub = rospy.Publisher("/N1/target", speed, queue_size=2)
-    leftpub = rospy.Publisher("/N2/target", speed, queue_size=2)
     print("waiting for full init")
     time.sleep(5)
     msg = speed()
     msg.dir = True
     msg.ticks = 0
     rightpub.publish(msg)
-    msg.ticks = 0
-    leftpub.publish(msg)
     bmsg = Bool()
     bmsg.data = False
     breakpub.publish(bmsg)
