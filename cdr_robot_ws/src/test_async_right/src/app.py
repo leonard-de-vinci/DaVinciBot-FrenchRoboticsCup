@@ -18,17 +18,13 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     global rightpub, leftpub
     rospy.init_node("tster", anonymous=False)
-    breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
     rightpub = rospy.Publisher("/N1/target", speed, queue_size=2)
     print("waiting for full init")
-    time.sleep(5)
+    time.sleep(15)
     msg = speed()
     msg.dir = True
     msg.ticks = 0
     rightpub.publish(msg)
-    bmsg = Bool()
-    bmsg.data = False
-    breakpub.publish(bmsg)
     print("ON TEST BENCH")
     print("test for motor connectivity")
     print("when ready press enter:")
