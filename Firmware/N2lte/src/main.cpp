@@ -107,6 +107,7 @@ void emergency_break_callback(const std_msgs::Bool &msg)
   }
   else
   {
+    digitalWriteFast(pin_pwr,LOW);
     digitalWrite(pin_dir1, dir);
     digitalWrite(pin_dir2, !dir);
   }
@@ -114,12 +115,12 @@ void emergency_break_callback(const std_msgs::Bool &msg)
 void target_callback(const PID::speed &msg)
 {
   target_ticks = msg.ticks;
-  dir = msg.dir;
-  E = 0;
-  target_ticks = abs(target_ticks);
-  if(! emergency_break){
+  if(dir != msg.dir && !emergency_break){
+    digitalWriteFast(pin_pwr,LOW);
+    dir = msg.dir;
     digitalWrite(pin_dir1, dir);
     digitalWrite(pin_dir2, !dir);
   }
-  
+  E = 0;
+  target_ticks = abs(target_ticks);
 }
