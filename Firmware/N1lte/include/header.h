@@ -13,7 +13,7 @@ const int period = 10000; //20 Hz ; 1 000 000 microseconds = 1 second
 //ros comm
 volatile int target_ticks=0;//target number of ticks per cycle
 //volatile bool target_dir=0;//number of cycles to run
-volatile bool emergency_break=false;//boolean for emergeancy break
+volatile bool emergency_break=true;//boolean for emergeancy break
 
 //PID - variables
 volatile int tick = 0; //encoder ticks

@@ -9,7 +9,6 @@ void setup(void)
   //initialisation du Node ROS
   nh.advertise(pub_reality);         //advertise le topic de publication
   nh.subscribe(sub_target);
-  //nh.subscribe(sub_empty);          //on s'abonne à là où on va écouter
   nh.subscribe(sub_emergency_break); //abonnement arrêt d'urgence
   while (!nh.connected())
   {
@@ -29,12 +28,6 @@ void setup(void)
   pinMode(pin_encoder, INPUT);
   //encoder initialisation
   attachInterrupt(digitalPinToInterrupt(pin_encoder), encoderInterrupt, RISING); //! slow must be changed to attachInterruptVector
-  //attachInterruptVector(,encoderInterrupt,RISING);
-  /*uint32_t mask = (0x09 << 16) | 0x01000000;//setup mask for rising edge
-  volatile uint32_t *config;
-  config = portConfigRegister(pin_encoder);
-  */
-  //setting up pwm precision
   analogWriteFrequency(pin_pwr, 10000); //setting up ideal frequency pedending on cpu frequency
   analogWriteResolution(10);                  // 0 - 255
 }
@@ -77,8 +70,6 @@ void Cycle() ///called by the timer
     mapped = ( PID_ < 0) ? 0 : PID_;
     mapped = ( PID_ < 1023) ? PID_ : 1023;
     analogWrite(pin_pwr, mapped);
-    //reset
-    //olde = e;
     
   }
   reality_ticks = copytick;
