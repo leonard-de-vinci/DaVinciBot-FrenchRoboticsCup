@@ -2,8 +2,7 @@
 
 #define TOPIC_TARGET "/N2/target"
 #define TOPIC_REALITY "/N2/reality"
-#define PARAM_PID "rpid"
-#define TOPIC_UPDATEPID "/npid"
+
 //pins
 #define pin_encoder 6// pin for the encoder interrupt
 #define pin_dir1 4//pin for H bridge pwm
@@ -12,6 +11,5 @@
 
 volatile int kp = 30;
 volatile int ki = 30;
-//volatile int kd = 0;
 
 const int IMAX = 2046;
