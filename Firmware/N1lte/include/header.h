@@ -66,3 +66,7 @@ ros::Subscriber<PID::speed> sub_target(TOPIC_TARGET, &target_callback);
 // speed reality
 PID::speed reality;
 ros::Publisher pub_reality(TOPIC_REALITY, &reality);
+
+// connection check
+int n = 0;
+#define TIMEOUT 50

@@ -10,10 +10,6 @@ void setup(void)
   nh.advertise(pub_reality);         //advertise le topic de publication
   nh.subscribe(sub_target);
   nh.subscribe(sub_emergency_break); //abonnement arrêt d'urgence
-  while (!nh.connected())
-  {
-    nh.spinOnce();
-  }
   //TIMER initialization
   Timer1.initialize(period);     //initialisation du timer
   Timer1.attachInterrupt(Cycle); //attachInterrupt
@@ -26,6 +22,14 @@ void setup(void)
   digitalWrite(pin_dir2,LOW);
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(pin_encoder, INPUT);
+  while (!nh.connected())
+  {
+    nh.spinOnce();
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(100);
+  }
   //encoder initialisation
   attachInterrupt(digitalPinToInterrupt(pin_encoder), encoderInterrupt, RISING); //! slow must be changed to attachInterruptVector
   analogWriteFrequency(pin_pwr, 10000); //setting up ideal frequency pedending on cpu frequency
@@ -37,6 +41,13 @@ void loop(void) ///main loop
   nh.spinOnce();
   if (mainlooppub)
   {
+    n++;
+    if(n >= TIMEOUT){
+      if(!nh.connected()){
+        emergency_break = true;
+      }
+      n=0;
+    }
     // ros pub
     reality_pub.ticks = reality_ticks; //reality_ticks;
     reality_pub.dir = dir;
@@ -61,7 +72,7 @@ void Cycle() ///called by the timer
     //calculate error and pid
     e = target_ticks - copytick;
     E = E + e;
-    E = ( E < 0) ? 0 : PID_;
+    E = ( E < 0) ? 0 : E;
     E = ( E < IMAX) ? E : IMAX;
     PID_ = (kp * e) + (ki*E); 
     mapped = ( PID_ < 0) ? 0 : PID_;
