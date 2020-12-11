@@ -25,8 +25,6 @@ int de;//derived erro:r or error variation
 int pid_constants[3];//for paramserver
 long PID_;//result of pid calc before mapping to pins
 int mapped;//mapped version of pid
-//const int maxpid=4000;//max value of pid for mapping
-//const int minpid=-4000;//min valu of pid use for mapping
 PID::IntArr reality_pub;
 
 //Communication
@@ -58,11 +56,6 @@ int desired_cycles = 0;
 PID::IntArr target;
 void target_callback(const PID::IntArr &msg);
 ros::Subscriber<PID::IntArr> sub_target(TOPIC_TARGET, &target_callback);
-//update pid
-//void updatepid_callback(const std_msgs::Empty &msg);
-//ros::Subscriber<std_msgs::Empty> sub_empty(TOPIC_UPDATEPID, &updatepid_callback);
-
-
 // speed reality
 PID::IntArr reality;
 ros::Publisher pub_reality(TOPIC_REALITY, &reality);

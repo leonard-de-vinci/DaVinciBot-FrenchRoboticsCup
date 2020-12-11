@@ -88,7 +88,7 @@ while running:
                 print("mod:= ", mod)
             if event.key == pg.K_SPACE:
                 showlidar = not showlidar
-                print("toggle lidar")
+                print("toggle lidar ", showlidar)
         if event.type == pygame.MOUSEBUTTONDOWN:
             temp = np.array([x, y])
             if(event.button == 1):  # left click
@@ -115,7 +115,8 @@ while running:
         targetcoord = np.array([waypoints[0].rx, waypoints[0].ry])
     else:
         targetcoord = np.array([thebot.rx, thebot.ry])
-    thebot.draw_the_rays()
+    if(showlidar):
+        thebot.draw_the_rays()
     thebot.draw(targetcoord)
     cop = waypoints[:]
     for i in range(len(cop)):
