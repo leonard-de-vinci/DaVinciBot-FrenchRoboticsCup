@@ -14,11 +14,11 @@ def signal_handler(signal, frame):
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
-    global rightpub , leftpub 
+    global rightpub, leftpub
     rospy.init_node("tickviewer", anonymous=False)
-    breakpub = rospy.Publisher("/breakServo",Bool, queue_size=1)
-    rightpub = rospy.Publisher("/N1/target",IntArr,queue_size=2)
-    leftpub = rospy.Publisher("/N2/target",IntArr,queue_size=2)
+    breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
+    rightpub = rospy.Publisher("/N1/target", IntArr, queue_size=2)
+    leftpub = rospy.Publisher("/N2/target", IntArr, queue_size=2)
     print("waiting for full init")
     time.sleep(5)
     msg = IntArr()

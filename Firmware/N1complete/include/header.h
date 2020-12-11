@@ -13,7 +13,7 @@ const int period = 10000; //20 Hz ; 1 000 000 microseconds = 1 second
 //ros comm
 volatile int target_ticks=0;//target number of ticks per cycle
 volatile int target_cycles=0;//number of cycles to run
-volatile bool emergency_break=false;//boolean for emergeancy break
+volatile bool emergency_break=true;//boolean for emergeancy break
 
 //PID - variables
 volatile int tick = 0; //encoder ticks
@@ -59,3 +59,7 @@ ros::Subscriber<PID::IntArr> sub_target(TOPIC_TARGET, &target_callback);
 // speed reality
 PID::IntArr reality;
 ros::Publisher pub_reality(TOPIC_REALITY, &reality);
+
+// connection check
+int n = 0;
+#define TIMEOUT 50

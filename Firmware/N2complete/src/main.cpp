@@ -42,6 +42,13 @@ void loop(void) ///main loop
   nh.spinOnce();
   if (mainlooppub)
   {
+    n++;
+    if(n >= TIMEOUT){
+      if(!nh.connected()){
+        emergency_break = true;
+      }
+      n=0;
+    }
     reality_pub.ticks = reality_ticks; //reality_ticks;
     reality_pub.cycles = target_cycles;
     pub_reality.publish(&reality_pub);
