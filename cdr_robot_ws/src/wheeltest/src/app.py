@@ -39,7 +39,7 @@ if __name__ == '__main__':
     msg.dir = True
     msg.ticks = 10
     rightpub.publish(msg)
-    time.sleep(2)
+    time.sleep(0.1)
     msg.ticks = 0
     leftpub.publish(msg)
     bmsg = False
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 0
     rightpub.publish(msg)
-    time.sleep(2)
+    time.sleep(0.1)
     msg.ticks = 10
     leftpub.publish(msg)
     # bmsg = False
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 0
     rightpub.publish(msg)
-    time.sleep(2)
+    time.sleep(0.1)
     msg.dir = False
     msg.ticks = 10
     leftpub.publish(msg)
@@ -78,9 +78,9 @@ if __name__ == '__main__':
     print("when ready press enter")
     raw_input("...")
     msg.dir = False
-    msg.ticks = -10
+    msg.ticks = 10
     rightpub.publish(msg)
-    time.sleep(2)
+    time.sleep(0.1)
     msg.ticks = 0
     leftpub.publish(msg)
     # bmsg = False
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 0
     rightpub.publish(msg)
-    time.sleep(2)
+    time.sleep(0.1)
     leftpub.publish(msg)
     # bmsg = False
     # breakpub.publish(bmsg)
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     msg.dir = False
     msg.ticks = 10
     rightpub.publish(msg)
-    time.sleep(2)
+    time.sleep(0.1)
     leftpub.publish(msg)
     # bmsg = False
     # breakpub.publish(bmsg)
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     msg.dir = True
     msg.ticks = 10
     rightpub.publish(msg)
-    time.sleep(2)
+    time.sleep(0.1)
     leftpub.publish(msg)
     # bmsg = False
     # breakpub.publish(bmsg)
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     raw_input("...")
     msg.ticks = 10
     rightpub.publish(msg)
-    time.sleep(2)
+    time.sleep(0.1)
     leftpub.publish(msg)
     bmsg = True
     breakpub.publish(bmsg)

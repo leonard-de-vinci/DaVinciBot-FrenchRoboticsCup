@@ -20,7 +20,6 @@ if __name__ == '__main__':
     rospy.init_node("tster", anonymous=False)
     rightpub = rospy.Publisher("/N1/target", speed, queue_size=2)
     print("waiting for full init")
-    time.sleep(15)
     msg = speed()
     msg.dir = True
     msg.ticks = 0

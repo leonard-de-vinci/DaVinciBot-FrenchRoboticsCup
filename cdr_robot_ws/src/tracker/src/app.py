@@ -25,13 +25,11 @@ def w(angle):
 def updatepos(rightmsg, leftmsg):
     global entraxe, X, Y, theta, coordpub, wheelRadius, Nticks, wheelDiameter
     Vl = np.pi*wheelDiameter*(rightmsg.ticks/Nticks)  # mm Dr
-    if (not rightmsg.dir){
-        vl *= -1
-    }
+    if not rightmsg.dir:
+        Vl *= -1
     Vr = np.pi*wheelDiameter*(leftmsg.ticks/Nticks)  # mm Dl
-    if (not leftmsg.dir){
-        vr *= -1
-    }
+    if not leftmsg.dir:
+        Vr *= -1
     V = (Vr+Vl)/2.0  # mm DC
     thetadot = (Vr-Vl)/entraxe  # rad
     Xdot = np.cos(theta)*V
