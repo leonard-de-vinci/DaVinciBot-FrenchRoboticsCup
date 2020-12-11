@@ -9,15 +9,7 @@ void setup(void)
   nh.advertise(pub_reality);         //advertise le topic de publication
   nh.subscribe(sub_target);
   nh.subscribe(sub_emergency_break); //abonnement arrêt d'urgence
-  while (!nh.connected())
-  {
-    nh.spinOnce();
-  }
-  //TIMER initialization
-  Timer1.initialize(period);     //initialisation du timer
-  Timer1.attachInterrupt(Cycle); //attachInterrupt
   //pin init
-  
   pinMode(pin_pwr, OUTPUT);
   digitalWrite(pin_pwr,LOW);
   pinMode(pin_dir1, OUTPUT);
@@ -27,6 +19,18 @@ void setup(void)
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(pin_encoder, INPUT);
   pinMode(pin_encoder2,INPUT);
+  while (!nh.connected())
+  {
+    nh.spinOnce();
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(100);
+    
+  }
+    //TIMER initialization
+  Timer1.initialize(period);     //initialisation du timer
+  Timer1.attachInterrupt(Cycle); //attachInterrupt
   //encoder initialisation
   attachInterrupt(digitalPinToInterrupt(pin_encoder), encoderInterrupt, RISING); //! slow must be changed to attachInterruptVector
   analogWriteFrequency(pin_pwr, 10000); //setting up ideal frequency pedending on cpu frequency
