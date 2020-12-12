@@ -22,7 +22,7 @@ if __name__ == '__main__':
     print("waiting for full init")
     time.sleep(5)
     msg = IntArr()
-    msg.cycles = 32000
+    msg.cycles = 30000
     msg.ticks = 0
     rightpub.publish(msg)
     msg.ticks = 0
