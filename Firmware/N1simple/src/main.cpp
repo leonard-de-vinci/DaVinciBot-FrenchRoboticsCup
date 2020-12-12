@@ -108,7 +108,7 @@ void emergency_break_callback(const std_msgs::Bool &msg)
     motorbreak();
   }
 }
-void target_callback(const std_msgs::Int16 &msg)
+void target_callback(const std_msgs::Int8 &msg)
 {
   target_ticks = msg.data;
 }

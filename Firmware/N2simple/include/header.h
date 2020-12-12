@@ -2,7 +2,7 @@
 #include <ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
-#include <std_msgs/Int16.h>
+#include <std_msgs/Int8.h>
 #include "config.h"
 
 //CYCLE
@@ -24,7 +24,7 @@ int de;//derived erro:r or error variation
 int pid_constants[3];//for paramserver
 long PID_;//result of pid calc before mapping to pins
 int mapped;//mapped version of pid
-std_msgs::Int16 reality_pub;
+std_msgs::Int8 reality_pub;
 
 //Communication
 const int bauderate = 38400;
@@ -50,11 +50,11 @@ ros::Subscriber<std_msgs::Bool> sub_emergency_break(TOPIC_EMERGENCY_BREAK, &emer
 
 // speed target
 int desired_ticks = 0;
-std_msgs::Int16 target;
-void target_callback(const std_msgs::Int16 &msg);
-ros::Subscriber<std_msgs::Int16> sub_target(TOPIC_TARGET, &target_callback);
+std_msgs::Int8 target;
+void target_callback(const std_msgs::Int8 &msg);
+ros::Subscriber<std_msgs::Int8> sub_target(TOPIC_TARGET, &target_callback);
 // speed reality
-std_msgs::Int16 reality;
+std_msgs::Int8 reality;
 ros::Publisher pub_reality(TOPIC_REALITY, &reality);
 
 // connection check
