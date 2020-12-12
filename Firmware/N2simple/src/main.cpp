@@ -75,8 +75,8 @@ void Cycle() ///called by the timer
     PID_ = (kp * e)+(ki * E);
     if(dir!=(PID_>0)){
       dir = (PID_>0);
-      digitalWrite(pin_dir1, dir);
-      digitalWrite(pin_dir2, !dir);
+      digitalWrite(pin_dir1, !dir);
+      digitalWrite(pin_dir2, dir);
     }
     PID_ =abs(PID_);
     mapped = ( PID_ < 1023) ? PID_ : 1023;
@@ -88,9 +88,9 @@ void Cycle() ///called by the timer
 void encoderInterrupt()
 {
   if(digitalReadFast(pin_encoder2)){
-    tick++;
-  }else{
     tick--;
+  }else{
+    tick++;
   }
 }
 void motorbreak()
