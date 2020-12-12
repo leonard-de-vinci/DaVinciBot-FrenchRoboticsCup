@@ -17,11 +17,11 @@ if __name__ == '__main__':
     global rightpub, leftpub
     rospy.init_node("tickviewer", anonymous=False)
     breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
-    rightpub = rospy.Publisher("/N1/target", IntArr, queue_size=2)
-    leftpub = rospy.Publisher("/N2/target", IntArr, queue_size=2)
+    rightpub = rospy.Publisher("/N1/target", Int8, queue_size=2)
+    leftpub = rospy.Publisher("/N2/target", Int8, queue_size=2)
     print("waiting for full init")
     time.sleep(5)
-    msg = Int16
+    msg = Int8()
     msg.data = 0
     rightpub.publish(msg)
     msg.data = 0
