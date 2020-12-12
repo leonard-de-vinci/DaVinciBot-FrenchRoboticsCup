@@ -30,7 +30,7 @@ def sendmovement():
         msg.y = target.ry
         msg.epsilon = target.rad
         msg.mod = target.mod
-        rospy.loginfo(str(target.rx)+" | "+str(target.ry))
+        #rospy.loginfo(str(target.rx)+" | "+str(target.ry))
         mvpub.publish(msg)
 
 # ## ROS -------------------------------------------------------------
