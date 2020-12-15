@@ -28,8 +28,8 @@ def updatepos(rightmsg, leftmsg):
     Vr = np.pi*wheelDiameter*(leftmsg.data/Nticks)  # mm Dl
     V = (Vr+Vl)/2.0  # mm DC
     thetadot = (Vr-Vl) / entraxe  # rad
-    Xdot = np.cos(theta)*V
-    Ydot = np.sin(theta)*V
+    Xdot = np.cos(thetadot)*V
+    Ydot = np.sin(thetadot)*V
     theta += thetadot  # rad
     X += Xdot
     Y += Ydot
