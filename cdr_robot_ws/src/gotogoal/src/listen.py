@@ -16,7 +16,7 @@ def signal_handler(signal, frame):
 
 
 def coordcallback(msg):
-    global instructionpub, epsilon, mod, target, buffer, feedbackpub
+    global instructionpub, epsilon, mod, target, buffer, feedbackpub, newtarget
     buffer += 1
     if buffer >= 10:  # !  so that we don't overscreen
         pos = np.array([msg.x, msg.y])
