@@ -130,6 +130,7 @@ while running:
         radius = np.linalg.norm(tempcoord - temp)
         myfont.render_to(screen, (int(x-5), int(y-5)), str(radius), colorc)
     pg.display.flip()
+    sendmovement()
     clock.tick(30)
 
 

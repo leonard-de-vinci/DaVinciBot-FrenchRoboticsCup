@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import rospy
 import time
 from bot_coordinates.msg import Coordinates
@@ -25,7 +25,7 @@ def w(angle):
 
 def coordcallback(msg):
     global rightpub, leftpub, V, K, targetAngle, buffer
-    if(buffer % 10 == 0):
+    if(buffer % 5 == 0):
         alpha = w(w(targetAngle) - w(msg.theta))
         Vr = V*(np.cos(alpha)+K*np.sin(alpha))  # rad/s
         Vl = V*(np.cos(alpha)-K*np.sin(alpha))  # rad/s
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     entraxe = 160.00  # mm
     l = 160.00  # mm? not sure
     K = entraxe/(2*l)  # main parameter    K [1/2:1] #! this is the most important param
-    targetAngle = 1
+    targetAngle = 0.00
     V = 0.00
     global rightpub, leftpub, coordsub, buffer
     buffer = 0
