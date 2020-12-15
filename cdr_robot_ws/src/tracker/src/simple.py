@@ -30,7 +30,7 @@ def updatepos(rightmsg, leftmsg):
     thetadot = (Vr-Vl) / entraxe  # rad
     Xdot = np.cos(thetadot)*V
     Ydot = np.sin(thetadot)*V
-    theta += thetadot  # rad
+    theta -= thetadot  # rad
     X += Xdot
     Y += Ydot
     # rospy.loginfo("| "+str(X)+" "+str(Y)+" "+str(theta)+" |")
