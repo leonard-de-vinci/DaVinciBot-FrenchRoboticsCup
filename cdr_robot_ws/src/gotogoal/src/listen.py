@@ -27,13 +27,14 @@ def coordcallback(msg):
         V = 10.00
         if (mod == 1):
             V = min(distance/7, V)
-        if distance <= epsilon:  # if reached the goal
+        if distance <= epsilon and newtarget:  # if reached the goal
             if mod == 1:
                 V = 0.00
             theta = msg.theta
             tmsg = Int32()
             tmsg.data = 1
             feedbackpub.publish(tmsg)
+            newtarget = False
             rospy.loginfo("reached a goal")
         controlmsg = FloatArr()
         controlmsg.v = V
@@ -50,7 +51,8 @@ def w(angle):
 
 
 def movementcallback(msg):
-    global target, mod, epsilon
+    global target, mod, epsilon, newtarget
+    newtarget = True
     target = np.array([msg.x, msg.y])
     mod = msg.mod
     epsilon = msg.epsilon
@@ -60,8 +62,9 @@ def movementcallback(msg):
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     # pointlist = np.loadtxt("waypoints.csv",delimiter=';')
-    global coordsub, instructionpub, movementsub, feedbackpub, mod, epsilon, target, buffer
+    global coordsub, instructionpub, movementsub, feedbackpub, mod, epsilon, target, buffer, nextarget
     buffer = 0
+    newtarget = False
     target = np.array([1500.00, 1000.00])
     mod = 0
     epsilon = 100
