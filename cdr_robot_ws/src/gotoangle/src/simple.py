@@ -26,9 +26,9 @@ def w(angle):
 def coordcallback(msg):
     global rightpub, leftpub, V, K, targetAngle, buffer
     if(buffer % 5 == 0):
-        alpha = w(w(targetAngle) - w(msg.theta))
-        Vr = V*(np.cos(alpha)+K*np.sin(alpha))  # rad/s
-        Vl = V*(np.cos(alpha)-K*np.sin(alpha))  # rad/s
+        alpha = w(w(targetAngle) - w(msg.theta)+np.pi)
+        Vr = V*(np.cos(alpha)+K*np.sin(alpha))*(-1)  # rad/s
+        Vl = V*(np.cos(alpha)-K*np.sin(alpha))*(-1)  # rad/s
         msg = Int8()
         msg.data = Vr
         rightpub.publish(msg)

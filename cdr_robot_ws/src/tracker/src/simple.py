@@ -28,8 +28,8 @@ def updatepos(rightmsg, leftmsg):
     Vr = np.pi*wheelDiameter*(leftmsg.data/Nticks)  # mm Dl
     V = (Vr+Vl)/2.0  # mm DC
     thetadot = (Vr-Vl) / entraxe  # rad
-    Xdot = np.cos(thetadot)*V
-    Ydot = np.sin(thetadot)*V
+    Xdot = np.cos(theta)*V
+    Ydot = np.sin(theta)*V
     theta -= thetadot  # rad
     X += Xdot
     Y += Ydot
@@ -58,8 +58,8 @@ if __name__ == "__main__":
     theta = 0.0  # ? rad not sure
     global wheelDiameter, entraxe, Nticks, wheelRadius
     Nticks = 1024.00  # ticks
-    entraxe = 160.00  # mm
-    wheelDiameter = 69.00  # mm
+    entraxe = 280.00  # mm
+    wheelDiameter = 61.50  # mm
     wheelRadius = wheelDiameter/2.0  # mm
     global coordpub, rightsub, leftsub
     rospy.init_node("rospy_tracker", anonymous=False)

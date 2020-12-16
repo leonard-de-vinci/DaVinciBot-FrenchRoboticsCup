@@ -26,7 +26,7 @@ def coordcallback(msg):
             target = pointlist[itlist % (len(pointlist))]
             diff = target - pos  # vecteur de deplacement vers prochain point
             distance = np.linalg.norm(diff)
-        V = min(distance / 7, 20)  # fonction de control de la vitesse en fonction de la distance,  will be upgraded
+        V = min(distance / 7, 45)  # fonction de control de la vitesse en fonction de la distance,  will be upgraded
         theta = np.arctan2(diff[1], diff[0])  # angle of the trajectory vector,  might need to swap argument order
         controlmsg = FloatArr()
         controlmsg.v = V
