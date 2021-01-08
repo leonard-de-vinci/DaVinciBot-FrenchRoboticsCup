@@ -45,7 +45,7 @@ if __name__ == '__main__':
     global K, targetAngle, V, dalpha, Kd
     dalpha = np.pi  # ! might need some tweeks
     K = 0.5  # entraxe/(2*l)  # main parameter    K [1/2:1] #! this is the most important param
-    Kd = 0.3  # wheight for derror                          #! this param i simportant too now
+    Kd = 0.2  # wheight for derror                          #! this param i simportant too now
     targetAngle = 0.00
     V = 0.00
     global rightpub, leftpub, coordsub, buffer

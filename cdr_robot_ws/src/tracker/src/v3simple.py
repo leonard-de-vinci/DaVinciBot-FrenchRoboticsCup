@@ -28,13 +28,13 @@ def updatepos(rightmsg, leftmsg):
     Vr = np.pi*wheelDiameter*(leftmsg.data/Nticks)  # mm Dl
     V = (Vr+Vl)/2.0  # mm DC
     thetadot = (Vr-Vl) / entraxe  # rad
-    # Xdot = (np.sin(thetadot)*np.cos(theta)+np.sin(theta)*np.cos(thetadot)-np.sin(theta))
-    # Ydot = (np.cos(theta)-np.cos(thetadot)*np.cos(theta)+np.sin(theta)*np.sin(thetadot))
-    Xdot = np.cos(theta+thetadot/2.0)
-    Ydot = np.sin(theta+thetadot/2.0)
+    Xdot = (np.sin(thetadot)*np.cos(theta)+np.sin(theta)*np.cos(thetadot)-np.sin(theta))
+    Ydot = (np.cos(theta)-np.cos(thetadot)*np.cos(theta)+np.sin(theta)*np.sin(thetadot))
+    # Xdot = np.cos(theta+thetadot/2.0)
+    # Ydot = np.sin(theta+thetadot/2.0)
     rospy.loginfo(str(Xdot)+" | "+str(Ydot))
-    Xdot*=V
-    Ydot*=V
+    Xdot*=(V/thetadot)
+    Ydot*=(V/thetadot)
     theta -= thetadot  # rad
     X += Xdot
     Y += Ydot
