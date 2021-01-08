@@ -60,3 +60,4 @@ ros::Publisher pub_reality(TOPIC_REALITY, &reality);
 // connection check
 int n = 0;
 #define TIMEOUT 50
+void connect(void);

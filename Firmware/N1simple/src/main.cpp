@@ -4,11 +4,7 @@
 
 void setup(void)
 {
-  //ROS
-  nh.initNode();
-  nh.advertise(pub_reality);         //advertise le topic de publication
-  nh.subscribe(sub_target);
-  nh.subscribe(sub_emergency_break); //abonnement arrêt d'urgence
+
   //pin init
   pinMode(pin_pwr, OUTPUT);
   digitalWrite(pin_pwr,LOW);
@@ -19,15 +15,12 @@ void setup(void)
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(pin_encoder, INPUT);
   pinMode(pin_encoder2,INPUT);
-  while (!nh.connected())
-  {
-    nh.spinOnce();
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(80);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(80);
-    
-  }
+    //ROS
+  nh.initNode();
+  nh.advertise(pub_reality);         //advertise le topic de publication
+  nh.subscribe(sub_target);
+  nh.subscribe(sub_emergency_break); //abonnement arrêt d'urgence
+  connect();
     //TIMER initialization
   Timer1.initialize(period);     //initialisation du timer
   Timer1.attachInterrupt(Cycle); //attachInterrupt
@@ -44,9 +37,7 @@ void loop(void) ///main loop
   {
     n++;
     if(n >= TIMEOUT){
-      if(!nh.connected()){
-        emergency_break = true;
-      }
+      connect();
       n=0;
     }
     reality_pub.data = copytick; //reality_ticks;
@@ -98,6 +89,7 @@ void motorbreak()
   digitalWrite(pin_pwr, LOW);
   digitalWrite(pin_dir1, HIGH);
   digitalWrite(pin_dir2, HIGH);
+  E=0;
   
 }
 void emergency_break_callback(const std_msgs::Bool &msg)
@@ -111,4 +103,20 @@ void emergency_break_callback(const std_msgs::Bool &msg)
 void target_callback(const std_msgs::Int8 &msg)
 {
   target_ticks = msg.data;
+}
+
+void connect(){
+  if(!nh.connected()){
+    motorbreak();
+    while (!nh.connected())
+    {
+      
+      nh.spinOnce();
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(80);
+      digitalWrite(LED_BUILTIN, LOW);
+      delay(80);
+    }
+    
+  }
 }
