@@ -18,7 +18,7 @@ def signal_handler(signal, frame):
 def coordcallback(msg):
     global instructionpub, epsilon, mod, target, buffer, feedbackpub, newtarget
     buffer += 1
-    if buffer >= 40:  # !  so that we don't overscreen
+    if buffer >= 10:  # !  so that we don't overscreen
         pos = np.array([msg.x, msg.y])
         diff = target - pos  # vecteur de deplacement
         distance = np.linalg.norm(diff)
@@ -26,10 +26,9 @@ def coordcallback(msg):
         # ! taking care of the speed
         V = 20.00
 	if (mod == 0):
-	   V = min(((distance-epsilon)/5)+10,40)
-        elif (mod == 1):
-            #V = min(((distance-epsilon)/5)+5, 10.00)
-	    V = 10.00
+	    V = min((
+        if (mod == 1):
+            V = min(((distance-epsilon)/5)+5, V)
         if distance <= epsilon and newtarget:  # if reached the goal
             if mod == 1:
                 V = 0.00

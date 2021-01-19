@@ -33,8 +33,8 @@ def updatepos(rightmsg, leftmsg):
     # Xdot = np.cos(theta+thetadot/2.0)
     # Ydot = np.sin(theta+thetadot/2.0)
     rospy.loginfo(str(Xdot)+" | "+str(Ydot))
-    Xdot*=(V/thetadot)
-    Ydot*=(V/thetadot)
+    Xdot*=(V)*1000
+    Ydot*=(V)*1000
     theta -= thetadot  # rad
     X += Xdot
     Y += Ydot

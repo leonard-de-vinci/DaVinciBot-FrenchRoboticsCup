@@ -28,8 +28,8 @@ def coordcallback(msg):
     if(buffer%5 == 0):
         alpha = w(w(targetAngle) - w(msg.theta))
 	# alpha = alpha *alpha
-        Vr = V*(np.cos(alpha)+K*np.sin(alpha))  # rad/s
-        Vl = V*(np.cos(alpha)-K*np.sin(alpha))  # rad/s
+        Vr = V*(np.cos(alpha)-K*np.sin(alpha))  # rad/s
+        Vl = V*(np.cos(alpha)+K*np.sin(alpha))  # rad/s
         msg = Int8()
         msg.data = Vr
         rightpub.publish(msg)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     wheelRadius = wheelDiameter/2
     # entraxe = 160.00  # mm
     # l = 160.00  # mm? not sure
-    K = 0.3 # entraxe/(2*l)  # main parameter    K [1/2:1] #! this is the most important param
+    K = 0.7 # entraxe/(2*l)  # main parameter    K [1/2:1] #! this is the most important param
     targetAngle = 0.00
     V = 0.00
     global rightpub, leftpub, coordsub, buffer

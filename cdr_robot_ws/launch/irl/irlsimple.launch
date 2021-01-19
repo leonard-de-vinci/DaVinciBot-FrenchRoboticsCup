@@ -8,6 +8,6 @@
         <param name="baud" value="4608000"/>
     </node>
     <node name="the_tracker" pkg = "tracker" type = "v2simple.py" output="screen"/>
-    <node name="gotoAngle" pkg = "gotoangle" type = "pdangle.py" />
+    <node name="gotoAngle" pkg = "gotoangle" type = "simple.py" />
     <node name="gotoGoal" pkg = "gotogoal" type = "listen.py" />
 </launch>
