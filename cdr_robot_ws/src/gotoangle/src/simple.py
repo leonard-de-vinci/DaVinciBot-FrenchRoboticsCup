@@ -46,7 +46,11 @@ if __name__ == '__main__':
     wheelRadius = wheelDiameter/2
     # entraxe = 160.00  # mm
     # l = 160.00  # mm? not sure
+<<<<<<< HEAD
     K = 0.7 # entraxe/(2*l)  # main parameter    K [1/2:1] #! this is the most important param
+=======
+    K = 0.6 # entraxe/(2*l)  # main parameter    K [1/2:1] #! this is the most important param
+>>>>>>> 1d7c349d4b04e4ef8a1c3454278b8713a114119f
     targetAngle = 0.00
     V = 0.00
     global rightpub, leftpub, coordsub, buffer

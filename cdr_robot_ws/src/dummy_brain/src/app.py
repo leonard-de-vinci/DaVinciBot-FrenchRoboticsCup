@@ -30,7 +30,7 @@ def sendmovement():
         msg.y = target.ry
         msg.epsilon = target.rad
         msg.mod = target.mod
-        #rospy.loginfo(str(target.rx)+" | "+str(target.ry))
+        # rospy.loginfo(str(target.rx)+" | "+str(target.ry))
         mvpub.publish(msg)
 
 # ## ROS -------------------------------------------------------------
@@ -80,11 +80,11 @@ while running:
                 print("break state: ", emergencybreak)
             if event.key == pg.K_UP:
                 mod += 1
-                mod = mod % 2
+                mod = mod % 4
                 print("mod:= ", mod)
             elif event.key == pg.K_DOWN:
                 mod -= 1
-                mod = mod % 2
+                mod = mod % 4
                 print("mod:= ", mod)
             if event.key == pg.K_SPACE:
                 showlidar = not showlidar
@@ -126,6 +126,10 @@ while running:
         colorc = (16, 5, 135)
         if(mod == 1):
             colorc = (6, 186, 27)
+        if(mod == 2):
+            colorc = (240, 34, 44)
+        if(mod == 3):
+            colorc = (189, 15, 140)
         pg.draw.line(screen, colorc, (int(tempcoord[0]), int(tempcoord[1])), (int(x), int(y)))
         radius = np.linalg.norm(tempcoord - temp)
         myfont.render_to(screen, (int(x-5), int(y-5)), str(radius), colorc)

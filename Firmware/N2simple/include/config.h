@@ -9,8 +9,8 @@
 #define pin_dir2 3//pin for H bridge pwm
 #define pin_pwr   2 //pin for H bridge enable
 
-volatile int kp = 20;
-volatile int ki = 30;
+volatile int kp = 10;
+volatile int ki = 10;
 
 const int IMAX = 1023;
 const int IMIN = -1023;
