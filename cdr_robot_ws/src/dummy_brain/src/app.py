@@ -5,6 +5,7 @@ import pygame as pg
 import pygame.freetype
 from point import waypoint
 import rospy
+import datetime
 from std_msgs.msg import Bool
 from std_msgs.msg import Int32
 from bot_coordinates.msg import movement
@@ -89,6 +90,15 @@ while running:
             if event.key == pg.K_SPACE:
                 showlidar = not showlidar
                 print("toggle lidar ", showlidar)
+            if event.key == pg.K_s:
+                name = "saves/"+np.datetime_as_string(np.datetime64(datetime.datetime.now()))+".csv"
+                temparray = []
+                for i in waypoints:
+                    temparray.append([i.rx, i.ry, i.rad, i.mod])
+                arrtosave = np.array(temparray)
+                np.savetxt(name, arrtosave, delimiter=';')
+                print("--------------SAVED !!! --------------")
+                print(name)
         if event.type == pygame.MOUSEBUTTONDOWN:
             temp = np.array([x, y])
             if(event.button == 1):  # left click
