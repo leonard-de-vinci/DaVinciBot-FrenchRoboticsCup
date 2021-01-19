@@ -24,27 +24,36 @@ def coordcallback(msg):
         distance = np.linalg.norm(diff)
         theta = np.arctan2(diff[1], diff[0])  # angle of the trajectory vector,  might need to swap argument order
         # ! taking care of the speed
-        V = 20.00
-	if (mod == 0):
-	   V = min(((distance-epsilon)/5)+10,40)
-        elif (mod == 1):
-            #V = min(((distance-epsilon)/5)+5, 10.00)
-	    V = 10.00
-        if distance <= epsilon and newtarget:  # if reached the goal
-            if mod == 1:
-                V = 0.00
-            theta = msg.theta
-            tmsg = Int32()
-            tmsg.data = 1
-            feedbackpub.publish(tmsg)
-            newtarget = False
-            rospy.loginfo("reached a goal")
-        controlmsg = FloatArr()
-        controlmsg.v = V
-        controlmsg.theta = theta
-        instructionpub.publish(controlmsg)
-        rospy.loginfo(str(theta)+" "+str(V))
-        buffer = 0  # !reset limiter
+        V = 0.00  # default values
+        mtype = 0  # default values
+    if (mod == 0):  # max speed with slow down
+        V = min(((distance-epsilon)/5)+10, 40)
+        mtype = 0
+    elif (mod == 1):  # slow controled approch
+        V = 10.00
+        mtype = 0
+    elif (mod == 2):  # pure rotation
+        V = 10.00
+        mtype = 1  # rot
+    elif (mod == 3):
+        V = 5.00
+        mtype = 1
+    if distance <= epsilon and newtarget:  # if reached the goal
+        if mod == 1:
+            V = 0.00
+        theta = msg.theta  # send feedback
+        tmsg = Int32()
+        tmsg.data = 1
+        feedbackpub.publish(tmsg)
+        newtarget = False
+        rospy.loginfo("reached a goal")
+    controlmsg = FloatArr()
+    controlmsg.v = V
+    controlmsg.theta = theta
+    controlmsg.type = mtype
+    instructionpub.publish(controlmsg)
+    rospy.loginfo(str(theta)+" "+str(V))
+    buffer = 0  # !reset limiter
 
 
 def w(angle):

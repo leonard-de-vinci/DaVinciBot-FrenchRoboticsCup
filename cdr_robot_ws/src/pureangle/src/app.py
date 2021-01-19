@@ -14,10 +14,9 @@ def signal_handler(signal, frame):
 
 
 def control_callback(msg):
-    global V, targetAngle, mtype
+    global V, targetAngle
     targetAngle = w(msg.theta)
     V = msg.v
-    mtype = msg.type
 
 
 def w(angle):
@@ -25,16 +24,12 @@ def w(angle):
 
 
 def coordcallback(msg):
-    global rightpub, leftpub, V, K, targetAngle, buffer, mtype
+    global rightpub, leftpub, V, K, targetAngle, buffer
     if(buffer % 5 == 0):
-        (Vr, Vl) = (0, 0)  # init for default values
         alpha = w(w(targetAngle) - w(msg.theta))
-        if mtype == 0:  # go for it
-            Vr = V*(np.cos(alpha)-K*np.sin(alpha))  # rad/s
-            Vl = V*(np.cos(alpha)+K*np.sin(alpha))  # rad/s
-        elif mtype == 1:  # only rotation
-            Vr = V*(-1*K*np.sin(alpha))  # rad/s
-            Vl = V*(K*np.sin(alpha))  # rad/s
+        # alpha = alpha *alpha
+        Vr = V*(-1*K*np.sin(alpha))  # rad/s
+        Vl = V*(K*np.sin(alpha))  # rad/s
         msg = Int8()
         msg.data = Vr
         rightpub.publish(msg)
@@ -46,10 +41,11 @@ def coordcallback(msg):
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
-    global wheelDiameter, entraxe, wheelRadius, l, K, targetAngle, V, mtype
+    global wheelDiameter, entraxe, wheelRadius, l, K, targetAngle, V
     wheelDiameter = 61.50  # mm
     wheelRadius = wheelDiameter/2
-    mtype = 0  # the type of movement; 0 = go for it; 1 = rotation only
+    # entraxe = 160.00  # mm
+    # l = 160.00  # mm? not sure
     K = 0.6  # entraxe/(2*l)  # main parameter    K [1/2:1] #! this is the most important param
     targetAngle = 0.00
     V = 0.00
