@@ -16,14 +16,13 @@ def signal_handler(signal, frame):
 
 
 def coordcallback(msg):
-    global instructionpub, epsilon, mod, target, buffer, feedbackpub, newtarget
+    global instructionpub, epsilon, mod, target, buffer, feedbackpub, newtarget, bufferangle
     buffer += 1
-    if buffer >= 40:  # !  so that we don't overscreen
+    if buffer >= 10:  # !  so that we don't overscreen
         pos = np.array([msg.x, msg.y])
         diff = target - pos  # vecteur de deplacement
         distance = np.linalg.norm(diff)
         theta = np.arctan2(diff[1], diff[0])  # angle of the trajectory vector,  might need to swap argument order
-        # ! taking care of the speed
         V = 0.00  # default values
         mtype = 0  # default values
     if (mod == 0):  # max speed with slow down
@@ -35,18 +34,35 @@ def coordcallback(msg):
     elif (mod == 2):  # pure rotation
         V = 10.00
         mtype = 1  # rot
-    elif (mod == 3):
+    elif (mod == 3):  # rot then change behaviour for 1
         V = 5.00
         mtype = 1
-    if distance <= epsilon and newtarget:  # if reached the goal
-        if mod == 1:
-            V = 0.00
-        theta = msg.theta  # send feedback
-        tmsg = Int32()
-        tmsg.data = 1
-        feedbackpub.publish(tmsg)
-        newtarget = False
-        rospy.loginfo("reached a goal")
+    if (mod == 0 or mod == 1):  # we consider disatnce to objectif
+        if distance <= epsilon and newtarget:  # if reached the goal
+            if mod == 1:
+                V = 0.00
+            theta = msg.theta  # send feedback
+            tmsg = Int32()
+            tmsg.data = 1
+            feedbackpub.publish(tmsg)
+            newtarget = False
+            rospy.loginfo("reached a goal")
+    if mod == 2 or mod == 3:  # we consider the angle to objectif
+        if abs(theta - msg.theta) < (epsilon / 100):  # if reached accepeble angle
+            bufferangle += 1
+            if bufferangle >= 100:  # ! this value is arbitrary and might require tweeking
+                bufferangle = 0
+                if mod == 3:
+                    mod = 1
+                    epsilon = 40  # ! this might need changing as in reducing for more acuracy
+                    rospy.loginfo("angle held, changing behaviour")
+                else:
+                    theta = msg.theta  # send feedback
+                    tmsg = Int32()
+                    tmsg.data = 1
+                    feedbackpub.publish(tmsg)
+                    newtarget = False
+                    rospy.loginfo("angle held")
     controlmsg = FloatArr()
     controlmsg.v = V
     controlmsg.theta = theta
@@ -63,19 +79,21 @@ def w(angle):
 
 
 def movementcallback(msg):
-    global target, mod, epsilon, newtarget
+    global target, mod, epsilon, newtarget, bufferangle
     newtarget = True
     target = np.array([msg.x, msg.y])
     mod = msg.mod
     epsilon = msg.epsilon
+    bufferangle = 0  # reset the buffer
     rospy.loginfo("received movement command")
 
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     # pointlist = np.loadtxt("waypoints.csv",delimiter=';')
-    global coordsub, instructionpub, movementsub, feedbackpub, mod, epsilon, target, buffer, nextarget
+    global coordsub, instructionpub, movementsub, feedbackpub, mod, epsilon, target, buffer, nextarget, bufferangle
     buffer = 0
+    bufferangle = 0  # buffer used for stability of angle
     newtarget = False
     target = np.array([1500.00, 1000.00])
     mod = 0
