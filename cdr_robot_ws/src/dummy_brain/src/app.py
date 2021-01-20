@@ -54,7 +54,7 @@ thebot = robot.rob(250, 150, 0, screen, myfont)
 
 # ## variables related to servos
 servostate = [0, 0, 0]  # what pos in the angle array so either 1 or 0 atm
-servoangles = [[0, 0, 0], [256, 256, 256]]  # min angle followed by max angle for easy change and switch ... 
+servoangles = [[0, 0, 0], [256, 256, 256]]  # min angle followed by max angle for easy change and switch ...
 
 # ## other stuff
 tempcoord = np.array([0, 0])
@@ -129,7 +129,7 @@ while running:
                 np.savetxt(name, arrtosave, delimiter=';')
                 print("--------------SAVED !!! --------------")
                 print(name)
-        
+
         # ##begin mouse stuff
         if event.type == pygame.MOUSEBUTTONDOWN:
             temp = np.array([x, y])
