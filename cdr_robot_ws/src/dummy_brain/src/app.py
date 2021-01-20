@@ -52,6 +52,11 @@ running = True
 clock = pg.time.Clock()
 thebot = robot.rob(250, 150, 0, screen, myfont)
 
+# ## variables related to servos
+servostate = [0, 0, 0]  # what pos in the angle array so either 1 or 0 atm
+servoangles = [[0, 0, 0], [256, 256, 256]]  # min angle followed by max angle for easy change and switch ... 
+
+# ## other stuff
 tempcoord = np.array([0, 0])
 holding = False
 emergencybreak = True
@@ -72,13 +77,15 @@ while running:
             running = False
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:  # save waypoints
+            if event.key == pygame.K_RETURN:  # emergency break
                 emergencybreak = not emergencybreak
                 msg = Bool()
                 msg.data = emergencybreak
                 breakpub.publish(emergencybreak)
                 sendmovement()
                 print("break state: ", emergencybreak)
+
+            # ## begin the mods
             if event.key == pg.K_UP:
                 mod += 1
                 mod = mod % 4
@@ -87,10 +94,33 @@ while running:
                 mod -= 1
                 mod = mod % 4
                 print("mod:= ", mod)
+            # ## begin the mods
+
+            # ##begin lidar related stuff
             if event.key == pg.K_SPACE:
                 showlidar = not showlidar
                 print("toggle lidar ", showlidar)
-            if event.key == pg.K_s:
+            # ##end lidar stuff
+
+            # ## begin servos
+            if event.key == pg.K_a:
+                which = 1
+                servostate[which] = (servostate[which]+1) % 2
+                # TODO put code to send info to servos here...
+                print("changing position of servo n°", which)
+            if event.key == pg.K_z:
+                which = 2
+                servostate[which] = (servostate[which]+1) % 2
+                # TODO put code to send info to servos here...
+                print("changing position of servo n°", which)
+            if event.key == pg.K_e:
+                which = 3
+                servostate[which] = (servostate[which]+1) % 2
+                # TODO put code to send info to servos here...
+                print("changing position of servo n°", which)
+            # ## end servos
+
+            if event.key == pg.K_s:  # save the data to csv
                 name = "saves/"+np.datetime_as_string(np.datetime64(datetime.datetime.now()))+".csv"
                 temparray = []
                 for i in waypoints:
@@ -99,6 +129,8 @@ while running:
                 np.savetxt(name, arrtosave, delimiter=';')
                 print("--------------SAVED !!! --------------")
                 print(name)
+        
+        # ##begin mouse stuff
         if event.type == pygame.MOUSEBUTTONDOWN:
             temp = np.array([x, y])
             if(event.button == 1):  # left click
@@ -119,6 +151,7 @@ while running:
                 if radius <= 1:
                     radius == 1
                 waypoints.append(waypoint(tempcoord[0], tempcoord[1], radius, myfont, screen, mod))
+
     # Fill the background with white
     screen.blit(background, (0, 0))
     if len(waypoints) >= 1:
