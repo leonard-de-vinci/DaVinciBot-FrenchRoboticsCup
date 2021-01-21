@@ -48,13 +48,14 @@ def coordcallback(msg):
                 newtarget = False
                 rospy.loginfo("reached a goal")
         if mod == 2 or mod == 3:  # we consider the angle to objectif
-            if abs(theta - msg.theta) < (epsilon / 100):  # if reached accepeble angle
+            if abs(w(w(theta) - w(msg.theta))) <= (0.1) and newtarget:  # if reached accepeble angle
                 bufferangle += 1
 		rospy.loginfo(str(bufferangle))
                 if bufferangle >= 100:  # ! this value is arbitrary and might require tweeking
                     bufferangle = 0
                     if mod == 3:
                         mod = 1
+			mtype = 0
                         epsilon = 40  # ! this might need changing as in reducing for more acuracy
                         rospy.loginfo("angle held, changing behaviour")
                     else:
