@@ -25,51 +25,53 @@ def coordcallback(msg):
         theta = np.arctan2(diff[1], diff[0])  # angle of the trajectory vector,  might need to swap argument order
         V = 0.00  # default values
         mtype = 0  # default values
-    if (mod == 0):  # max speed with slow down
-        V = min(((distance-epsilon)/5)+10, 40)
-        mtype = 0
-    elif (mod == 1):  # slow controled approch
-        V = 10.00
-        mtype = 0
-    elif (mod == 2):  # pure rotation
-        V = 10.00
-        mtype = 1  # rot
-    elif (mod == 3):  # rot then change behaviour for 1
-        V = 5.00
-        mtype = 1
-    if (mod == 0 or mod == 1):  # we consider disatnce to objectif
-        if distance <= epsilon and newtarget:  # if reached the goal
-            if mod == 1:
-                V = 0.00
-            theta = msg.theta  # send feedback
-            tmsg = Int32()
-            tmsg.data = 1
-            feedbackpub.publish(tmsg)
-            newtarget = False
-            rospy.loginfo("reached a goal")
-    if mod == 2 or mod == 3:  # we consider the angle to objectif
-        if abs(theta - msg.theta) < (epsilon / 100):  # if reached accepeble angle
-            bufferangle += 1
-            if bufferangle >= 100:  # ! this value is arbitrary and might require tweeking
-                bufferangle = 0
-                if mod == 3:
-                    mod = 1
-                    epsilon = 40  # ! this might need changing as in reducing for more acuracy
-                    rospy.loginfo("angle held, changing behaviour")
-                else:
-                    theta = msg.theta  # send feedback
-                    tmsg = Int32()
-                    tmsg.data = 1
-                    feedbackpub.publish(tmsg)
-                    newtarget = False
-                    rospy.loginfo("angle held")
-    controlmsg = FloatArr()
-    controlmsg.v = V
-    controlmsg.theta = theta
-    controlmsg.type = mtype
-    instructionpub.publish(controlmsg)
-    rospy.loginfo(str(theta)+" "+str(V))
-    buffer = 0  # !reset limiter
+        if (mod == 0):  # max speed with slow down
+            V = min(((distance-epsilon)/5)+10, 40)
+            mtype = 0
+        elif (mod == 1):  # slow controled approch
+            V = 15.00
+            mtype = 0
+        elif (mod == 2):  # pure rotation
+            V = 20.00
+            mtype = 1  # rot
+        elif (mod == 3):  # rot then change behaviour for 1
+            V = 20.00
+            mtype = 1
+        if (mod == 0 or mod == 1):  # we consider disatnce to objectif
+            if (distance <= epsilon) and newtarget:  # if reached the goal
+                if mod == 1:
+                    V = 0.00
+                theta = msg.theta  # send feedback
+                tmsg = Int32()
+                tmsg.data = 1
+                feedbackpub.publish(tmsg)
+                newtarget = False
+                rospy.loginfo("reached a goal")
+        if mod == 2 or mod == 3:  # we consider the angle to objectif
+            if abs(w(w(theta) - w(msg.theta))) <= (0.1) and newtarget:  # if reached accepeble angle
+                bufferangle += 1
+		rospy.loginfo("----------------------"+str(bufferangle))
+                if bufferangle >= 10:  # ! this value is arbitrary and might require tweeking
+                    bufferangle = 0
+                    if mod == 3:
+                        mod = 1
+			mtype = 0
+                        epsilon = 40  # ! this might need changing as in reducing for more acuracy
+                        rospy.loginfo("angle held, changing behaviour")
+                    else:
+                        theta = msg.theta  # send feedback
+                        tmsg = Int32()
+                        tmsg.data = 1
+                        feedbackpub.publish(tmsg)
+                        newtarget = False
+                        rospy.loginfo("angle held")
+        controlmsg = FloatArr()
+        controlmsg.v = V
+        controlmsg.theta = theta
+        controlmsg.type = mtype
+        instructionpub.publish(controlmsg)
+        # rospy.loginfo(str(theta)+" "+str(V))
+        buffer = 0  # !reset limiter
 
 
 def w(angle):
@@ -80,12 +82,13 @@ def w(angle):
 
 def movementcallback(msg):
     global target, mod, epsilon, newtarget, bufferangle
-    newtarget = True
-    target = np.array([msg.x, msg.y])
-    mod = msg.mod
-    epsilon = msg.epsilon
-    bufferangle = 0  # reset the buffer
-    rospy.loginfo("received movement command")
+    if msg.x!=target[0] or target[1]!=msg.y :
+        newtarget = True
+        target = np.array([msg.x, msg.y])
+        mod = msg.mod
+        epsilon = msg.epsilon
+        bufferangle = 0  # reset the buffer
+        rospy.loginfo("received movement command, "+str(msg.mod))
 
 
 if __name__ == '__main__':

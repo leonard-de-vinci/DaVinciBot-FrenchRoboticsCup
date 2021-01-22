@@ -107,17 +107,16 @@ while running:
                 which = 1
                 servostate[which] = (servostate[which]+1) % 2
                 # TODO put code to send info to servos here...
-                print("changing position of servo n°", which)
+                print("changing position of servo nO", which)
             if event.key == pg.K_z:
                 which = 2
                 servostate[which] = (servostate[which]+1) % 2
                 # TODO put code to send info to servos here...
-                print("changing position of servo n°", which)
             if event.key == pg.K_e:
                 which = 3
                 servostate[which] = (servostate[which]+1) % 2
                 # TODO put code to send info to servos here...
-                print("changing position of servo n°", which)
+                print("changing position of servo nO", which)
             # ## end servos
 
             if event.key == pg.K_s:  # save the data to csv
