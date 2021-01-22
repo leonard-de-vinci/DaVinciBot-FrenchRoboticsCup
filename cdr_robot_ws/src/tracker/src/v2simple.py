@@ -56,8 +56,8 @@ def ttomm(ticks):
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     global X, Y, theta
-    X = 150.0  # mm
-    Y = 850.0  # mm
+    X = 1500.0  # mm
+    Y = 1000.0  # mm
     theta = 0.0  # ? rad not sure
     global wheelDiameter, entraxe, Nticks, wheelRadius
     Nticks = 1024.00  # ticks
