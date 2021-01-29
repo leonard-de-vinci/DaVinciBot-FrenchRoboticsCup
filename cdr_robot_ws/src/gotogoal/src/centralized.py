@@ -20,7 +20,7 @@ def signal_handler(signal, frame):
 
 def commandCallback(msg):
     global me, state, precision
-    if msg.destination = me:
+    if msg.destination == me:
         state = msg.order
         precision = msg.precision
 
