@@ -35,6 +35,13 @@ def coordCallback(msg):
         diff = targetXY - XY  # ! change target to result when lidar stuff implemented
         targetangle = np.arctan2(diff[1], diff[0])
         distance = np.linalg.norm(diff)
+        if precision == -1:  # freinage intelligent lidar
+            mymsg = move()
+            mymsg.V = 0
+            mymsg.theta = theta
+            mymsg.K = 0
+            mymsg.A = 0
+            movementpub.publish(mymsg)
         if precision == 0 or precision == 1:
             if (distance <= epsilon) and newtarget:
                 newtarget = False
