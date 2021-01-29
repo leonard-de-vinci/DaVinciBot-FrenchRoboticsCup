@@ -55,7 +55,7 @@ class rob():
         temp = np.copy(self.valuearray)
         for i in range(len(temp)):
             if(not np.isinf(temp[i])):
-                angle = self.angle + self.lidar_min_angle + (self.lidar_max_angle - self.lidar_min_angle)*(float(i)/(float(len(temp))))
+                angle = self.angle - self.lidar_min_angle - (self.lidar_max_angle - self.lidar_min_angle)*(float(i)/(float(len(temp))))
                 x2 = ((np.cos(angle)*float(temp[i])*1000.00)*self.width/3000.0)+self.x
                 y2 = ((np.sin(angle)*float(temp[i])*1000.00)*self.height/2000.0)+self.y
                 #pg.draw.line(self.surface, (150, 150, 150), (int(self.x), int(self.y)), (int(x2), int(y2)), 3)

@@ -157,12 +157,15 @@ while running:
         targetcoord = np.array([waypoints[0].rx, waypoints[0].ry])
     else:
         targetcoord = np.array([thebot.rx, thebot.ry])
-    if(showlidar):
-        thebot.draw_the_rays()
     thebot.draw(targetcoord)
+    #if(showlidar):
+    #    thebot.draw_the_rays()
+    #thebot.draw(targetcoord)
     cop = waypoints[:]
     for i in range(len(cop)):
         cop[i].draw(i)
+    if(showlidar):
+        thebot.draw_the_rays()
     if holding:
         temp = np.array([x, y])
         colorc = (16, 5, 135)
