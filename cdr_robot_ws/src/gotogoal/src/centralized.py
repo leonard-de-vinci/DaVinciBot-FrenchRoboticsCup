@@ -117,21 +117,20 @@ def lidarcallback(msg):
     ranges = np.array(laser_scan.ranges)
     test = False
     for i in range(len(ranges)):
-        if ranges[i] < 1.00 :
+        if ranges[i] < 1.00:
             test = True
             rospy.loginfo(str(ranges[i]))
-    if test == True :
-    	buffer+= 1
-    else :
-    	buffer -= 1
-    if buffer <0:
-    	buffer = 0
-    if buffer > 10 :
-    	precision = -1
-        #rospy.loginfo("breaking!!")
-    
-    if buffer >20 :
-    	buffer = 20
+    if test:
+        buffer += 1
+    else:
+        buffer -= 1
+    if buffer < 0:
+        buffer = 0
+    if buffer > 10:
+        precision = -1
+    rospy.loginfo("breaking!!")
+    if buffer > 20:
+        buffer = 20
     rospy.loginfo(str(test))
 
 
@@ -170,5 +169,5 @@ if __name__ == '__main__':
     commandpub = rospy.Publisher("/control", command, queue_size=1)
     commandsub = rospy.Subscriber("/control", command, commandCallback)
     movementpub = rospy.Publisher("/movement", move, queue_size=1)
-    lidarsub = rospy.Subscriber("/processedscan", LaserScan, lidarcallback)
+    lidarsub = rospy.Subscriber("/scan", LaserScan, lidarcallback)
     rospy.spin()
