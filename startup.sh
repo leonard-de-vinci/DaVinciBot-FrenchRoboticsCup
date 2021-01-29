@@ -67,42 +67,16 @@ checkEnvVarMaster(){
         echo " environment variable \e[34mROS_IP\e[0m is currently equal to ${ROS_IP} but should be equal to 10.3.141.1"
         exit 1
     fi
-    printf " \e[4m\e[1m\e[32mOK\e[0m\n"
-    checkEnvVarLidar
-}
-
-checkEnvVarLidar(){
-	printf "\e[K\e[4m\e[1mSTEP \e[5m4\e[25m : Check environment variables on \e[34mLIDAR\e[0m :"
-    LIDAR_BASHRC=$(ssh ubuntu@10.3.141.60 "cat ~/.bashrc")
-    
-    if [[ $LIDAR_BASHRC != *"ROS_MASTER_URI"* ]]; then
-        printf " environment variable \e[34mROS_MASTER_URI\e[0m \e[4m\e[1m\e[31misn't defined\e[0m"
-        exit 1
-        elif [[ $LIDAR_BASHRC != *"ROS_IP"* ]]; then
-        printf " environment variable \e[34mROS_IP\e[0m \e[4m\e[1m\e[31misn't defined\e[0m"
-        exit 1
-    fi
-    # environment variables exists, but do they contain the right value ?
-    regex='ROS_MASTER_URI=([^\
-    ]*)'
-    [[ $LIDAR_BASHRC =~ $regex ]]
-    if [ ${BASH_REMATCH[1]} != "http://10.3.141.1:11311" ]; then
-        printf " environment variable \e[34mROS_MASTER_URI\e[0m is currently equal to ${BASH_REMATCH[1]} but should be equal to http://10.3.141.1:11311"
-        exit 1
-    fi
-    regex='ROS_IP=([^\
-    ]*)'
-    [[ $LIDAR_BASHRC =~ $regex ]]
-    if [ ${BASH_REMATCH[1]} != "10.3.141.60" ]; then
-        printf " environment variable \e[34mROS_IP\e[0m is currently equal to ${BASH_REMATCH[1]} but should be equal to 10.3.141.60"
-        exit 1
-    fi
+	BASHRC=$(cat ~/.bashrc)
+	if [[ $BASHRC != *"source /opt/ros/kinetic/setup.bash"* ]]; then
+		printf " \e[31m\e[1m/!\\ \e[21m\e[39m/opt/ros/kinetic/setup.bash must be sourced in ~/.basrc"
+	fi
     printf " \e[4m\e[1m\e[32mOK\e[0m\n"
     checkUSBMaster
 }
 
 checkUSBMaster(){
-	printf "\e[K\e[4m\e[1mSTEP \e[5m5\e[25m : Check USB devices on \e[34mMASTER\e[0m :"
+	printf "\e[K\e[4m\e[1mSTEP \e[5m4\e[25m : Check USB devices on \e[34mMASTER\e[0m :"
 	USBS=$(usb-devices)
 	if [[ $USBS != *"Bus=01 Lev=02 Prnt=02 Port=00"* ]]; then
 		printf " \e[31m\e[1m/!\\ \e[21m\e[39mplease check that there is a device connected to the top \e[34mUSB 3 (blue)\e[39m port on the raspberry \e[34mMASTER\e[0m.\n"
@@ -122,7 +96,7 @@ checkUSBMaster(){
 		exit 1
 	fi
 	printf " \e[4m\e[1m\e[32mOK\e[0m\n"
-	checkUSBLidar
+
 }
 
 checkUSBLidar(){
@@ -136,18 +110,6 @@ checkUSBLidar(){
 	if [[ $USBS != *"TIM3xx"* ]]; then
 		printf " \e[31m\e[1m/!\\ \e[21m\e[39m please check that the device connected in USB is indeed the \e[34mLIDAR\e[0m\n"
 		printRPI
-		exit 1
-	fi
-	printf " \e[4m\e[1m\e[32mOK\e[0m\n"
-	checkLidarROS
-}
-
-checkLidarROS(){
-	printf "\e[K\e[4m\e[1mSTEP \e[5m7\e[25m : Check LIDAR with ROS\e[0m :"
-	echo "checking Lidar with ROS (10s) :"
-	ROSLAUNCH_O=$(ssh ubuntu@10.3.141.60 "timeout 8 roslaunch sick_tim sick_tim551_2050001.launch")
-	if [[ ROSLAUNCH_O == *"No SICK TiM devices connected"* ]]; then
-		printf " \e[31m\e[1m/!\\\e[21m\e[39m Issue while connecting with the LIDAR through ROS"
 		exit 1
 	fi
 	printf " \e[4m\e[1m\e[32mOK\e[0m\n"
