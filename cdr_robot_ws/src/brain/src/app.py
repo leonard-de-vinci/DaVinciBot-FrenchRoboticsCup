@@ -23,7 +23,7 @@ def commandCallback(msg):
 
 
 def mainloop():
-    global thestack, precision, state, actionpos, me, waiting, senderid
+    global thestack, precision, state, actionpos, me, waiting, senderid, commandpub, waypointpub
     if state == 0:
         # turn on the mcontrol
         commsg = command()
@@ -60,6 +60,13 @@ def mainloop():
         else:
             rospy.loginfo("action n "+(str)(actionpos))
             currentaction = waypoints[actionpos]
+            # ## this is for debug only
+            cmsg = command()
+            cmsg.sender = me
+            cmsg.destination = "a human"
+            cmsg.order = 1
+            cmsg.precision = 1
+            commandpub.publish(cmsg)
             senderid = currentaction[0]
             # ##------------------- what are we waiting for
             waiting = currentaction[1]
@@ -77,7 +84,6 @@ def mainloop():
                     skip = True
             if not skip:  # we need to stimulate a response
                 if sender == "gotogoal":
-                    global waypointpub
                     msg = FloatArr()
                     msg.X = currentaction[2]
                     msg.Y = currentaction[3]
@@ -135,4 +141,4 @@ if __name__ == '__main__':
     rospy.loginfo(">  the brain has been succesfully initialised")
     while True:
         mainloop()
-        time.sleep(0.3)
+
