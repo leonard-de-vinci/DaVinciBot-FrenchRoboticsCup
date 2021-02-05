@@ -70,7 +70,7 @@ def mainloop():
                 sender = "gotogoal"
             # ##--------------------now that we kno what we are waiting for we check if its teh case
             skip = False
-            if not thestack.empty():  # obtain latest msg
+            if len(thestack) > 0:  # obtain latest msg
                 (sender, order, precision) = thestack.pop()
                 if sender == senderid and waiting == order:
                     actionpos += 1
