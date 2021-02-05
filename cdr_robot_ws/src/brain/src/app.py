@@ -23,7 +23,7 @@ def commandCallback(msg):
 
 
 def mainloop():
-    global thestack, precision, state, actionpos, me
+    global thestack, precision, state, actionpos, me, waiting, senderid
     if state == 0:
         # turn on the mcontrol
         commsg = command()
@@ -135,4 +135,4 @@ if __name__ == '__main__':
     rospy.loginfo(">  the brain has been succesfully initialised")
     while True:
         mainloop()
-        time.sleep(1)
+        time.sleep(0.3)
