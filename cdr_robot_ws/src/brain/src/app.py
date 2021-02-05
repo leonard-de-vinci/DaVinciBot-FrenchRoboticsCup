@@ -98,10 +98,10 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     # ##---------------------waypoints and stuff
     global waypoints
-    waypoints = np.array([1, 1, 1, 1, 1, 1],
-                         [1, 1, 1, 1, 1, 1],
-                         [1, 1, 1, 1, 1, 1],
-                         [1, 1, 1, 1, 1, 1],)
+    waypoints = np.array([[1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1]])
     # ##---------------------logique
     global blocked, waiting, sender, me, precision, order, state, actionpos, thestack
     blocked = False
