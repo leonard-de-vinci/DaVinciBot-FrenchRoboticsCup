@@ -81,5 +81,5 @@ if __name__ == '__main__':
     coordsub = rospy.Subscriber("/coords", Coordinates, coordCallback)
     rightpub = rospy.Publisher("/N1/target", Int8, queue_size=1)
     leftpub = rospy.Publisher("/N2/target", Int8, queue_size=1)
-    rospy.loginfo("> viewer correctly initialised")
+    rospy.loginfo("> mcontrol succesfully initialised")
     rospy.spin()

@@ -170,4 +170,5 @@ if __name__ == '__main__':
     commandsub = rospy.Subscriber("/control", command, commandCallback)
     movementpub = rospy.Publisher("/movement", move, queue_size=1)
     lidarsub = rospy.Subscriber("/scan", LaserScan, lidarcallback)
+    rospy.loginfo("center succesfully initialised")
     rospy.spin()

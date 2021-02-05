@@ -118,4 +118,5 @@ if __name__ == '__main__':
     commandpub = rospy.Publisher("/control", command, queue_size=1)          # pub for commanding teh nodes
     commandsub = rospy.Subscriber("/control", command, commandCallback)      # sub for teh commands
     waypointpub = rospy.Publisher("/movement", move, queue_size=1)           # pub for teh waypoints from actions
+    rospy.loginfo("the brain has been succesfully initialised")
     rospy.spin()
