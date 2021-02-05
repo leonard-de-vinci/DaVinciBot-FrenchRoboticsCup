@@ -7,8 +7,8 @@
         <param name="port" value="/dev/ttyACM1"/>
         <param name="baud" value="4608000"/>
     </node>
-    <node name="theBrain" pkg = "brain" type = "app.py"/>
-    <node name="the_tracker" pkg = "tracker" type = "v2simple.py"/>
-    <node name="gotoAngle" pkg = "gotoangle" type = "mcontrol.py" />
+    <node name="theBrain" pkg = "brain" type = "app.py" output="screen"/>
+    <node name="the_tracker" pkg = "tracker" type = "v2simple.py" output="screen"/>
+    <node name="gotoAngle" pkg = "gotoangle" type = "mcontrol.py" output="screen"/>
     <node name="gotoGoal" pkg = "gotogoal" type = "centralized.py" output="screen"/>
 </launch>
