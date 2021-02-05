@@ -25,17 +25,17 @@ def commandCallback(msg):
 def mainloop():
     global thestack, precision
     if state == 0:
-        # turn of the mcontrol
+        # turn on the mcontrol
         commsg = command()
         commsg.sender = me
         commsg.destination = "mcontrol"
-        commsg.order = 0
+        commsg.order = 1
         commsg.precision = 0
-        # trun off the gotogoal
+        # trun on the gotogoal
         commsg = command()
         commsg.sender = me
         commsg.destination = "gotogoal"
-        commsg.order = 0
+        commsg.order = 1
         commsg.precision = 0
         state += 1
     if state == 1:
@@ -98,7 +98,10 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     # ##---------------------waypoints and stuff
     global waypoints
-    waypoints = np.array([0, 0, 0, 0, 0, 0])
+    waypoints = np.array([1, 1, 1, 1, 1, 1],
+                         [1, 1, 1, 1, 1, 1],
+                         [1, 1, 1, 1, 1, 1],
+                         [1, 1, 1, 1, 1, 1],)
     # ##---------------------logique
     global blocked, waiting, sender, me, precision, order, state, actionpos, thestack
     blocked = False
