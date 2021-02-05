@@ -51,6 +51,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Coordinates.msg
+  move.msg
+  command.msg
   movement.msg
 )
 
