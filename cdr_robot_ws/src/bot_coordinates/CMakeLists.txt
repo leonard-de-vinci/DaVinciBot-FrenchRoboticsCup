@@ -53,6 +53,7 @@ add_message_files(
   Coordinates.msg
   move.msg
   command.msg
+  target.msg
   movement.msg
 )
 
