@@ -4,6 +4,7 @@ import time
 from PID.msg import FloatArr
 from std_msgs.msg import Bool
 from bot_coordinates.msg import command
+from bot_coordinates.msg import move
 from PID.msg import FloatArr
 from std_msgs.msg import Int8
 import signal
