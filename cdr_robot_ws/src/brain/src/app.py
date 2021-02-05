@@ -24,6 +24,7 @@ def commandCallback(msg):
 
 def mainloop():
     global thestack, precision
+    rospy.loginfo("main loop "+(str)(state))
     if state == 0:
         # turn on the mcontrol
         commsg = command()
