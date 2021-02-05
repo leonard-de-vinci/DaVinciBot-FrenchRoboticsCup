@@ -74,7 +74,7 @@ if __name__ == '__main__':
     precision = 0
     theta = 0
     targettheta = 0
-    me = mcontrol
+    me = "mcontrol"
     rospy.init_node("mcontrol", anonymous=False)
     targetsub = rospy.Subscriber("/movement", move, targetCallback)
     commandsub = rospy.Subscriber("/command", command, commandCallback)
