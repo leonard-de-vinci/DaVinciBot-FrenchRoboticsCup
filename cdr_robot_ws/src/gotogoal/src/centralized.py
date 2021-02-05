@@ -95,7 +95,7 @@ def coordCallback(msg):
     elif state == 0:  # ## smart break
         mymsg = move()
         mymsg.V = 0
-        mymsg.theta = theta
+        mymsg.angle = theta
         mymsg.K = 0
         mymsg.A = 0
         movementpub.publish(mymsg)
