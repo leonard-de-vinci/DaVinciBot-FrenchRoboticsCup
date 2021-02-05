@@ -41,11 +41,13 @@ def mainloop():
         state += 1
     if state == 1:
         # TODO : wait for the start from the arduino
-        if len(thestack) > 0:
-            a = thestack.pop()
-            if a == ("start", 1, 2) or a == ("start", 1, 1):
-                state += 1
-                (_, __, precision) = a
+        # if len(thestack) > 0:
+        #     a = thestack.pop()
+        #     if a == ("start", 1, 2) or a == ("start", 1, 1):
+        #         state += 1
+        #         (_, __, precision) = a
+        state += 1
+        precision = 1
     if state == 2:
         # TODO load teh correct file according to the chosen strategie
         if precision == 1:  # laod the right file
