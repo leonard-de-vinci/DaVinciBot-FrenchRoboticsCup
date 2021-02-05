@@ -85,8 +85,8 @@ def mainloop():
             if not skip:  # we need to stimulate a response
                 if sender == "gotogoal":
                     msg = FloatArr()
-                    msg.X = currentaction[2]
-                    msg.Y = currentaction[3]
+                    msg.x = currentaction[2]
+                    msg.y = currentaction[3]
                     msg.theta = currentaction[4]
                     msg.epsilon = currentaction[5]
                     waypointpub.publish(msg)
@@ -103,8 +103,8 @@ def mainloop():
     if state >= 4:  # go back home because end
         currentaction = waypoints[len(waypoints)-1]  # this line needs the last value of the waypoints to be the coord of home
         msg = FloatArr()
-        msg.X = currentaction[2]
-        msg.Y = currentaction[3]
+        msg.x = currentaction[2]
+        msg.y = currentaction[3]
         msg.theta = currentaction[4]
         msg.epsilon = currentaction[5]
         waypointpub.publish(msg)
