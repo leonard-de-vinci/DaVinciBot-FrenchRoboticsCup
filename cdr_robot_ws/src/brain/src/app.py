@@ -41,7 +41,7 @@ def mainloop():
         state += 1
     if state == 1:
         # TODO : wait for the start from the arduino
-        if not thestack.empty():
+        if len(thestack) > 0:
             a = thestack.pop()
             if a == ("start", 1, 2) or a == ("start", 1, 1):
                 state += 1
