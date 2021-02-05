@@ -52,6 +52,7 @@ add_message_files(
   FILES
   Coordinates.msg
   movement.msg
+  move.msg
 )
 
 ## Generate services in the 'srv' folder
