@@ -18,7 +18,7 @@ def signal_handler(signal, frame):
 def targetCallback(msg):
     global V, targettheta, K, A, buffer
     targettheta = w(msg.angle)
-    V = msg.v
+    V = msg.V
     K = msg.K
     A = msg.A
     buffer = 0
