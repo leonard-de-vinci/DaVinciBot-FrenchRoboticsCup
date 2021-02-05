@@ -85,7 +85,7 @@ def mainloop():
                     msg.theta = currentaction[4]
                     msg.epsilon = currentaction[5]
                     waypointpub.publish(msg)
-                elif sender = "start":
+                elif sender == "start":
                     # TODO implement the control of the servos and shit 
                     pass
     if state >= 4:  # go back home because end

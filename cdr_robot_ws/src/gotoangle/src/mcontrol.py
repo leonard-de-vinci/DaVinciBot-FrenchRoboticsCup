@@ -35,7 +35,7 @@ def w(angle):
     return np.arctan2(np.sin(angle), np.cos(angle))
 
 
-def coordcallback(msg):
+def coordCallback(msg):
     global rightpub, leftpub, V, K, A, targettheta, buffer, state
     if state == 1:  # point forward steering controler
         if(buffer >= precision):
