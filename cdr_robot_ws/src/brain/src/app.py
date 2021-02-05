@@ -58,7 +58,7 @@ def mainloop():
         if actionpos >= len(waypoints):
             state += 1
         else:
-            rospy.loginfo("action n°"+(str)(actionpos))
+            rospy.loginfo("action n "+(str)(actionpos))
             currentaction = waypoints[actionpos]
             senderid = currentaction[0]
             # ##------------------- what are we waiting for
