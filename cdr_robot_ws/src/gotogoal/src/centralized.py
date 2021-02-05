@@ -38,7 +38,7 @@ def coordCallback(msg):
         if precision == -1:  # freinage intelligent lidar
             mymsg = move()
             mymsg.V = 0
-            mymsg.theta = theta
+            mymsg.angle = theta
             mymsg.K = 0
             mymsg.A = 0
             movementpub.publish(mymsg)
