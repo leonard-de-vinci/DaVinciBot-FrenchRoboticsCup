@@ -89,6 +89,7 @@ def mainloop():
                     cmsg.destination = sender
                     cmsg.order = currentaction[6]
                     cmsg.precision = currentaction[7]
+                    commandpub.publish(cmsg)
                     rospy.loginfo("published a waypoint")
                 elif sender == "start":
                     # TODO implement the control of the servos and shit
