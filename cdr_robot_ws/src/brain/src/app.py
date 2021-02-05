@@ -24,7 +24,6 @@ def commandCallback(msg):
 
 def mainloop():
     global thestack, precision, state, actionpos
-    rospy.loginfo("main loop "+(str)(state))
     if state == 0:
         # turn on the mcontrol
         commsg = command()
@@ -59,6 +58,7 @@ def mainloop():
         if actionpos >= len(waypoints):
             state += 1
         else:
+            rospy.loginfo((str)(actionpos))
             currentaction = waypoints[actionpos]
             senderid = currentaction[0]
             # ##------------------- what are we waiting for
