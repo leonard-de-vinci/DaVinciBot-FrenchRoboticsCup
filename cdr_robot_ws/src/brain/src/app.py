@@ -23,20 +23,20 @@ def commandCallback(msg):
 
 
 def mainloop():
-    global thestack, precision, state, actionpos
+    global thestack, precision, state, actionpos, me
     if state == 0:
         # turn on the mcontrol
         commsg = command()
         commsg.sender = me
         commsg.destination = "mcontrol"
         commsg.order = 1
-        commsg.precision = 0
+        commsg.precision = 1  # here the precision refers to the rate buffer
         # trun on the gotogoal
         commsg = command()
         commsg.sender = me
         commsg.destination = "gotogoal"
         commsg.order = 1
-        commsg.precision = 0
+        commsg.precision = 0  # here precision refers to the mod
         state += 1
     if state == 1:
         # TODO : wait for the start from the arduino
@@ -84,6 +84,12 @@ def mainloop():
                     msg.theta = currentaction[4]
                     msg.epsilon = currentaction[5]
                     waypointpub.publish(msg)
+                    cmsg = command()
+                    cmsg.sender = me
+                    cmsg.destination = sender
+                    cmsg.order = currentaction[6]
+                    cmsg.precision = currentaction[7]
+                    rospy.loginfo("published a waypoint")
                 elif sender == "start":
                     # TODO implement the control of the servos and shit
                     pass
@@ -95,16 +101,17 @@ def mainloop():
         msg.theta = currentaction[4]
         msg.epsilon = currentaction[5]
         waypointpub.publish(msg)
+        rospy.loginfo("go back home quick")
 
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     # ##---------------------waypoints and stuff
     global waypoints
-    waypoints = np.array([[1, 1, 1, 1, 1, 1],
-                          [1, 1, 1, 1, 1, 1],
-                          [1, 1, 1, 1, 1, 1],
-                          [1, 1, 1, 1, 1, 1]])
+    waypoints = np.array([[1, 1, 1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1, 1, 1]])
     # ##---------------------logique
     global blocked, waiting, sender, me, precision, order, state, actionpos, thestack
     blocked = False
