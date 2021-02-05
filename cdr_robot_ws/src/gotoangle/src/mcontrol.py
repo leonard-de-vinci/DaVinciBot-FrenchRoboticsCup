@@ -77,7 +77,7 @@ if __name__ == '__main__':
     me = "mcontrol"
     rospy.init_node("mcontrol", anonymous=False)
     targetsub = rospy.Subscriber("/movement", move, targetCallback)
-    commandsub = rospy.Subscriber("/command", command, commandCallback)
+    commandsub = rospy.Subscriber("/control", command, commandCallback)
     coordsub = rospy.Subscriber("/coords", Coordinates, coordCallback)
     rightpub = rospy.Publisher("/N1/target", Int8, queue_size=1)
     leftpub = rospy.Publisher("/N2/target", Int8, queue_size=1)
