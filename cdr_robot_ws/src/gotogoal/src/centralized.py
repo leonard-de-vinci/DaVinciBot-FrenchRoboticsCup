@@ -30,7 +30,7 @@ def coordCallback(msg):
     global movementpub, newtarget, commandpub, me
     mvmsg = move()
     theta = msg.theta
-    XY = np.array([msg.x msg.y])
+    XY = np.array([msg.x, msg.y])
     if state == 1:  # # move as intended
         diff = targetXY - XY  # ! change target to result when lidar stuff implemented
         targetangle = np.arctan2(diff[1], diff[0])
