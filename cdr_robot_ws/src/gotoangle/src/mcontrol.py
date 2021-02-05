@@ -18,7 +18,7 @@ def signal_handler(signal, frame):
 def targetCallback(msg):
     global V, targettheta, K, A, buffer
     targettheta = w(msg.angle)
-    V = msg.v
+    V = msg.V
     K = msg.K
     A = msg.A
     buffer = 0
@@ -35,7 +35,7 @@ def w(angle):
     return np.arctan2(np.sin(angle), np.cos(angle))
 
 
-def coordcallback(msg):
+def coordCallback(msg):
     global rightpub, leftpub, V, K, A, targettheta, buffer, state
     if state == 1:  # point forward steering controler
         if(buffer >= precision):
@@ -74,12 +74,12 @@ if __name__ == '__main__':
     precision = 0
     theta = 0
     targettheta = 0
-    me = mcontrol
+    me = "mcontrol"
     rospy.init_node("mcontrol", anonymous=False)
     targetsub = rospy.Subscriber("/movement", move, targetCallback)
-    commandsub = rospy.Subscriber("/command", command, commandCallback)
+    commandsub = rospy.Subscriber("/control", command, commandCallback)
     coordsub = rospy.Subscriber("/coords", Coordinates, coordCallback)
     rightpub = rospy.Publisher("/N1/target", Int8, queue_size=1)
     leftpub = rospy.Publisher("/N2/target", Int8, queue_size=1)
-    rospy.loginfo("> viewer correctly initialised")
+    rospy.loginfo("> mcontrol succesfully initialised")
     rospy.spin()

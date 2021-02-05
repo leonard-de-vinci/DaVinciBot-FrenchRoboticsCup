@@ -30,7 +30,7 @@ def coordCallback(msg):
     global movementpub, newtarget, commandpub, me
     mvmsg = move()
     theta = msg.theta
-    XY = np.array([msg.X, msg.Y])
+    XY = np.array([msg.x, msg.y])
     if state == 1:  # # move as intended
         diff = targetXY - XY  # ! change target to result when lidar stuff implemented
         targetangle = np.arctan2(diff[1], diff[0])
@@ -38,7 +38,7 @@ def coordCallback(msg):
         if precision == -1:  # freinage intelligent lidar
             mymsg = move()
             mymsg.V = 0
-            mymsg.theta = theta
+            mymsg.angle = theta
             mymsg.K = 0
             mymsg.A = 0
             movementpub.publish(mymsg)
@@ -95,7 +95,7 @@ def coordCallback(msg):
     elif state == 0:  # ## smart break
         mymsg = move()
         mymsg.V = 0
-        mymsg.theta = theta
+        mymsg.angle = theta
         mymsg.K = 0
         mymsg.A = 0
         movementpub.publish(mymsg)
@@ -170,4 +170,5 @@ if __name__ == '__main__':
     commandsub = rospy.Subscriber("/control", command, commandCallback)
     movementpub = rospy.Publisher("/movement", move, queue_size=1)
     lidarsub = rospy.Subscriber("/scan", LaserScan, lidarcallback)
+    rospy.loginfo(">  center succesfully initialised")
     rospy.spin()

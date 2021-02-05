@@ -4,6 +4,7 @@ import time
 from PID.msg import FloatArr
 from std_msgs.msg import Bool
 from bot_coordinates.msg import command
+from bot_coordinates.msg import move
 from PID.msg import FloatArr
 from std_msgs.msg import Int8
 import signal
@@ -21,34 +22,31 @@ def commandCallback(msg):
         thestack.append((msg.sender, msg.order, msg.precision))
 
 
-def waypointCallback(msg):
-    # TODO implement the communication of waypoints from the gui to the brain
-    pass
-
-
 def mainloop():
-    global thestack, precision
+    global thestack, precision, state, actionpos
     if state == 0:
-        # turn of the mcontrol
+        # turn on the mcontrol
         commsg = command()
         commsg.sender = me
         commsg.destination = "mcontrol"
-        commsg.order = 0
+        commsg.order = 1
         commsg.precision = 0
-        # trun off the gotogoal
+        # trun on the gotogoal
         commsg = command()
         commsg.sender = me
         commsg.destination = "gotogoal"
-        commsg.order = 0
+        commsg.order = 1
         commsg.precision = 0
         state += 1
     if state == 1:
         # TODO : wait for the start from the arduino
-        if not thestack.empty():
-            a = thestack.pop()
-            if a == ("start", 1, 2) or a == ("start", 1, 1):
-                state += 1
-                (_, __, precision) = a
+        # if len(thestack) > 0:
+        #     a = thestack.pop()
+        #     if a == ("start", 1, 2) or a == ("start", 1, 1):
+        #         state += 1
+        #         (_, __, precision) = a
+        state += 1
+        precision = 1
     if state == 2:
         # TODO load teh correct file according to the chosen strategie
         if precision == 1:  # laod the right file
@@ -60,6 +58,7 @@ def mainloop():
         if actionpos >= len(waypoints):
             state += 1
         else:
+            rospy.loginfo("action n "+(str)(actionpos))
             currentaction = waypoints[actionpos]
             senderid = currentaction[0]
             # ##------------------- what are we waiting for
@@ -71,7 +70,7 @@ def mainloop():
                 sender = "gotogoal"
             # ##--------------------now that we kno what we are waiting for we check if its teh case
             skip = False
-            if not thestack.empty():  # obtain latest msg
+            if len(thestack) > 0:  # obtain latest msg
                 (sender, order, precision) = thestack.pop()
                 if sender == senderid and waiting == order:
                     actionpos += 1
@@ -85,8 +84,8 @@ def mainloop():
                     msg.theta = currentaction[4]
                     msg.epsilon = currentaction[5]
                     waypointpub.publish(msg)
-                elif sender = "start":
-                    # TODO implement the control of the servos and shit 
+                elif sender == "start":
+                    # TODO implement the control of the servos and shit
                     pass
     if state >= 4:  # go back home because end
         currentaction = waypoints[len(waypoints)-1]  # this line needs the last value of the waypoints to be the coord of home
@@ -102,7 +101,10 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     # ##---------------------waypoints and stuff
     global waypoints
-    waypoints = np.array([0, 0])
+    waypoints = np.array([[1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1],
+                          [1, 1, 1, 1, 1, 1]])
     # ##---------------------logique
     global blocked, waiting, sender, me, precision, order, state, actionpos, thestack
     blocked = False
@@ -121,6 +123,8 @@ if __name__ == '__main__':
     emergencystop = rospy.Publisher("/breakServo", Bool, queue_size=1)       # pub for emergency break
     commandpub = rospy.Publisher("/control", command, queue_size=1)          # pub for commanding teh nodes
     commandsub = rospy.Subscriber("/control", command, commandCallback)      # sub for teh commands
-    waypointpub = rospy.Publisher("/movement", move, queue_size=1)           # pub for teh waypoints from actions
-    guisub = rospy.Subscriber("/waypoints", waypointlist, waypointCallback)  # sub for reading commands from gui #! may not be implemented
-    rospy.spin()
+    waypointpub = rospy.Publisher("/target", FloatArr, queue_size=1)           # pub for teh waypoints from actions
+    rospy.loginfo(">  the brain has been succesfully initialised")
+    while True:
+        mainloop()
+        time.sleep(1)
