@@ -22,11 +22,6 @@ def commandCallback(msg):
         thestack.append((msg.sender, msg.order, msg.precision))
 
 
-def waypointCallback(msg):
-    # TODO implement the communication of waypoints from the gui to the brain
-    pass
-
-
 def mainloop():
     global thestack, precision
     if state == 0:
@@ -87,7 +82,7 @@ def mainloop():
                     msg.epsilon = currentaction[5]
                     waypointpub.publish(msg)
                 elif sender == "start":
-                    # TODO implement the control of the servos and shit 
+                    # TODO implement the control of the servos and shit
                     pass
     if state >= 4:  # go back home because end
         currentaction = waypoints[len(waypoints)-1]  # this line needs the last value of the waypoints to be the coord of home
@@ -103,7 +98,7 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     # ##---------------------waypoints and stuff
     global waypoints
-    waypoints = np.array([0, 0])
+    waypoints = np.array([0, 0, 0, 0, 0, 0])
     # ##---------------------logique
     global blocked, waiting, sender, me, precision, order, state, actionpos, thestack
     blocked = False
@@ -123,5 +118,4 @@ if __name__ == '__main__':
     commandpub = rospy.Publisher("/control", command, queue_size=1)          # pub for commanding teh nodes
     commandsub = rospy.Subscriber("/control", command, commandCallback)      # sub for teh commands
     waypointpub = rospy.Publisher("/movement", move, queue_size=1)           # pub for teh waypoints from actions
-    guisub = rospy.Subscriber("/waypoints", waypointlist, waypointCallback)  # sub for reading commands from gui #! may not be implemented
     rospy.spin()
