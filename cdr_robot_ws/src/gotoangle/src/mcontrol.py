@@ -42,7 +42,7 @@ def coordCallback(msg):
         if(buffer >= precision):
             buffer = 0
             (Vr, Vl) = (0, 0)  # init for default values
-            alpha = w(w(targetAngle) - w(msg.theta))
+            alpha = w(w(targettheta) - w(msg.theta))
             Vr = V*(A*np.cos(alpha)-K*np.sin(alpha))  # rad/s
             Vl = V*(A*np.cos(alpha)+K*np.sin(alpha))  # rad/s
             msg = Int8()
