@@ -33,7 +33,7 @@ def coordCallback(msg):
     theta = msg.theta
     XY = np.array([msg.x, msg.y])
     if state == 1:  # # move as intended
-        rospy.loginfo("state is one")
+        rospy.loginfo("-_-__-_-_-_-_-_-_-_-_-state is one")
         diff = resultXY - XY  # ! change target to result when lidar stuff implemented
         targetangle = np.arctan2(diff[1], diff[0])
         distance = np.linalg.norm(diff)
