@@ -142,4 +142,4 @@ if __name__ == '__main__':
     rospy.loginfo(">  the brain has been succesfully initialised")
     while True:
         mainloop()
-
+        time.sleep(1)

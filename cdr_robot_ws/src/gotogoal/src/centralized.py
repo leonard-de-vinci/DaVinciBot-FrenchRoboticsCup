@@ -33,7 +33,7 @@ def coordCallback(msg):
     theta = msg.theta
     XY = np.array([msg.x, msg.y])
     if state == 1:  # # move as intended
-        diff = targetXY - XY  # ! change target to result when lidar stuff implemented
+        diff = resultXY - XY  # ! change target to result when lidar stuff implemented
         targetangle = np.arctan2(diff[1], diff[0])
         distance = np.linalg.norm(diff)
         if precision == -1:  # freinage intelligent lidar
@@ -103,13 +103,19 @@ def coordCallback(msg):
 
 
 def targetCallback(msg):
-    global targetXY, targetTheta, epsilon, newtarget
-    if msg.X != targetXY[0] or msg.Y != targetXY[1]:
+    global targetXY, targetTheta, epsilon, newtarget, commandpub, precision
+    if msg.x != targetXY[0] or msg.y != targetXY[1]:
         newtarget = True
-        targetXY = np.array([msg.X, msg.Y])
+        targetXY = np.array([msg.x, msg.y])
         targetTheta = msg.theta
         epsilon = msg.epsilon
         rospy.loginfo("received new target coords")
+        commsg = command()
+        commsg.sender = me
+        commsg.destination = "brain"
+        commsg.order = 0  # ## we receuved feedback
+        commsg.precision = precision
+        commandpub.publish(commsg)
 
 
 def lidarcallback(msg):
@@ -166,7 +172,7 @@ if __name__ == '__main__':
     rospy.init_node("goalToPath", anonymous=False)
     global coordsub, targetsub, commandpub, commandsub, movementpub, lidarsub, emergencypub
     coordsub = rospy.Subscriber("/coords", Coordinates, coordCallback)
-    targetsub = rospy.Subscriber("/target", FloatArr, targetCallback)
+    targetsub = rospy.Subscriber("/target", target, targetCallback)
     commandpub = rospy.Publisher("/control", command, queue_size=1)
     commandsub = rospy.Subscriber("/control", command, commandCallback)
     movementpub = rospy.Publisher("/movement", move, queue_size=1)
