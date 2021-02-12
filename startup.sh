@@ -69,7 +69,12 @@ checkEnvVarMaster(){
     fi
 	BASHRC=$(cat ~/.bashrc)
 	if [[ $BASHRC != *"source /opt/ros/kinetic/setup.bash"* ]]; then
-		printf " \e[31m\e[1m/!\\ \e[21m\e[39m/opt/ros/kinetic/setup.bash must be sourced in ~/.basrc"
+		printf " \e[31m\e[1m/!\\ \e[21m\e[39m\e[34m/opt/ros/kinetic/setup.bash\e[39m must be sourced in \e[34m~/.basrc\e[39m"
+		exit 1
+	fi
+	if [[ $BASHRC != *"source /home/pi/cdr/cdr_robot_ws/devel/setup.bash"* ]]; then
+		printf " \e[31m\e[1m/!\\ \e[21m\e[39m\e[34msource /home/pi/cdr/cdr_robot_ws/devel/setup.bash\e[39m must be sourced in \e[34m~/.basrc\e[39m"
+		exit 1
 	fi
     printf " \e[4m\e[1m\e[32mOK\e[0m\n"
     checkUSBMaster

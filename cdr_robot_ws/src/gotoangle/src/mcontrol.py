@@ -38,10 +38,11 @@ def w(angle):
 def coordCallback(msg):
     global rightpub, leftpub, V, K, A, targettheta, buffer, state
     if state == 1:  # point forward steering controler
+        rospy.loginfo("state is ONEINEINEONEONEONEONE")
         if(buffer >= precision):
             buffer = 0
             (Vr, Vl) = (0, 0)  # init for default values
-            alpha = w(w(targetAngle) - w(msg.theta))
+            alpha = w(w(targettheta) - w(msg.theta))
             Vr = V*(A*np.cos(alpha)-K*np.sin(alpha))  # rad/s
             Vl = V*(A*np.cos(alpha)+K*np.sin(alpha))  # rad/s
             msg = Int8()
