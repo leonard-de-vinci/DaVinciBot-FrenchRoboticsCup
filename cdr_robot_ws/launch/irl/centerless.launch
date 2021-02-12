@@ -1,0 +1,6 @@
+<launch>
+    <node name="theBrain" pkg = "brain" type = "app.py" output="screen"/>
+    <node name="the_tracker" pkg = "tracker" type = "v2simple.py" output="screen"/>
+    <node name="gotoAngle" pkg = "gotoangle" type = "mcontrol.py" output="screen"/>
+    <node name="gotoGoal" pkg = "gotogoal" type = "centralized.py" output="screen"/>
+</launch>
