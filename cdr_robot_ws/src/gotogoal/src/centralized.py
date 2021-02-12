@@ -32,9 +32,7 @@ def coordCallback(msg):
     mvmsg = move()
     theta = msg.theta
     XY = np.array([msg.x, msg.y])
-    rospy.loginfo("coordcallbacking")
     if state == 1:  # # move as intended
-        rospy.loginfo("-_-__-_-_-_-_-_-_-_-_-state is one")
         diff = resultXY - XY  # ! change target to result when lidar stuff implemented
         targetangle = np.arctan2(diff[1], diff[0])
         distance = np.linalg.norm(diff)
@@ -45,12 +43,18 @@ def coordCallback(msg):
             mymsg.K = 0
             mymsg.A = 0
             movementpub.publish(mymsg)
+            commsg = command()
+            commsg.sender = me
+            commsg.destination = "brain"
+            commsg.order = 1  # ## successfully completed task
+            commsg.precision = 1
+            commandpub.publish(commsg)
         if precision == 0 or precision == 1:
             if (distance <= epsilon) and newtarget:
                 newtarget = False
                 commsg = command()
                 commsg.sender = me
-                commsg.destination = "brain"
+                commsg.destination = "mcontrol"
                 commsg.order = 1  # ## successfully completed task
                 commsg.precision = 1
                 rospy.loginfo("succesfully reached destination")
@@ -68,12 +72,18 @@ def coordCallback(msg):
                     mvmsg.A = 1.0
                     mvmsg.angle = targetangle
                     movementpub.publish(mvmsg)
+                commsg = command()
+                commsg.sender = me
+                commsg.destination = "mcontrol"
+                commsg.order = 1  # ## successfully completed task
+                commsg.precision = 1
+                commandpub.publish(commsg)
         elif precision == 2 or precision == 3:
             if abs(targetangle - theta) <= 0.1 and newtarget:
                 if precision == 2:
                     newtarget = False
                     commsg = command()
-                    commsg.ID = me
+                    commsg.sender = me
                     commsg.destination = "brain"
                     commsg.order = 1  # ## successfully completed task
                     commsg.precision = 1
@@ -95,6 +105,12 @@ def coordCallback(msg):
                     mvmsg.A = 0
                     mvmsg.angle = targetangle
                     movementpub.publish(mvmsg)
+                commsg = command()
+                commsg.sender = me
+                commsg.destination = "mcontrol"
+                commsg.order = 1  # ## successfully completed task
+                commsg.precision = 1
+                commandpub.publish(commsg)
     elif state == 0:  # ## smart break
         mymsg = move()
         mymsg.V = 0
