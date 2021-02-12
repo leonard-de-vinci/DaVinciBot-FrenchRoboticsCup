@@ -5,6 +5,7 @@ from PID.msg import IntArr
 from bot_coordinates.msg import Coordinates
 from bot_coordinates.msg import movement
 from bot_coordinates.msg import move
+from bot_coordinates.msg import target
 from bot_coordinates.msg import command
 from sensor_msgs.msg import LaserScan
 from PID.msg import FloatArr
