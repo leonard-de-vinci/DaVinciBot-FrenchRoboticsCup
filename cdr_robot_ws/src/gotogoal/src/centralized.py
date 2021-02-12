@@ -103,7 +103,7 @@ def coordCallback(msg):
 
 
 def targetCallback(msg):
-    global targetXY, targetTheta, epsilon, newtarget, commandpub
+    global targetXY, targetTheta, epsilon, newtarget, commandpub, precision
     if msg.x != targetXY[0] or msg.y != targetXY[1]:
         newtarget = True
         targetXY = np.array([msg.x, msg.y])
@@ -114,7 +114,7 @@ def targetCallback(msg):
         commsg.sender = me
         commsg.destination = "brain"
         commsg.order = 0  # ## we receuved feedback
-        commsg.precision = 2
+        commsg.precision = precision
         commandpub.publish(commsg)
 
 
