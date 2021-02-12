@@ -25,6 +25,12 @@ def commandCallback(msg):
         state = msg.order
         precision = msg.precision
         rospy.loginfo("-_-_-_-_-_state modified-_-_-_-_-_-_-__-")
+        commsg = command()
+        commsg.sender = me
+        commsg.destination = "brain"
+        commsg.order = 0  # ## we receuved feedback
+        commsg.precision = state
+        commandpub.publish(commsg)
 
 
 def coordCallback(msg):
