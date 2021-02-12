@@ -32,6 +32,7 @@ def coordCallback(msg):
     mvmsg = move()
     theta = msg.theta
     XY = np.array([msg.x, msg.y])
+    rospy.loginfo("coordcallbacking")
     if state == 1:  # # move as intended
         rospy.loginfo("-_-__-_-_-_-_-_-_-_-_-state is one")
         diff = resultXY - XY  # ! change target to result when lidar stuff implemented
@@ -48,7 +49,7 @@ def coordCallback(msg):
             if (distance <= epsilon) and newtarget:
                 newtarget = False
                 commsg = command()
-                commsg.ID = me
+                commsg.sender = me
                 commsg.destination = "brain"
                 commsg.order = 1  # ## successfully completed task
                 commsg.precision = 1
