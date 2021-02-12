@@ -24,13 +24,6 @@ def commandCallback(msg):
     if msg.destination == me:
         state = msg.order
         precision = msg.precision
-        rospy.loginfo("-_-_-_-_-_state modified-_-_-_-_-_-_-__-")
-        commsg = command()
-        commsg.sender = me
-        commsg.destination = "brain"
-        commsg.order = 0  # ## we receuved feedback
-        commsg.precision = state
-        commandpub.publish(commsg)
 
 
 def coordCallback(msg):
@@ -40,6 +33,7 @@ def coordCallback(msg):
     theta = msg.theta
     XY = np.array([msg.x, msg.y])
     if state == 1:  # # move as intended
+        rospy.loginfo("state is one")
         diff = resultXY - XY  # ! change target to result when lidar stuff implemented
         targetangle = np.arctan2(diff[1], diff[0])
         distance = np.linalg.norm(diff)
