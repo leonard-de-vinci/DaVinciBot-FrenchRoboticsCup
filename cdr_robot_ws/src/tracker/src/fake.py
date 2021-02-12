@@ -49,7 +49,7 @@ if __name__ == "__main__":
     timesync.registerCallback(updatepos)
     coordpub = rospy.Publisher("/coords", Coordinates, queue_size=3)
     rospy.loginfo("> tracker succesfully initialised")
-    whle True:
+    while True:
         pload = Coordinates()
         pload.x = X
         pload.y = Y
