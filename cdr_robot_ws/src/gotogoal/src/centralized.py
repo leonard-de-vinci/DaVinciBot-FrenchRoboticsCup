@@ -122,9 +122,15 @@ def lidarcallback(msg):
     # TODO implement lidar and pathplanning here
     rospy.loginfo("lidar hasn t been implemented yet")
     ranges = np.array(laser_scan.ranges)
+    wall_top_XY = np.array([XY[0],(float)(0)])
+    wall_bot_XY = np.array([XY[0],(float)(2)])
+    wall_right_XY = np.array((float)(3),XY[1]) 
+    wall_left_XY = np.array((float)(0),XY[1])
+    
+
     test = False
     for i in range(len(ranges)):
-        if ranges[i] < 1.00:
+        if ranges[i] < 1.00 and ranges[i]>0.06 and i*laser_scan.angle_increment < (float)(3.14159265359) and i*laser_scan.angle_increment > (float)(0):
             test = True
             rospy.loginfo(str(ranges[i]))
     if test:
