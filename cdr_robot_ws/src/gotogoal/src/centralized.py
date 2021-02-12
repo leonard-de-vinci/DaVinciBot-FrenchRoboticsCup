@@ -24,6 +24,7 @@ def commandCallback(msg):
     if msg.destination == me:
         state = msg.order
         precision = msg.precision
+        rospy.loginfo("-_-_-_-_-_state modified-_-_-_-_-_-_-__-")
 
 
 def coordCallback(msg):
