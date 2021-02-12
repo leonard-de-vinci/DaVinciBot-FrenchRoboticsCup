@@ -21,12 +21,43 @@ def signal_handler(signal, frame):
 
 def commandCallback(msg):
     global arr
-    if len(arr) > 10:
-        arr.pop()
-    else:
+    found = False
+    for i in range(len(arr)):
+        if arr[i].sender == msg.sender:
+            arr[i] = msg
+            found = True
+    if not found:
         arr.append(msg)
+    for i in range(100):
+        print()
+    for j in range(5):
+        temp = ""
+        for i in arr:
+            temp += " "
+            temp += i.sender[j]
+        print(temp)
+    temp = ""
     for i in arr:
-        print(msg.sender + " --> " + msg.destination + "    " + msg.order + " : "+msg.precision)
+        temp += " "
+        temp += "-"
+        print(temp)
+    for j in range(5):
+        temp = ""
+        for i in arr:
+            temp += " "
+            temp += i.destination[j]
+        print(temp)
+    temp = ""
+    for i in arr:
+        temp += " "
+        temp += str(i.order)
+    print(temp)
+    print()
+    temp = ""
+    for i in arr:
+        temp += " "
+        temp += str(i.precision)
+    print(temp)
 
 
 if __name__ == '__main__':
