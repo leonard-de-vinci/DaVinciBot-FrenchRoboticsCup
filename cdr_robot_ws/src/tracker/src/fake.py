@@ -45,8 +45,6 @@ if __name__ == "__main__":
     leftsub = Subscriber("/N1/reality", Int8)
     q = 3  # buffer queu size
     deltaT = 0.005  # time interval for sync in s
-    timesync = ApproximateTimeSynchronizer([rightsub, leftsub], q, deltaT, allow_headerless=True)  # time sync to sync right with left
-    timesync.registerCallback(updatepos)
     coordpub = rospy.Publisher("/coords", Coordinates, queue_size=3)
     rospy.loginfo("> tracker succesfully initialised")
     while True:
