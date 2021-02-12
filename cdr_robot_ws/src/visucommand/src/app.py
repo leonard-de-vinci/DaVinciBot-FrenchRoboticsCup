@@ -41,6 +41,11 @@ def commandCallback(msg):
         temp += " "
         temp += "-"
         print(temp)
+    temp = ""
+    for i in arr:
+        temp += " "
+        temp += "-"
+        print(temp)
     for j in range(5):
         temp = ""
         for i in arr:
@@ -51,6 +56,7 @@ def commandCallback(msg):
     for i in arr:
         temp += " "
         temp += str(i.order)
+    print()
     print(temp)
     print()
     temp = ""
