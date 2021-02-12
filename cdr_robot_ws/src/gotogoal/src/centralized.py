@@ -106,7 +106,7 @@ def targetCallback(msg):
     global targetXY, targetTheta, epsilon, newtarget, commandpub
     if msg.x != targetXY[0] or msg.y != targetXY[1]:
         newtarget = True
-        targetXY = np.array([msg.X, msg.Y])
+        targetXY = np.array([msg.x, msg.y])
         targetTheta = msg.theta
         epsilon = msg.epsilon
         rospy.loginfo("received new target coords")
