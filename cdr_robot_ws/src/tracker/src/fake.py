@@ -52,8 +52,8 @@ if __name__ == "__main__":
         pload.x = X
         pload.y = Y
         pload.theta = w(theta)
-        pload.xdot = Xdot
-        pload.ydot = Ydot
-        pload.thetadot = thetadot
+        pload.xdot = 0
+        pload.ydot = 0
+        pload.thetadot = 0
         coordpub.publish(pload)
-        time.sleep(1)
+        time.sleep(0.2)
