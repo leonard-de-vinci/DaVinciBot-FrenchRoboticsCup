@@ -111,7 +111,7 @@ def targetCallback(msg):
         epsilon = msg.epsilon
         rospy.loginfo("received new target coords")
         commsg = command()
-        commsg.ID = me
+        commsg.sender = me
         commsg.destination = "brain"
         commsg.order = 0  # ## we receuved feedback
         commsg.precision = 2
