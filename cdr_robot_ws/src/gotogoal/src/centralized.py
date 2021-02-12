@@ -104,7 +104,7 @@ def coordCallback(msg):
 
 def targetCallback(msg):
     global targetXY, targetTheta, epsilon, newtarget, commandpub
-    if msg.X != targetXY[0] or msg.Y != targetXY[1]:
+    if msg.x != targetXY[0] or msg.y != targetXY[1]:
         newtarget = True
         targetXY = np.array([msg.X, msg.Y])
         targetTheta = msg.theta
@@ -172,7 +172,7 @@ if __name__ == '__main__':
     rospy.init_node("goalToPath", anonymous=False)
     global coordsub, targetsub, commandpub, commandsub, movementpub, lidarsub, emergencypub
     coordsub = rospy.Subscriber("/coords", Coordinates, coordCallback)
-    targetsub = rospy.Subscriber("/target", FloatArr, targetCallback)
+    targetsub = rospy.Subscriber("/target", target, targetCallback)
     commandpub = rospy.Publisher("/control", command, queue_size=1)
     commandsub = rospy.Subscriber("/control", command, commandCallback)
     movementpub = rospy.Publisher("/movement", move, queue_size=1)
