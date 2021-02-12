@@ -5,6 +5,7 @@ from PID.msg import FloatArr
 from std_msgs.msg import Bool
 from bot_coordinates.msg import command
 from bot_coordinates.msg import move
+from bot_coordinates.msg import target
 from PID.msg import FloatArr
 from std_msgs.msg import Int8
 import signal
@@ -84,7 +85,7 @@ def mainloop():
                     skip = True
             if not skip:  # we need to stimulate a response
                 if sender == "gotogoal":
-                    msg = FloatArr()
+                    msg = target()
                     msg.x = currentaction[2]
                     msg.y = currentaction[3]
                     msg.theta = currentaction[4]
@@ -137,7 +138,7 @@ if __name__ == '__main__':
     emergencystop = rospy.Publisher("/breakServo", Bool, queue_size=1)       # pub for emergency break
     commandpub = rospy.Publisher("/control", command, queue_size=1)          # pub for commanding teh nodes
     commandsub = rospy.Subscriber("/control", command, commandCallback)      # sub for teh commands
-    waypointpub = rospy.Publisher("/target", FloatArr, queue_size=1)           # pub for teh waypoints from actions
+    waypointpub = rospy.Publisher("/target", target, queue_size=1)           # pub for teh waypoints from actions
     rospy.loginfo(">  the brain has been succesfully initialised")
     while True:
         mainloop()
