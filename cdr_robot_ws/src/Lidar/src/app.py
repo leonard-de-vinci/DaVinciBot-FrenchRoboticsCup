@@ -25,7 +25,7 @@ def Lidar_usings(laser_scan):
     test = False
     XY = np.array([1.5,1])
     
-    vectors_sum = np.array([0.0,0.0]
+    vectors_sum = np.array([0.0,0.0])
     for i in range(len(ranges)):
         if ranges[i] < 2.00 and ranges[i]>0.06 :
             if i*laser_scan.angle_increment < np.pi/2.0 and i*laser_scan.angle_increment > np.pi :
