@@ -136,33 +136,24 @@ def targetCallback(msg):
         commandpub.publish(commsg)
 
 
-def lidarcallback(msg):
+def lidarcallback(laser_scan):
     # TODO implement lidar and pathplanning here
+    global resultXY
     rospy.loginfo("lidar hasn t been implemented yet")
     ranges = np.array(laser_scan.ranges)
-    wall_top_XY = np.array([XY[0],(float)(0)])
-    wall_bot_XY = np.array([XY[0],(float)(2)])
-    wall_right_XY = np.array((float)(3),XY[1]) 
-    wall_left_XY = np.array((float)(0),XY[1])
-    
+    vectors_sum = np.array[0.0,0.0]
+    mid_angle = (len(ranges)//2)*laser_scan.angle_increment
+    k = 1 #Coefficient de poids vectoriel
+    for i in range(len(ranges)) :
+        angle = i*laser_scan.angle_increment - mid_angle
+        vectors_sum[0] += -(1/laser_scan.ranges[i]**2)*np.cos(angle) + XY[0]
+        vectors_sum[1] += -(1/laser_scan.ranges[i]**2)*np.sin(angle) + XY[1]
+    vectors_sum *= k
+    resultXY = vectors_sum
 
-    test = False
-    for i in range(len(ranges)):
-        if ranges[i] < 1.00 and ranges[i]>0.06 and i*laser_scan.angle_increment < (float)(3.14159265359) and i*laser_scan.angle_increment > (float)(0):
-            test = True
-            rospy.loginfo(str(ranges[i]))
-    if test:
-        buffer += 1
-    else:
-        buffer -= 1
-    if buffer < 0:
-        buffer = 0
-    if buffer > 10:
-        precision = -1
-    rospy.loginfo("breaking!!")
-    if buffer > 20:
-        buffer = 20
-    rospy.loginfo(str(test))
+
+
+    
 
 
 if __name__ == '__main__':
