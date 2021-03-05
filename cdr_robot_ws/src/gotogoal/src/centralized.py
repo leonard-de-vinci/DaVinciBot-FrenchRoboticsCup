@@ -141,7 +141,7 @@ def lidarcallback(laser_scan):
     global resultXY
     rospy.loginfo("lidar hasn t been implemented yet")
     ranges = np.array(laser_scan.ranges)
-    vectors_sum = np.array[0.0,0.0]
+    vectors_sum = np.array([0.0,0.0])
     mid_angle = (len(ranges)//2)*laser_scan.angle_increment
     k = 1 #Coefficient de poids vectoriel
     for i in range(len(ranges)) :
@@ -150,7 +150,7 @@ def lidarcallback(laser_scan):
         vectors_sum[1] += -(1/laser_scan.ranges[i]**2)*np.sin(angle) + XY[1]
     vectors_sum *= k
     resultXY = vectors_sum
-
+    rospy.loginfo(str(vectors_sum[0]) + " " + str( vectors_sum[1]))
 
 
     
