@@ -8,6 +8,7 @@ from bot_coordinates.msg import move
 from bot_coordinates.msg import target
 from PID.msg import FloatArr
 from std_msgs.msg import Int8
+from std_msgs.msg import Bool
 import signal
 import sys
 import numpy as np
@@ -15,6 +16,11 @@ import numpy as np
 
 def signal_handler(signal, frame):
     sys.exit(0)
+
+
+def compassCallback(msg):
+    rospy.loginfo(msg.data)
+    north = msg.data
 
 
 def commandCallback(msg):
@@ -102,7 +108,13 @@ def mainloop():
                     # TODO implement the control of the servos and shit
                     pass
     if state >= 4:  # go back home because end
-        currentaction = waypoints[len(waypoints)-1]  # this line needs the last value of the waypoints to be the coord of home
+        //currentaction = waypoints[len(waypoints)-1]  # this line needs the last value of the waypoints to be the coord of home
+        if north:
+            # coordinates of north
+            currentaction = [0, 0, 0, 0, 0, 50]
+        else:
+            # coordinates of south
+            currentaction = [0, 0, 0, 0, 0, 50]
         msg = FloatArr()
         msg.x = currentaction[2]
         msg.y = currentaction[3]
@@ -133,8 +145,10 @@ if __name__ == '__main__':
     state = 0
 
     # ##---------------------ROS
-    global emergencystop, commandpub, commandsub, waypointpub, guisub
+    global emergencystop, commandpub, commandsub, waypointpub, guisub, nordsub, north
+    north = False
     rospy.init_node("thebrain", anonymous=False)
+    nordsub = rospy.Subscriber("/compassOrientation",Bool, compassCallback)  # sub for compass
     emergencystop = rospy.Publisher("/breakServo", Bool, queue_size=1)       # pub for emergency break
     commandpub = rospy.Publisher("/control", command, queue_size=1)          # pub for commanding teh nodes
     commandsub = rospy.Subscriber("/control", command, commandCallback)      # sub for teh commands
