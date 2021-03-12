@@ -138,8 +138,8 @@ def targetCallback(msg):
 
 def lidarcallback(laser_scan):
     # TODO implement lidar and pathplanning here
-    global resultXY
-    rospy.loginfo("lidar hasn t been implemented yet")
+    global resultXY, lidar_pub
+    #rospy.loginfo("lidar hasn t been implemented yet")
     ranges = np.array(laser_scan.ranges)
     vectors_sum = np.array([0.0,0.0])
     mid_angle = (len(ranges)//2)*laser_scan.angle_increment
@@ -150,13 +150,18 @@ def lidarcallback(laser_scan):
         vectors_sum[1] += (1/laser_scan.ranges[i]**2)*np.sin(angle) + XY[1]
     vectors_sum *= k
     resultXY = vectors_sum
+    z = Coordinates()
+    z.x = vectors_sum[0]
+    z.y = vectors_sum[1]
+    lidar_pub.publish(z)
+
     rospy.loginfo("X =  " + str(vectors_sum[0]) + " Y =  " + str(vectors_sum[1]) + " ")
 
 
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
-
+    
     # ##---------------------STATE
     global state, me, precision
     state = 0
@@ -183,12 +188,13 @@ if __name__ == '__main__':
 
     # ##---------------------ROS
     rospy.init_node("goalToPath", anonymous=False)
-    global coordsub, targetsub, commandpub, commandsub, movementpub, lidarsub, emergencypub
+    global coordsub, targetsub, commandpub, commandsub, movementpub, lidarsub, emergencypub, lidar_pub
     coordsub = rospy.Subscriber("/coords", Coordinates, coordCallback)
     targetsub = rospy.Subscriber("/target", target, targetCallback)
     commandpub = rospy.Publisher("/control", command, queue_size=1)
     commandsub = rospy.Subscriber("/control", command, commandCallback)
     movementpub = rospy.Publisher("/movement", move, queue_size=1)
     lidarsub = rospy.Subscriber("/scan", LaserScan, lidarcallback)
+    lidar_pub = rospy.Publisher('/resultant_lidar', Coordinates)
     rospy.loginfo(">  center succesfully initialised")
     rospy.spin()
