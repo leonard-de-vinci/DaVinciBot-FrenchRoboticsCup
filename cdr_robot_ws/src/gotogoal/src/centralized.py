@@ -150,10 +150,9 @@ def lidarcallback(laser_scan):
         vectors_sum[1] += -(1/laser_scan.ranges[i]**2)*np.sin(angle) + XY[1]
     vectors_sum *= k
     resultXY = vectors_sum
+    rospy.loginfo(vectors_sum[0] + " " + vectors_sum[1])
 
 
-
-    
 
 
 if __name__ == '__main__':
