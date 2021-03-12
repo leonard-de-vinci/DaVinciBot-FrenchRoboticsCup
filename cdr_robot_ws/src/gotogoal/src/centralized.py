@@ -143,14 +143,14 @@ def lidarcallback(laser_scan):
     ranges = np.array(laser_scan.ranges)
     vectors_sum = np.array([0.0,0.0])
     mid_angle = (len(ranges)//2)*laser_scan.angle_increment
-    k = 1 #Coefficient de poids vectoriel
+    k = 0.005 #Coefficient de poids vectoriel
     for i in range(len(ranges)) :
         angle = i*laser_scan.angle_increment - mid_angle
-        vectors_sum[0] += -(1/laser_scan.ranges[i]**2)*np.cos(angle) + XY[0]
-        vectors_sum[1] += -(1/laser_scan.ranges[i]**2)*np.sin(angle) + XY[1]
+        vectors_sum[0] += (1/laser_scan.ranges[i]**2)*np.cos(angle) + XY[0]
+        vectors_sum[1] += (1/laser_scan.ranges[i]**2)*np.sin(angle) + XY[1]
     vectors_sum *= k
     resultXY = vectors_sum
-    rospy.loginfo("X =  "vectors_sum[0] + " Y =  " + vectors_sum[1] + " ")
+    rospy.loginfo("X =  " + str(vectors_sum[0]) + " Y =  " + str(vectors_sum[1]) + " ")
 
 
 
