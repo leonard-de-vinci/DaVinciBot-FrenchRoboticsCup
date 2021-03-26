@@ -20,7 +20,7 @@ def coordcallback(msg):
     buffer += 1
     if buffer >= 10:  # !  so that we don't overscreen
         pos = np.array([msg.x, msg.y])
-        diff = 1/(target - pos)  # vecteur de deplacement
+        diff = (target - pos)  # vecteur de deplacement
         diff += resultant
         distance = np.linalg.norm(diff)
         theta = np.arctan2(diff[1], diff[0])  # angle of the trajectory vector,  might need to swap argument order
