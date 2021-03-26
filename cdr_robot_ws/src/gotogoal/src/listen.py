@@ -51,21 +51,21 @@ def coordcallback(msg):
         if mod == 2 or mod == 3:  # we consider the angle to objectif
             if abs(w(w(theta) - w(msg.theta))) <= (0.1) and newtarget:  # if reached acceptaeble angle
                 bufferangle += 1
-        rospy.loginfo("----------------------"+str(bufferangle))
+                rospy.loginfo("----------------------"+str(bufferangle))
                 if bufferangle >= 10:  # ! this value is arbitrary and might require tweeking
                     bufferangle = 0
                     if mod == 3:
                         mod = 1
-    		mtype = 0
+                        mtype = 0
                         epsilon = 40  # ! this might need changing as in reducing for more acuracy
                         rospy.loginfo("angle held, changing behaviour")
                     else:
                         theta = msg.theta  # send feedback
-                        tmsg = Int32()
-                        tmsg.data = 1
-                        feedbackpub.publish(tmsg)
-                        newtarget = False
-                        rospy.loginfo("angle held")
+                    tmsg = Int32()
+                    tmsg.data = 1
+                    feedbackpub.publish(tmsg)
+                    newtarget = False
+                    rospy.loginfo("angle held")
         controlmsg = FloatArr()
         controlmsg.v = V
         controlmsg.theta = theta
@@ -79,6 +79,7 @@ def w(angle):
     alpha = np.arctan2(np.sin(angle), np.cos(angle))
     # alpha = ((np.pi + alpha) % 2*np.pi) - np.pi
     return alpha
+
 
 def resultcallback(msg):
     global resultant
