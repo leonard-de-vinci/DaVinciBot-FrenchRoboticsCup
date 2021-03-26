@@ -44,13 +44,7 @@ class rob():
         self.angle = msg.theta
 
     def break_callback(self, msg):
-        self.pause = msg.data
-
-    def draw_resultant(self, array) :
-        x = (array[0]/3000.0) *self.width
-        y = (array[1]/2000.0) *self.height
-        pg.draw.line(self.surface, (69,69,69),(int(x),int(y)),(int(self.x), self(y)), 3)
-        
+        self.pause = msg.data        
 
 
     # def draw_points(self):
@@ -71,7 +65,6 @@ class rob():
     def drawresultant(self, arr):
         nrx = int(((arr[0]+self.rx)/float(3000.0))*float(self.width))
         nry = int(((arr[1]+self.ry)/float(2000.0))*float(self.height))
-        print(nrx, nry)
         pg.draw.line(self.surface, (253, 108, 158), (self.x, self.y), (nrx, nry), 4)
 
     def draw(self, targetcoord):
