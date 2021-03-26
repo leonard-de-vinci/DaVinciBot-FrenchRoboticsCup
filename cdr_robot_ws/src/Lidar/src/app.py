@@ -5,89 +5,53 @@ import numpy as np
 #from PID.msg import IntArr
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Bool
-
+from bot_coordinates.msg import Coordinates
+bot_coords = np.array([0.0,0.0,0.0])
 
 
 
 def Lidar_setup():
-    global lidar_publish, buffer
-    buffer = 0
+    global lidar_pub, lidarsub
+    #buffer = 0
     rospy.init_node('Lidar')
-    lidar_publish = rospy.Publisher("breakServo",Bool,queue_size=1)
-    sub = rospy.Subscriber('/scan',LaserScan,Lidar_usings)
+    lidarsub = rospy.Subscriber("/scan", LaserScan, Lidar_usings)
+    coords_sub = rospy.Subscriber("/coords", Coordinates, coords_callback)
+    lidar_pub = rospy.Publisher('/resultant_lidar', Coordinates)
     rospy.loginfo("Le node Lidar a demarre correctement")
+
+def coords_callback(msg):
+    global bot_coords
+    bot_coords[0] = msg.x
+    bot_coords[1] = msg.y
+    bot_coords[2] = msg.theta
 
 
 def Lidar_usings(laser_scan):
-    #angle_increment = laser_scan.angle_increment
-    global buffer, lidar_publish
+    # TODO implement lidar and pathplanning here
+    global resultXY, lidar_pub, lidarsub, bot_coords
+    #rospy.loginfo("lidar hasn t been implemented yet")
     ranges = np.array(laser_scan.ranges)
-    test = False
-    #Mis arbitrairement le temps de l'implementation dans "Centralized", il faudra récupérer les coordonnées callback
-    XY = np.array([1.5,1])
-    
     vectors_sum = np.array([0.0,0.0])
-    for i in range(len(ranges)):
-        if ranges[i] < 2.00 and ranges[i]>0.06 :
-            if i*laser_scan.angle_increment < np.pi/2.0 and i*laser_scan.angle_increment > np.pi/2.0 :
-                angle = ((double)i*laser_scan.angle_increment-0.0) *(laser_scan.angle_max-laser_scan.angle_min)/(len(ranges) -0) + laser_scan.angle_min
-                temp = np.array([XY[0] + (1/ranges[i]**2)*np.cos(angle),XY[1] + (1/ranges[i]**2)*np.sin(angle)])
-                
-
-            #rospy.loginfo(str(ranges[i]))
-    if test == True :
-    	buffer+= 1
-    else :
-    	buffer -= 1
-    if buffer <0:
-    	buffer = 0
-    if buffer > 10 :
-    	msg = Bool()
-    	msg.data = True
-    	lidar_publish.publish(msg)
-        #rospy.loginfo("breaking!!")
-    else :
-    	msg = Bool()
-    	msg.data = False
-    	lidar_publish.publish(msg)
-    if buffer >20 :
-    	buffer = 20
-    rospy.loginfo(str(test))
-    #rospy.loginfo(str(laser_scan.range_min))
-    #if laser_scan.range_min <1.0 :
-    #	msg = Bool()
-    #	msg.data = True
-    #	lidar_publish.publish(msg)
-    #else:
-    #	msg = Bool()
-    #	msg.data = False
-    #	lidar_publish.publish(msg)
-
-
-    #Je stock juste ça là comme ça 
-    # wall_top_XY = np.array([XY[0],(float)(0)])
-    # wall_bot_XY = np.array([XY[0],(float)(2)])
-    # wall_right_XY = np.array((float)(3),XY[1]) 
-    # wall_left_XY = np.array((float)(0),XY[1])
+    #rospy.loginfo(len(laser_scan.ranges))
+    mid_angle = (len(laser_scan.ranges)/2.0)*laser_scan.angle_increment
+    k = 1 #Coefficient de poids vectoriel
+    for i in range(len(laser_scan.ranges)) :
+        if (laser_scan.ranges[i] >= 0.05) : 
+            angle = i*laser_scan.angle_increment - mid_angle + bot_coords[2]
+            vectors_sum[0] += (1/(float(laser_scan.ranges[i])**2))*np.cos(angle) 
+            vectors_sum[1] += (1/(float(laser_scan.ranges[i])**2))*np.sin(angle) 
+    k_mur = 25
+    vectors_sum[0] += k_mur/float((bot_coords[0]/1000.0)**2)
+    vectors_sum[0] -= k_mur/float(((3000.0 - bot_coords[0])/1000.0)**2)
+    vectors_sum[1] += k_mur/float((bot_coords[1]/1000.0)**2)
+    vectors_sum[1] -= k_mur/float(((2000.0- bot_coords[1])/1000.0)**2)
+    vectors_sum *= k
     
-
-    # test = False
-    # for i in range(len(ranges)):
-    #     if ranges[i] < 1.00 and ranges[i]>0.06 and i*laser_scan.angle_increment < (float)(3.14159265359) and i*laser_scan.angle_increment > (float)(0):
-    #         test = True
-    #         rospy.loginfo(str(ranges[i]))
-    # if test:
-    #     buffer += 1
-    # else:
-    #     buffer -= 1
-    # if buffer < 0:
-    #     buffer = 0
-    # if buffer > 10:
-    #     precision = -1
-    # rospy.loginfo("breaking!!")
-    # if buffer > 20:
-    #     buffer = 20
-    # rospy.loginfo(str(test))
+    resultXY = vectors_sum
+    z = Coordinates()
+    z.x = vectors_sum[0]
+    z.y = vectors_sum[1]
+    lidar_pub.publish(z)
 
 if __name__ == '__main__':
     
