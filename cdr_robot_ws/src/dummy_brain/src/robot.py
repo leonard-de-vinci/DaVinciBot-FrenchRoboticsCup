@@ -44,13 +44,7 @@ class rob():
         self.angle = msg.theta
 
     def break_callback(self, msg):
-        self.pause = msg.data
-
-    def draw_resultant(self, array) :
-        x = (array[0]/3000.0) *self.width
-        y = (array[1]/2000.0) *self.height
-        pg.draw.line(self.surface, (69,69,69),(int(x),int(y)),(int(self.x), self(y)), 3)
-        
+        self.pause = msg.data        
 
 
     # def draw_points(self):
@@ -65,8 +59,13 @@ class rob():
                 angle = self.angle - self.lidar_min_angle - (self.lidar_max_angle - self.lidar_min_angle)*(float(i)/(float(len(temp))))
                 x2 = ((np.cos(angle)*float(temp[i])*1000.00)*self.width/3000.0)+self.x
                 y2 = ((np.sin(angle)*float(temp[i])*1000.00)*self.height/2000.0)+self.y
-                #pg.draw.line(self.surface, (150, 150, 150), (int(self.x), int(self.y)), (int(x2), int(y2)), 3)
+                # pg.draw.line(self.surface, (150, 150, 150), (int(self.x), int(self.y)), (int(x2), int(y2)), 3)
                 pg.draw.circle(self.surface, (255, 50, 50), (int(x2), int(y2)),2)
+
+    def drawresultant(self, arr):
+        nrx = int(((arr[0]+self.rx)/float(3000.0))*float(self.width))
+        nry = int(((arr[1]+self.ry)/float(2000.0))*float(self.height))
+        pg.draw.line(self.surface, (253, 108, 158), (self.x, self.y), (nrx, nry), 4)
 
     def draw(self, targetcoord):
         diff = targetcoord - np.array([self.rx, self.ry])
