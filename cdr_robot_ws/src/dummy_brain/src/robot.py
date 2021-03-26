@@ -46,6 +46,13 @@ class rob():
     def break_callback(self, msg):
         self.pause = msg.data
 
+    def draw_resultant(self, array) :
+        x = (array[0]/3000.0) *self.width
+        y = (array[1]/2000.0) *self.height
+        pg.draw.line(self.surface, (69,69,69),(int(x),int(y)),(int(self.x), self(y)), 3)
+        
+
+
     # def draw_points(self):
     #     for point in self.datapos:
     #         if point[0] != float('inf') and point[1] != float('inf'):

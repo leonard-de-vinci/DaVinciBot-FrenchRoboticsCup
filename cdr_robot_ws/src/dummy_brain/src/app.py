@@ -13,8 +13,12 @@ from bot_coordinates.msg import Coordinates
 import numpy as np
 
 waypoints = []
+<<<<<<< HEAD
 resultcoord = [0,0]
 
+=======
+lidar_points = [0,0]
+>>>>>>> 4aeef88c18e76df495a5dc76944dc17784f7352a
 
 def feedback_callback(msg):
     global waypoints
@@ -42,6 +46,11 @@ def sendmovement():
         # rospy.loginfo(str(target.rx)+" | "+str(target.ry))
         mvpub.publish(msg)
 
+def lidar_callback(msg) :
+    global lidar_points
+    lidar_points[0] = msg.x
+    lidar_points[1] = msg.y
+
 # ## ROS -------------------------------------------------------------
 
 
@@ -49,7 +58,11 @@ rospy.init_node("fake_brain")
 breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
 mvpub = rospy.Publisher("/movement", movement, queue_size=1)
 feedbacksub = rospy.Subscriber("/feedback", Int32, feedback_callback)
+<<<<<<< HEAD
 resultsub = rospy.Subscriber("resultant_lidar", Coordinates, rescallback)
+=======
+lidar_sub = rospy.Subscriber("/resultant_lidar", Coordinates, lidar_callback)
+>>>>>>> 4aeef88c18e76df495a5dc76944dc17784f7352a
 # ## end ros ---------------------------------------------------------
 
 pg.init()
@@ -167,7 +180,12 @@ while running:
     else:
         targetcoord = np.array([thebot.rx, thebot.ry])
     thebot.draw(targetcoord)
+<<<<<<< HEAD
     thebot.drawresultant(resultcoord)
+=======
+    
+    
+>>>>>>> 4aeef88c18e76df495a5dc76944dc17784f7352a
     #if(showlidar):
     #    thebot.draw_the_rays()
     #thebot.draw(targetcoord)
