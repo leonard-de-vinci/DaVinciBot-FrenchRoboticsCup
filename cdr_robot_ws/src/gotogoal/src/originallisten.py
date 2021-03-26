@@ -16,12 +16,11 @@ def signal_handler(signal, frame):
 
 
 def coordcallback(msg):
-    global instructionpub, epsilon, mod, target, buffer, feedbackpub, newtarget, bufferangle, resultant
+    global instructionpub, epsilon, mod, target, buffer, feedbackpub, newtarget, bufferangle
     buffer += 1
     if buffer >= 10:  # !  so that we don't overscreen
         pos = np.array([msg.x, msg.y])
-        diff = 1/(target - pos)  # vecteur de deplacement
-        diff += resultant
+        diff = target - pos  # vecteur de deplacement
         distance = np.linalg.norm(diff)
         theta = np.arctan2(diff[1], diff[0])  # angle of the trajectory vector,  might need to swap argument order
         V = 0.00  # default values
@@ -51,12 +50,12 @@ def coordcallback(msg):
         if mod == 2 or mod == 3:  # we consider the angle to objectif
             if abs(w(w(theta) - w(msg.theta))) <= (0.1) and newtarget:  # if reached acceptaeble angle
                 bufferangle += 1
-        rospy.loginfo("----------------------"+str(bufferangle))
+		rospy.loginfo("----------------------"+str(bufferangle))
                 if bufferangle >= 10:  # ! this value is arbitrary and might require tweeking
                     bufferangle = 0
                     if mod == 3:
                         mod = 1
-    		mtype = 0
+			mtype = 0
                         epsilon = 40  # ! this might need changing as in reducing for more acuracy
                         rospy.loginfo("angle held, changing behaviour")
                     else:
@@ -80,11 +79,7 @@ def w(angle):
     # alpha = ((np.pi + alpha) % 2*np.pi) - np.pi
     return alpha
 
-def resultcallback(msg):
-    global resultant
-    resultant[0] = msg.x
-    resultant[1] = msg.y
-
+#def resultcallback():
 
 def movementcallback(msg):
     global target, mod, epsilon, newtarget, bufferangle
@@ -100,9 +95,8 @@ def movementcallback(msg):
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     # pointlist = np.loadtxt("waypoints.csv",delimiter=';')
-    global coordsub, instructionpub, movementsub, feedbackpub, mod, epsilon, target, buffer, newtarget, bufferangle, resultant
+    global coordsub, instructionpub, movementsub, feedbackpub, mod, epsilon, target, buffer, nextarget, bufferangle
     buffer = 0
-    resultant = np.array([0.0, 0.0])
     bufferangle = 0  # buffer used for stability of angle
     newtarget = False
     target = np.array([1500.00, 1000.00])
@@ -112,7 +106,6 @@ if __name__ == '__main__':
     instructionpub = rospy.Publisher("/control", FloatArr, queue_size=1)
     feedbackpub = rospy.Publisher("/feedback", Int32, queue_size=1)
     movementsub = rospy.Subscriber("/movement", movement, movementcallback)
-    resultsub = rospy.Subscriber("/resultant_lidar", Coordinates, resultcallback)
     coordsub = rospy.Subscriber("/coords", Coordinates, coordcallback)
     rospy.loginfo("> viewer correctly initialised")
     rospy.spin()

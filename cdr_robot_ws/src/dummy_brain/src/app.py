@@ -9,9 +9,11 @@ import datetime
 from std_msgs.msg import Bool
 from std_msgs.msg import Int32
 from bot_coordinates.msg import movement
+from bot_coordinates.msg import Coordinates
 import numpy as np
 
 waypoints = []
+resultcoord = [0,0]
 
 
 def feedback_callback(msg):
@@ -20,6 +22,12 @@ def feedback_callback(msg):
         rospy.loginfo("fullfiled a waypoint")
         bybye = waypoints.pop(0)
     sendmovement()
+
+
+def rescallback(msg):
+    global resultcoord
+    resultcoord[0] = msg.x
+    resultcoord[1] = msg.y
 
 
 def sendmovement():
@@ -41,6 +49,7 @@ rospy.init_node("fake_brain")
 breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
 mvpub = rospy.Publisher("/movement", movement, queue_size=1)
 feedbacksub = rospy.Subscriber("/feedback", Int32, feedback_callback)
+resultsub = rospy.Subscriber("resultant_lidar", Coordinates, rescallback)
 # ## end ros ---------------------------------------------------------
 
 pg.init()
@@ -158,6 +167,7 @@ while running:
     else:
         targetcoord = np.array([thebot.rx, thebot.ry])
     thebot.draw(targetcoord)
+    thebot.drawresultant(resultcoord)
     #if(showlidar):
     #    thebot.draw_the_rays()
     #thebot.draw(targetcoord)
