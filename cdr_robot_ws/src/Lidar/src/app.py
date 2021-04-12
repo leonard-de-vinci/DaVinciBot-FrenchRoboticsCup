@@ -36,10 +36,18 @@ def Lidar_usings(laser_scan):
     mid_angle = (len(laser_scan.ranges)/2.0)*laser_scan.angle_increment
     k = 1 #Coefficient de poids vectoriel
     for i in range(len(laser_scan.ranges)) :
-        if (laser_scan.ranges[i] >= 0.05) : 
-            angle = i*laser_scan.angle_increment - mid_angle + bot_coords[2]
-            vectors_sum[0] += (1/(float(laser_scan.ranges[i])**2))*np.cos(angle) 
-            vectors_sum[1] += (1/(float(laser_scan.ranges[i])**2))*np.sin(angle) 
+        if (laser_scan.ranges[i] >= 0.05 and (not np.isinf(laser_scan.ranges[i]))) : 
+            angle = bot_coords[2] - laser_scan.angle_min - (laser_scan.angle_max - laser_scan.angle_min)*(float(i)/float(len(laser_scan.ranges)))
+            pos = np.array([np.cos(angle),np.sin(angle)])
+            pos*= laser_scan.ranges[i]
+            pos[0] += bot_coords[0]/1000.0
+            pos[1] += bot_coords[1]/1000.0
+            #rospy.loginfo(pos)
+            if(pos[0] >= 0 and pos[1] >= 0 and pos[0]<= 3.0 and pos[1]<= 2.0) : 
+                vectors_sum[0] -= (1/(float(laser_scan.ranges[i])**2))*np.cos(angle) 
+                vectors_sum[1] -= (1/(float(laser_scan.ranges[i])**2))*np.sin(angle)
+            #else  :rospy.loginfo("AHAHAHAHAHH BOlOSS") 
+
     k_mur = 25
     vectors_sum[0] += k_mur/float((bot_coords[0]/1000.0)**2)
     vectors_sum[0] -= k_mur/float(((3000.0 - bot_coords[0])/1000.0)**2)
