@@ -27,7 +27,6 @@ def coords_callback(msg):
 
 
 def Lidar_usings(laser_scan):
-    # TODO implement lidar and pathplanning here
     global resultXY, lidar_pub, lidarsub, bot_coords
     #rospy.loginfo("lidar hasn t been implemented yet")
     ranges = np.array(laser_scan.ranges)

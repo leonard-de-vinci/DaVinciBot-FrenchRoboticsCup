@@ -13,7 +13,8 @@ from bot_coordinates.msg import Coordinates
 import numpy as np
 
 waypoints = []
-resultcoord = [0,0]
+resultcoord = [0, 0]
+
 
 def feedback_callback(msg):
     global waypoints
@@ -37,11 +38,12 @@ def sendmovement():
         msg.x = target.rx
         msg.y = target.ry
         msg.epsilon = target.rad
-        msg.mod = target.mod
+        msg.mod = int(target.mod)
         # rospy.loginfo(str(target.rx)+" | "+str(target.ry))
         mvpub.publish(msg)
 
-def lidar_callback(msg) :
+
+def lidar_callback(msg):
     global lidar_points
     lidar_points[0] = msg.x
     lidar_points[1] = msg.y
@@ -65,6 +67,17 @@ running = True
 clock = pg.time.Clock()
 thebot = robot.rob(250, 150, 0, screen, myfont)
 
+
+# ## loading the waypoints
+try:
+    temp = np.genfromtxt("saves/moi.csv", delimiter=";")
+    print("a file was found")
+    for i in temp:
+        waypoints.append(waypoint(i[0], i[1], i[2], myfont, screen, int(i[3])))
+except IOError:
+    print("no file found")
+
+
 # ## variables related to servos
 servostate = [0, 0, 0]  # what pos in the angle array so either 1 or 0 atm
 servoangles = [[0, 0, 0], [256, 256, 256]]  # min angle followed by max angle for easy change and switch ...
@@ -81,6 +94,9 @@ msg = Bool()
 msg.data = emergencybreak
 breakpub.publish(emergencybreak)
 sendmovement()
+
+for i in waypoints:
+    print(i.rx, i.ry)
 
 while running:
     # Did the user click the window close button?
@@ -136,7 +152,7 @@ while running:
                 name = "saves/"+np.datetime_as_string(np.datetime64(datetime.datetime.now()))+".csv"
                 temparray = []
                 for i in waypoints:
-                    temparray.append([i.rx, i.ry, i.rad, i.mod])
+                    temparray.append([i.x, i.y, i.rad, i.mod])
                 arrtosave = np.array(temparray)
                 np.savetxt(name, arrtosave, delimiter=';')
                 print("--------------SAVED !!! --------------")
@@ -171,12 +187,10 @@ while running:
     else:
         targetcoord = np.array([thebot.rx, thebot.ry])
     thebot.draw(targetcoord)
-    thebot.drawresultant(resultcoord)
-    
-    
-    #if(showlidar):
+    thebot.drawresultant(resultcoord) 
+    #  if(showlidar):
     #    thebot.draw_the_rays()
-    #thebot.draw(targetcoord)
+    #  thebot.draw(targetcoord)
     cop = waypoints[:]
     for i in range(len(cop)):
         cop[i].draw(i)
