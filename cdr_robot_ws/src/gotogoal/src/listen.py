@@ -22,12 +22,13 @@ def coordcallback(msg):
         pos = np.array([msg.x, msg.y])
         diff = (target - pos)  # vecteur de deplacement
         diff += resultant
+        dis = np.linalg.norm(target-pos)
         distance = np.linalg.norm(diff)
         theta = np.arctan2(diff[1], diff[0])  # angle of the trajectory vector,  might need to swap argument order
         V = 0.00  # default values
         mtype = 0  # default values
         if (mod == 0):  # max speed with slow down
-            V = min(((distance-epsilon)/5)+10, 40)
+            V = min(((dis-epsilon)/5)+10, 40)
             mtype = 0
         elif (mod == 1):  # slow controled approch
             V = 15.00
