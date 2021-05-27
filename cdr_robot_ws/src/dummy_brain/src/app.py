@@ -8,6 +8,7 @@ import rospy
 import datetime
 from std_msgs.msg import Bool
 from std_msgs.msg import Int32
+from std_msgs.msg import Int8
 from bot_coordinates.msg import movement
 from bot_coordinates.msg import Coordinates
 import numpy as np
@@ -56,6 +57,7 @@ breakpub = rospy.Publisher("/breakServo", Bool, queue_size=1)
 mvpub = rospy.Publisher("/movement", movement, queue_size=1)
 feedbacksub = rospy.Subscriber("/feedback", Int32, feedback_callback)
 resultsub = rospy.Subscriber("resultant_lidar", Coordinates, rescallback)
+servocontroller = rospy.Publisher("/servos", Int8, queue_size=2)
 # ## end ros ---------------------------------------------------------
 
 pg.init()
@@ -76,12 +78,6 @@ try:
         waypoints.append(waypoint(i[0], i[1], i[2], myfont, screen, int(i[3])))
 except IOError:
     print("no file found")
-
-
-# ## variables related to servos
-servostate = [0, 0, 0]  # what pos in the angle array so either 1 or 0 atm
-servoangles = [[0, 0, 0], [256, 256, 256]]  # min angle followed by max angle for easy change and switch ...
-
 # ## other stuff
 tempcoord = np.array([0, 0])
 holding = False
@@ -134,17 +130,20 @@ while running:
             # ## begin servos
             if event.key == pg.K_a:
                 which = 1
-                servostate[which] = (servostate[which]+1) % 2
-                # TODO put code to send info to servos here...
+                mmsg = Int8()
+                mmsg.data = which
+                servocontroller.publish(mmsg)
                 print("changing position of servo nO", which)
             if event.key == pg.K_z:
-                which = 2
-                servostate[which] = (servostate[which]+1) % 2
-                # TODO put code to send info to servos here...
-            if event.key == pg.K_e:
                 which = 3
-                servostate[which] = (servostate[which]+1) % 2
-                # TODO put code to send info to servos here...
+                mmsg = Int8()
+                mmsg.data = which
+                servocontroller.publish(mmsg)
+            if event.key == pg.K_e:
+                which = 2
+                mmsg = Int8()
+                mmsg.data = which
+                servocontroller.publish(mmsg)
                 print("changing position of servo nO", which)
             # ## end servos
 

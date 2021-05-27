@@ -29,6 +29,7 @@ void connect(){
       nh.spinOnce();
       digitalWrite(LED_BUILTIN,ledop);
       ledop = !ledop;
+      delay(100);
     }
 
   }
@@ -47,7 +48,8 @@ void setup() {
   pinMode(tirrette,INPUT);
   nh.initNode();
   nh.advertise(pub_msgs);
-  connect();  
+  connect();
+  nh.spinOnce();
 }
 
 void loop() {
@@ -60,13 +62,13 @@ void loop() {
   digitalWrite(led4,!switchb);
   digitalWrite(led5,tire);
   digitalWrite(led6,!tire);
-  digitalWrite(LED_BUILTIN,ledop);
-  ledop = !ledop;
+  digitalWrite(LED_BUILTIN,LOW);
   //ros
-  if(tire){
+  //nh.loginfo((!tire && !switcha)? "yes":"no");
+  if(tire && switcha){
     if(switchb){
-      msgs_pub.data = 4; // right
-    }else{
+      msgs_pub.data = 4;
+    }else {
       msgs_pub.data = 16;
     }
   }else{
@@ -74,5 +76,7 @@ void loop() {
   }
   pub_msgs.publish(&msgs_pub);
   nh.spinOnce();
+  connect();
+  delay(10);
 
 }
