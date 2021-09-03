@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/pi/cdr/cdr_robot_ws/install/setup.sh

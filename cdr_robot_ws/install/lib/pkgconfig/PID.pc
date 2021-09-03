@@ -1,0 +1,8 @@
+prefix=/home/pi/cdr/cdr_robot_ws/install
+
+Name: PID
+Description: Description of PID
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: rospy roscpp message_runtime

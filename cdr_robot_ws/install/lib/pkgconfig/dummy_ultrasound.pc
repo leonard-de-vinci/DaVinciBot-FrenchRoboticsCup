@@ -1,0 +1,8 @@
+prefix=/home/pi/cdr/cdr_robot_ws/install
+
+Name: dummy_ultrasound
+Description: Description of dummy_ultrasound
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

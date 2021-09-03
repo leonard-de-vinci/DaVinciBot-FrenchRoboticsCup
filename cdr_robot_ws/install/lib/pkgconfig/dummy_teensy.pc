@@ -1,0 +1,8 @@
+prefix=/home/pi/cdr/cdr_robot_ws/install
+
+Name: dummy_teensy
+Description: Description of dummy_teensy
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
