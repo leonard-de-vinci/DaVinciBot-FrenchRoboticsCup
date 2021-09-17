@@ -1,3 +1,8 @@
+# [This repo has been archived](https://github.com/leonard-de-vinci/DaVinciBot-CDR) ![status: archived](https://img.shields.io/badge/status-archived-red.svg)
+
+This repository has been archived and is no longer in use. The new repository for the French Robotics Cup can be found at the following address:
+
+https://github.com/leonard-de-vinci/DaVinciBot-CDR
 
 
 # Presentation
